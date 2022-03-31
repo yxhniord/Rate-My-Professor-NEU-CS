@@ -6,7 +6,9 @@ var logger = require("morgan");
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var userRouter = require("./routes/users");
+var professorRouter = require("./routes/professor");
+var commentRouter = require("./routes/comment");
 
 var app = express();
 
@@ -21,7 +23,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", userRouter);
+app.use("/professor", professorRouter);
+app.use("/comment", commentRouter);
 
 // Set up mongoose connection
 var mongoose = require("mongoose");
