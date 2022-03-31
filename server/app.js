@@ -6,7 +6,7 @@ var logger = require("morgan");
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
-var userRouter = require("./routes/users");
+var userRouter = require("./routes/user");
 var professorRouter = require("./routes/professor");
 var commentRouter = require("./routes/comment");
 
