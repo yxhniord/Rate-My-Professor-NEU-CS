@@ -136,12 +136,17 @@ exports.user_update = [
       // There are errors. Response with errors.
       return res.status(500).json({ message: errors.array() });
     }
-    User.findByIdAndUpdate(req.params.id, user, {}, function (err, theuser) {
-      if (err) {
-        res.status(500).json({ message: err });
-      } else {
-        res.status(200).json(theuser);
+    User.findByIdAndUpdate(
+      req.params.id,
+      user,
+      { new: true },
+      function (err, theuser) {
+        if (err) {
+          res.status(500).json({ message: err });
+        } else {
+          res.status(200).json(theuser);
+        }
       }
-    });
+    );
   },
 ];

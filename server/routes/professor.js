@@ -17,9 +17,9 @@ router.get("/id/:id", professor_controller.professor_detail);
 router.post("/create", professor_controller.professor_create);
 
 // DELETE request: delete professor.
-// router.delete("/delete/:id", professor_controller.professor_delete);
+router.delete("/delete/:id", professor_controller.professor_delete);
 
 // POST request: update professor.
-// router.post("/update/:id", professor_controller.professor_update);
+router.post("/update/:id", professor_controller.professor_update);
 
 module.exports = router;
