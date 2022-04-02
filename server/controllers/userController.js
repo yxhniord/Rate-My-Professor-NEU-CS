@@ -138,7 +138,13 @@ exports.user_update = [
     }
     User.findByIdAndUpdate(
       req.params.id,
-      user,
+      {
+        $set: {
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          campus: req.body.campus,
+        },
+      },
       { new: true },
       function (err, theuser) {
         if (err) {

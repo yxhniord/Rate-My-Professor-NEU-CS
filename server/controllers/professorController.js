@@ -145,7 +145,12 @@ exports.professor_update = [
     }
     Professor.findByIdAndUpdate(
       req.params.id,
-      professor,
+      {
+        $set: {
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+        },
+      },
       { new: true },
       function (err, theprofessor) {
         if (err) {
