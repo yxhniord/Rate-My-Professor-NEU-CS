@@ -5,7 +5,7 @@ import {Button, Card, Form} from "react-bootstrap";
 import "../styles/Login.css";
 import {Link} from "react-router-dom";
 
-function Login(props) {
+function Signup(props) {
     return (
         <div>
             <Navigation/>
@@ -13,7 +13,7 @@ function Login(props) {
             <main>
                 <Card className="login-area">
                     <Card.Header className="login-title" as="h3">
-                        Login
+                        Signup
                     </Card.Header>
                     <Card.Body>
                         <Form className="login-input">
@@ -38,9 +38,9 @@ function Login(props) {
                             </Button>
                         </Form>
                         <Card.Text>
-                            Don't have an account? {""}
-                            <Link to="/signup">
-                                Signup
+                            Have an account? {" "}
+                            <Link to="/login">
+                                Login
                             </Link>
                         </Card.Text>
                     </Card.Body>
@@ -52,4 +52,4 @@ function Login(props) {
     );
 }
 
-export default Login;
+export default Signup;
