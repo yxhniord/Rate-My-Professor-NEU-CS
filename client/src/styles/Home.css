@@ -1,0 +1,40 @@
+#search {
+    background-image: url("../images/background.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.search-area {
+    display: flex;
+    padding: 25% 15%;
+}
+
+.search-box {
+    border-color: black;
+}
+
+#headline {
+    max-height: 40%;
+    background-color: black;
+}
+
+.headline-img {
+    padding: 1rem 20%;
+}
+
+#about {
+    max-height: 40%;
+    padding: 5rem 3rem;
+    display: flex;
+    align-items: center;
+}
+
+.neu-video {
+    width: 50%;
+}
+
+.neu-description {
+    width: 50%;
+    padding: 1rem 2rem;
+}
