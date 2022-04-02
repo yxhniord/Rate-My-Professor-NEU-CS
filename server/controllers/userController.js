@@ -66,9 +66,6 @@ exports.user_create = [
 exports.user_delete = function (req, res, next) {
   async.parallel(
     {
-      user: function (callback) {
-        User.findById(req.params.id).exec(callback);
-      },
       user_comments: function (callback) {
         Comment.find({ user: req.params.id }).exec(callback);
       },
@@ -81,7 +78,7 @@ exports.user_delete = function (req, res, next) {
       // Success
       if (results.user_comments.length > 0) {
         // User has comments. Delete the comments first.
-        user_comments.forEach((commentId) => {
+        results.user_comments.forEach((commentId) => {
           Comment.findByIdAndRemove(commentId, function deleteComment(err) {
             if (err) {
               return res.status(500).json({ message: err });
@@ -123,14 +120,6 @@ exports.user_update = [
   (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
-
-    // Create a user object with escaped and trimmed data.
-    var user = new User({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      campus: req.body.campus,
-      _id: req.params.id,
-    });
 
     if (!errors.isEmpty()) {
       // There are errors. Response with errors.

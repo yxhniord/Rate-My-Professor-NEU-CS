@@ -77,9 +77,6 @@ exports.professor_create = [
 exports.professor_delete = function (req, res, next) {
   async.parallel(
     {
-      professor: function (callback) {
-        Professor.findById(req.params.id).exec(callback);
-      },
       professor_comments: function (callback) {
         Comment.find({ professor: req.params.id }).exec(callback);
       },
@@ -91,7 +88,7 @@ exports.professor_delete = function (req, res, next) {
       // Success
       if (results.professor_comments.length > 0) {
         // Professor has comments. Delete the comments first.
-        professor_comments.forEach((commentId) => {
+        results.professor_comments.forEach((commentId) => {
           Comment.findByIdAndRemove(commentId, function deleteComment(err) {
             if (err) {
               return res.status(500).json({ message: err });
@@ -131,13 +128,6 @@ exports.professor_update = [
   (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
-
-    // Create a professor object with escaped and trimmed data.
-    var professor = new Professor({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      _id: req.params.id,
-    });
 
     if (!errors.isEmpty()) {
       // There are errors. Response with errors.
