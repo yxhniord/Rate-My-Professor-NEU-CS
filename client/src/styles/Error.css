@@ -1,0 +1,12 @@
+html {
+    background-image: url("https://i.pinimg.com/originals/21/24/b4/2124b4beaaff049dff9369cb5697eb46.png");
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
+}
+
+main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
