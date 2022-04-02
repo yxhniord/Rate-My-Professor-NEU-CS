@@ -7,8 +7,8 @@ import "../styles/Error.css";
 
 function Error() {
     return (
-        <main>
-            <Alert show variant="danger">
+        <main className="error-page">
+            <Alert className="error-message" show variant="danger">
                 <Alert.Heading>Oops!</Alert.Heading>
                 <p>
                     An error occurred while loading the page.
