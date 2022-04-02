@@ -1,8 +1,12 @@
 import React from 'react';
+import "../styles/Footer.css";
 
-function Footer(props) {
+function Footer() {
     return (
-        <div>Footer</div>
+        <footer>
+            {/*TODO: add social media if needed*/}
+            Copyright &copy; {new Date().getFullYear()}
+        </footer>
     );
 }
 
