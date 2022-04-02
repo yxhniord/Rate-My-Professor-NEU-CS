@@ -20,7 +20,7 @@ function SearchResults(props) {
                         <Col key={idx}>
                             <Card className="search-result">
                                 <Card.Body className="search-result-rating">
-                                    <Card.Text as="h2">{idx}</Card.Text>
+                                    <Card.Text as="h2">{idx} / 5</Card.Text>
                                 </Card.Body>
                                 <Card.Body className={"search-result-content"}>
                                     <Card.Title>{`Neda ${idx}`}</Card.Title>
