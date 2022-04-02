@@ -5,8 +5,17 @@ import Footer from "../components/Footer";
 function Home(props) {
     return (
         <div>
-            <Navigation />
-            <Footer />
+            <Navigation/>
+            <section id="search">
+                Search
+            </section>
+            <section id="headline">
+                Headline
+            </section>
+            <section id="about">
+                About
+            </section>
+            <Footer/>
         </div>
     );
 }
