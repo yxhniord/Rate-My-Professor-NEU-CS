@@ -3,20 +3,24 @@ import {Container, Nav, Navbar} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGraduationCap, faUser} from '@fortawesome/free-solid-svg-icons'
 import "../styles/Navigation.css";
+import {Link} from "react-router-dom";
 
 
 function Navigation() {
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand>
-                    <FontAwesomeIcon className="head-icon" icon={faGraduationCap}/>
-                    <span className="head-text">
+                <Link to={"/"} style={{textDecoration: 'none'}}>
+                    <Navbar.Brand>
+                        <FontAwesomeIcon className="head-icon" icon={faGraduationCap}/>
+                        <span className="head-text">
                         NEU Rate My Professor
                     </span>
-                </Navbar.Brand>
+                    </Navbar.Brand>
+                </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
+                    {/*TODO: conditional rendering: only show them on home page*/}
                     <Nav className="me-auto option-text">
                         <Nav.Link href="#search">Search</Nav.Link>
                         <Nav.Link href="#headline">Top-Professors</Nav.Link>
@@ -24,16 +28,21 @@ function Navigation() {
                     </Nav>
                     <Nav>
                         <Nav.Link className="login">
-                            {/*TODO: Need conditional rendering*/}
+                            {/*TODO: Need conditional name rendering*/}
                             <div className="login-text">
                                 <span className="login-greeting">
                                     Hello, {"User"}
                                 </span>
-                                <span className="login-login">
-                                    Signup / Login
-                                </span>
+                                <Link to={"/login"} style={{textDecorationColor: 'white'}}>
+                                    <span className="login-login">
+                                        Login
+                                    </span>
+                                </Link>
                             </div>
-                            <FontAwesomeIcon className="login-icon" icon={faUser}/>
+                            {/*TODO: change link*/}
+                            <Link to={"/details/1"} style={{textDecoration: 'none', color: "white"}}>
+                                <FontAwesomeIcon className="login-icon" icon={faUser}/>
+                            </Link>
                         </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
