@@ -5,14 +5,13 @@ var async = require("async");
 
 const { body, validationResult } = require("express-validator");
 
-// GET request: get professor list.
+// GET request: get professor list by name.
 exports.professor_list = function (req, res, next) {
   var name = req.params.name;
   Professor.find({
     $or: [{ first_name: new RegExp(name) }, { last_name: new RegExp(name) }],
   })
-    .sort([["first_name", "ascending"]])
-    .sort([["last_name", "ascending"]])
+    .sort({ first_name: 1, last_name: 1 })
     .exec(function (err, professor_list) {
       if (err) {
         return res.status(500).json({ message: err });

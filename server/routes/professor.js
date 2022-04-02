@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
   res.send("professor");
 });
 
-// GET request: get professor list.
+// GET request: get professor list by name.
 router.get("/name/:name", professor_controller.professor_list);
 
 // GET request: get one professor.
