@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card} from "react-bootstrap";
+import moment from "moment";
 import "../styles/Comment.css";
 
 function Comment(props) {
@@ -15,7 +16,10 @@ function Comment(props) {
         <Card className="mb-3 comment-item">
             <Card.Header>{comment.professorName}</Card.Header>
             <Card.Body>
-                <Card.Title>{comment.course} {comment.date}</Card.Title>
+                <Card.Title>
+                    {comment.course} &nbsp;&nbsp;
+                    {moment(comment.date).format('MMM Do YYYY')}
+                </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Campus: {comment.campus} |  Grade: {comment.rate}</Card.Subtitle>
                 <Card.Text>{comment.content}</Card.Text>
             </Card.Body>
