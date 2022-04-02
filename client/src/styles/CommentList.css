@@ -1,0 +1,6 @@
+.comment-list {
+    padding: 2rem 20% 5rem 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
