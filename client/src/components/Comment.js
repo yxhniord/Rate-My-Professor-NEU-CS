@@ -12,11 +12,11 @@ function Comment(props) {
         professorName: "Neda"
     };
     return (
-        <Card className="comment-item">
+        <Card className="mb-3 comment-item">
             <Card.Header>{comment.professorName}</Card.Header>
             <Card.Body>
-                <Card.Title>{comment.course}  {comment.date}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">{comment.campus}  {comment.rate}</Card.Subtitle>
+                <Card.Title>{comment.course} {comment.date}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">Campus: {comment.campus} |  Grade: {comment.rate}</Card.Subtitle>
                 <Card.Text>{comment.content}</Card.Text>
             </Card.Body>
         </Card>
