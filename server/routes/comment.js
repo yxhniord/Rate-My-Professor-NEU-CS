@@ -23,6 +23,6 @@ router.post("/create", comment_controller.comment_create);
 router.delete("/delete/:id", comment_controller.comment_delete);
 
 // POST request: update comment.
-// router.post("/update/:id", comment_controller.comment_update);
+router.post("/update/:id", comment_controller.comment_update);
 
 module.exports = router;

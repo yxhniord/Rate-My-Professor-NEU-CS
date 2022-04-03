@@ -197,3 +197,45 @@ exports.comment_delete = async function (req, res, next) {
     );
   });
 };
+
+// POST request: update comment.
+exports.comment_update = [
+  // Validate and sanitize fields.
+  body("course", "Course required").trim().isLength({ min: 1 }).escape(),
+  body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
+  body("rate", "Invalid rate").isNumeric().escape(),
+  body("date", "Invalid date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("professor", "Professor required").notEmpty(),
+  body("user", "User required").notEmpty(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Response with errors.
+      return res.status(500).json({ message: errors.array() });
+    }
+
+    Comment.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          ...req.body,
+        },
+      },
+      { new: true },
+      function (err, thecomment) {
+        if (!thecomment || err) {
+          return res.status(500).json({ message: err });
+        } else {
+          res.status(200).json(thecomment);
+        }
+      }
+    );
+  },
+];
