@@ -18,9 +18,9 @@ ReactDOM.render(
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/profile" element={<Profile/>}/>
-                <Route path="/search/:query" element={<SearchResults/>}/>
+                <Route path="/search/:name" element={<SearchResults/>}/>
                 <Route path="/details/:profId" element={<RatingDetails/>}/>
-                <Route path="*" element={<Error/>}/>
+                <Route path="/error" element={<Error/>}/>
             </Routes>
         </BrowserRouter>
     </React.StrictMode>,

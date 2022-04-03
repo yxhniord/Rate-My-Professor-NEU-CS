@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigate} from "react-router-dom";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import {Button, Carousel, Figure, Form, FormControl, Placeholder} from "react-bootstrap";
@@ -7,14 +8,24 @@ import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 
 function Home() {
+    // #search: navigate to SearchResults page based on names entered in search form
+    const [name, setName] = React.useState("");
+    let navigate = useNavigate();
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        navigate(`/search/${name}`, {replace: true});
+        setName("");
+    };
+
     return (
         <div>
             <Navigation/>
 
             <main>
                 <section id="search">
-                    <Form className="search-area">
-                        <FormControl className="search-box" aria-label="Type the name of your professor"/>
+                    <Form className="search-area" onSubmit={handleSubmit}>
+                        <FormControl className="search-box" aria-label="Type the name of your professor" value={name}
+                                     onChange={(e) => setName(e.target.value)}/>
                         <Button variant="outline-dark" type="submit">
                             <FontAwesomeIcon className="search-icon" icon={faMagnifyingGlass}/>
                         </Button>
