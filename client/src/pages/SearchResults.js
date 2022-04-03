@@ -39,23 +39,25 @@ function SearchResults() {
                     <Row lg={1} className="g-4 search-results">
                         <h1>Search Results ...</h1>
 
-                        professors.length === 0 ?
-                        <h2>No results found</h2> :
-                        {professors.map((_, idx) => (
-                            <Col key={idx}>
-                                <Card className="search-result">
-                                    <Card.Body className="search-result-rating">
-                                        <Card.Text as="h2">{idx} / 5</Card.Text>
-                                    </Card.Body>
-                                    <Card.Body className={"search-result-content"}>
-                                        <Card.Title>{`Neda ${idx}`}</Card.Title>
-                                        <Card.Text>
-                                            {"Descriptions: The household registration is also integral to the state’s control capacity. It splits the population into subcategories, divides the working population, and prevents both urban-rural and broad working-class solidarity."}
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        ))}
+                        {professors.length === 0 ?
+                            <h3>No results found</h3> :
+                            <>
+                                {professors.map((professor) => (
+                                    <Col key={professor._id}>
+                                        <Card className="search-result">
+                                            <Card.Body className="search-result-rating">
+                                                <Card.Text as="h2">{professor.first_name} / 5</Card.Text>
+                                            </Card.Body>
+                                            <Card.Body className={"search-result-content"}>
+                                                <Card.Title>{professor.comment}</Card.Title>
+                                                <Card.Text>
+                                                    {"Descriptions: The household registration is also integral to the state’s control capacity. It splits the population into subcategories, divides the working population, and prevents both urban-rural and broad working-class solidarity."}
+                                                </Card.Text>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                ))}
+                            </>}
                     </Row>
                 </main>
             }
