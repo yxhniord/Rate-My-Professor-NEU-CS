@@ -7,21 +7,22 @@ import "../styles/SearchResults.css";
 
 function SearchResults() {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
-    
+
     // GET/professor/name/:name
     const {name} = useParams();
     const navigate = useNavigate();
     const [professors, setProfessors] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
 
-    const getProfessors = async () => {
-        const response = await fetch(`${baseURL}/professor/name/${name}`);
-        const data = await response.json();
+    fetch(`${baseURL}/professor/name/${name}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }).then((response) => response.json()).then((data) => {
         setProfessors(data);
         setLoading(false);
-    };
-
-    getProfessors().catch(error => {
+    }).catch((error) => {
         console.log(error);
         navigate("/error");
     });

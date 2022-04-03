@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
@@ -9,7 +9,7 @@ import "../styles/Home.css";
 
 function Home() {
     // #search: navigate to SearchResults page based on names entered in search form
-    const [name, setName] = React.useState("");
+    const [name, setName] = useState("");
     let navigate = useNavigate();
     const handleSubmit = (event) => {
         event.preventDefault();
