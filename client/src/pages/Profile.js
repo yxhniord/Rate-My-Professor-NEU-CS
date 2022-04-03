@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import {ListGroup, ListGroupItem, Tab, Tabs} from "react-bootstrap";
@@ -6,14 +6,21 @@ import CommentList from "../components/CommentList";
 import "../styles/Profile.css"
 
 function Profile(props) {
-    const user = {
-        firstName: "Zhiwei",
-        lastName: "Bao",
-        campus: "Vancouver"
-    }
+    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const [user, setUser] = useState({});
+    const id = '62460604d66bdbab801b2c5b';
+    useEffect(() => {
+        async function fetchUser() {
+            const data = await fetch(`${baseUrl}/user/${id}`);
+            const jsonData = data.json();
+            setUser(jsonData);
+        }
+
+        fetchUser();
+    }, [user]);
     return (
         <div>
-            <Navigation />
+            <Navigation/>
 
             <main>
                 <div className="profile-area">
@@ -26,13 +33,13 @@ function Profile(props) {
                             </ListGroup>
                         </Tab>
                         <Tab eventKey="user-comments" title="My Ratings">
-                            <CommentList />
+                            <CommentList/>
                         </Tab>
                     </Tabs>
                 </div>
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     );
 }
