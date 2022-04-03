@@ -9,7 +9,7 @@ function CommentList({comments}) {
     return (
         <div className="comment-list">
             {Array.from({length: 4}).map((_, idx) =>
-                <Comment key={{idx}} idx={idx}/>
+                <Comment key={idx}/>
             )}
         </div>
     )
