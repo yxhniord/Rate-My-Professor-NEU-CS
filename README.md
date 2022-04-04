@@ -61,8 +61,14 @@ Use this space to show useful examples of how a project can be used. Additional 
 
 - [x] Iteration 1
 
-  1. Developed all the server-end API
-  2.
+  1. Developed all the server-end API (CRUD)
+  2. Created React components and placeholders to represent the functionalities
+  3. Connected frontend and backend and realized the following functions:
+     1. Jump to login/signup pages
+     2. Search for professors by name or part of a name
+     3. Display professor's information
+     4. Display user's information
+
 
 - [ ] Iteration 2
 - [ ] Iteration 3
