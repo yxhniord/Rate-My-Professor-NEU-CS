@@ -84,7 +84,7 @@ Server development
 
 Client development
 
-- search
+- client home, login, search results, and professor rating details pages.
 
 ### Zhiwei Bao
 
