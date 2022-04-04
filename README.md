@@ -59,7 +59,7 @@ Use this space to show useful examples of how a project can be used. Additional 
 
 ## Iteration
 
-- [√] Iteration 1
+- [x] Iteration 1
 
   1. Developed all the server-end API
   2.
@@ -73,6 +73,24 @@ Use this space to show useful examples of how a project can be used. Additional 
 ## Contribution
 
 Contributions of all team members.
+
+### Xuehan Yi
+
+Server development
+
+- server end API
+
+### Yuheng Miao
+
+Client development
+
+- search
+
+### Zhiwei Bao
+
+Client development
+
+- search
 
 <!-- LICENSE -->
 
