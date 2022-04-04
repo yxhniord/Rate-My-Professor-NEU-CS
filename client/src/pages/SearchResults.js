@@ -1,5 +1,5 @@
-import React from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate, useParams} from "react-router-dom";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
@@ -11,21 +11,30 @@ function SearchResults() {
     // GET/professor/name/:name
     const {name} = useParams();
     const navigate = useNavigate();
-    const [professors, setProfessors] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
+    const [professors, setProfessors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    fetch(`${baseURL}/professor/name/${name}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+    useEffect(() => {
+        async function fetchProfessors() {
+            const response = await fetch(`${baseURL}/professor/name/${name}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await response.json();
+            setProfessors(data);
+            setLoading(false);
         }
-    }).then((response) => response.json()).then((data) => {
-        setProfessors(data);
-        setLoading(false);
-    }).catch((error) => {
-        console.log(error);
-        navigate("/error");
-    });
+
+        fetchProfessors().catch((error) => {
+            console.log(error);
+            navigate("/error");
+        });
+
+    }, []);
+
+    //TODO: fetch comments from comment id
 
     return (
         <div>
@@ -45,15 +54,23 @@ function SearchResults() {
                                 {professors.map((professor) => (
                                     <Col key={professor._id}>
                                         <Card className="search-result">
+
                                             <Card.Body className="search-result-rating">
-                                                <Card.Text as="h2">{professor.first_name} / 5</Card.Text>
+                                                <Link to={`/details/${professor._id}`}
+                                                      style={{color: 'inherit', textDecoration: 'inherit'}}>
+
+                                                    <Card.Title
+                                                        as="h2">{professor.first_name}{" "}{professor.last_name}
+                                                    </Card.Title>
+                                                </Link>
                                             </Card.Body>
                                             <Card.Body className={"search-result-content"}>
-                                                <Card.Title>{professor.comment}</Card.Title>
+                                                <Card.Title>Top comment</Card.Title>
                                                 <Card.Text>
-                                                    {"Descriptions: The household registration is also integral to the state’s control capacity. It splits the population into subcategories, divides the working population, and prevents both urban-rural and broad working-class solidarity."}
+                                                    {professor.comment.length > 0 ? professor.comment : "No comment"}
                                                 </Card.Text>
                                             </Card.Body>
+
                                         </Card>
                                     </Col>
                                 ))}

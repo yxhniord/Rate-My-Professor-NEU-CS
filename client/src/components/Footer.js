@@ -5,7 +5,7 @@ function Footer() {
     return (
         <footer>
             {/*TODO: add social media if needed*/}
-            Copyright &copy; {new Date().getFullYear()}
+            Copyright &copy; {new Date().getFullYear()} NEU Rate My Professor
         </footer>
     );
 }
