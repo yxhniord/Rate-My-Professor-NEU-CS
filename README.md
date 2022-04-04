@@ -90,7 +90,7 @@ Client development
 
 Client development
 
-- search
+- Client profile detail page. Comment and CommentList components.
 
 <!-- LICENSE -->
 
