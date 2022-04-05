@@ -65,7 +65,7 @@ Use this space to show useful examples of how a project can be used. Additional 
   2. Created React components and placeholders to represent the functionalities
   3. Connected frontend and backend and realized the following functions:
      1. Jump to login/signup pages
-     2. Search for professors by name or part of a name
+     2. Search for professors by name or part of a name (eg. "AA", "TTT")
      3. Display professor's information
      4. Display user's information
 
