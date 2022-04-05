@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import "../styles/RatingDetails.css";
-import {Card, Col, Row, Spinner} from "react-bootstrap";
+import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
@@ -11,9 +11,12 @@ function RatingDetails(props) {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
-    const [professor, setProfessor] = useState({});
     const [loading, setLoading] = useState(true);
+    const [professor, setProfessor] = useState({});
+    const [comments, setComments] = useState([]);
+    const [rating, setRating] = useState(0);
 
+    // Get professor details and comments
     useEffect(() => {
         async function fetchProfessor() {
             const response = await fetch(`${baseURL}/professor/id/${profId}`, {
@@ -24,6 +27,17 @@ function RatingDetails(props) {
             });
             const data = await response.json();
             setProfessor(data);
+        }
+
+        async function fetchComments() {
+            const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await response.json();
+            setComments(data);
             setLoading(false);
         }
 
@@ -31,9 +45,19 @@ function RatingDetails(props) {
             console.log(error);
             navigate("/error");
         });
-    }, []);
 
-    //TODO: fetch comments from comment id
+        fetchComments().catch((error) => {
+            console.log(error);
+            navigate("/error");
+        });
+
+        let sum = 0;
+        for (let i = 0; i < comments.length; i++) {
+            sum += Number(comments[i].rate);
+        }
+        setRating(Math.round(sum / comments.length));
+
+    }, []);
 
     return (
         <div>
@@ -64,23 +88,28 @@ function RatingDetails(props) {
                                 voluptate voluptates.
                             </p>
                         </div>
+                        <div>
                         <h1 className="prof-rating">
-                            5 / 5
+                            {rating} / 5
                         </h1>
+                            <Button className="add-rating" variant="dark" onClick={() => navigate(`/newComment/${profId}`)}>
+                                Add Comment
+                            </Button>
+                        </div>
                     </section>
 
                     <section className="comment-detail">
                         <Row lg={1} className="g-4 comment-items">
-                            {Array.from({length: 4}).map((_, idx) => (
-                                <Col key={idx}>
+                            {comments.map((comment) => (
+                                <Col key={comment._id}>
                                     <Card className="comment-item">
                                         <Card.Body className="comment-item-rating">
-                                            <Card.Text as="h3">{idx} / 5</Card.Text>
+                                            <Card.Text as="h3">{comment.rate} / 5</Card.Text>
                                         </Card.Body>
                                         <Card.Body className={"comment-item-content"}>
-                                            <Card.Title>{`CS 000${idx}`}</Card.Title>
+                                            <Card.Title as={"h4"}>{comment.course}</Card.Title>
                                             <Card.Text>
-                                                {"Comments: The household registration is also integral to the state’s control capacity. It splits the population into subcategories, divides the working population, and prevents both urban-rural and broad working-class solidarity."}
+                                                From {comment.campus} campus: {comment.content}
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>

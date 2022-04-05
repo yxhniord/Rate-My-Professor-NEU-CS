@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import SearchResults from "./pages/SearchResults";
 import RatingDetails from "./pages/RatingDetails";
 import Signup from "./pages/Signup";
+import NewComment from "./pages/NewComment";
 import Error from "./pages/Error";
 
 ReactDOM.render(
@@ -20,6 +21,7 @@ ReactDOM.render(
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/search/:name" element={<SearchResults/>}/>
                 <Route path="/details/:profId" element={<RatingDetails/>}/>
+                <Route path={"/newComment/:profId"} element={<NewComment/>}/>
                 <Route path="/error" element={<Error/>}/>
             </Routes>
         </BrowserRouter>

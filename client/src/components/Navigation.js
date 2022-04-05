@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGraduationCap, faUser} from '@fortawesome/free-solid-svg-icons'
 import "../styles/Navigation.css";
 import {Link} from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
 
 
 function Navigation() {
@@ -20,11 +21,10 @@ function Navigation() {
                 </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    {/*TODO: conditional rendering: only show them on home page*/}
                     <Nav className="me-auto option-text">
-                        <Nav.Link href="#search">Search</Nav.Link>
-                        <Nav.Link href="#headline">Top-Professors</Nav.Link>
-                        <Nav.Link href="#about">About</Nav.Link>
+                        <Nav.Link as={HashLink} to={"/#search"}>Search</Nav.Link>
+                        <Nav.Link as={HashLink} to={"/#headline"}>Top-Professors</Nav.Link>
+                        <Nav.Link as={HashLink} to={"/#about"}>About</Nav.Link>
                     </Nav>
                     <Nav>
                         <Nav.Link className="login">
