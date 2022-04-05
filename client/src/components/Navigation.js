@@ -30,9 +30,11 @@ function Navigation() {
                         <Nav.Link className="login">
                             {/*TODO: Need conditional name rendering*/}
                             <div className="login-text">
-                                <span className="login-greeting">
-                                    Hello, {"User"}
-                                </span>
+                                <Link to={"/profile"} style={{textDecoration: 'none', color: "white"}}>
+                                    <span className="login-greeting">
+                                        Hello, {"User"}
+                                    </span>
+                                </Link>
                                 <Link to={"/login"} style={{textDecorationColor: 'white'}}>
                                     <span className="login-login">
                                         Login
