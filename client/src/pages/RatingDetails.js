@@ -38,6 +38,13 @@ function RatingDetails(props) {
             });
             const data = await response.json();
             setComments(data);
+
+            let sum = 0;
+            for (let comment of data) {
+                sum += comment.rate;
+            }
+            setRating(Math.round(sum / comments.length));
+
             setLoading(false);
         }
 
@@ -51,11 +58,6 @@ function RatingDetails(props) {
             navigate("/error");
         });
 
-        let sum = 0;
-        for (let i = 0; i < comments.length; i++) {
-            sum += Number(comments[i].rate);
-        }
-        setRating(Math.round(sum / comments.length));
 
     }, []);
 
@@ -88,11 +90,12 @@ function RatingDetails(props) {
                                 voluptate voluptates.
                             </p>
                         </div>
-                        <div>
-                        <h1 className="prof-rating">
-                            {rating} / 5
-                        </h1>
-                            <Button className="add-rating" variant="dark" onClick={() => navigate(`/newComment/${profId}`)}>
+                        <div className="prof-rating">
+                            <h1>
+                                {isNaN(rating) ? 0 : rating} / 5
+                            </h1>
+                            <Button className="add-rating" variant="dark"
+                                    onClick={() => navigate(`/newComment/${profId}`)}>
                                 Add Comment
                             </Button>
                         </div>

@@ -34,7 +34,11 @@
 .prof-rating {
     width: 30%;
     text-align: center;
+}
+
+.prof-rating > h1 {
     color: crimson;
+    margin-bottom: 2rem;
 }
 
 .comment-items {
