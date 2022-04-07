@@ -7,13 +7,12 @@ import "../styles/SearchResults.css";
 
 function SearchResults() {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const navigate = useNavigate();
+    const {name} = useParams();
+    const [loading, setLoading] = useState(true);
+    const [professors, setProfessors] = useState([]);
 
     // GET/professor/name/:name
-    const {name} = useParams();
-    const navigate = useNavigate();
-    const [professors, setProfessors] = useState([]);
-    const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         async function fetchProfessors() {
             const response = await fetch(`${baseURL}/professor/name/${name}`, {
@@ -34,8 +33,6 @@ function SearchResults() {
 
     }, []);
 
-    //TODO: fetch comments from comment id
-
     return (
         <div>
             <Navigation/>
@@ -46,7 +43,7 @@ function SearchResults() {
                 <main>
                     {/*TODO: add pagination if have time*/}
                     <Row lg={1} className="g-4 search-results">
-                        <h1>Search Results ...</h1>
+                        <h1>Are you looking for ...</h1>
 
                         {professors.length === 0 ?
                             <h3>No results found</h3> :
@@ -67,7 +64,7 @@ function SearchResults() {
                                             <Card.Body className={"search-result-content"}>
                                                 <Card.Title>Top comment</Card.Title>
                                                 <Card.Text>
-                                                    {professor.comment.length > 0 ? professor.comment : "No comment"}
+                                                    {professor.comment.length} {professor.comment.length > 1? " students" : " student"} commented on this professor.
                                                 </Card.Text>
                                             </Card.Body>
 

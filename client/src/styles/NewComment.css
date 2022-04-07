@@ -1,0 +1,17 @@
+.new-comment-area {
+    margin: 5rem 30%
+}
+
+.new-comment-title {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.new-comment-input {
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+}
