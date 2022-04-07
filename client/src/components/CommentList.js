@@ -1,17 +1,35 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Comment from "./Comment";
 import "../styles/CommentList.css";
+import {useNavigate} from "react-router-dom";
 
-function CommentList({comments}) {
-    // if (comments.length === 0) {
-    //     return <h2>No comments!</h2>
-    // }
+function CommentList({userId}) {
+    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const navigate = useNavigate();
+    const [comments, setComments] = React.useState([]);
+
+    useEffect(() => {
+        async function fetchComments() {
+            const response = await fetch(`${baseUrl}/comment/user/${userId}`);
+            const data = await response.json();
+            setComments(data);
+        }
+
+        fetchComments().catch((err) => {
+            console.log(err);
+            navigate("/error");
+        });
+    }, [comments.length]);
+
     return (
-        <div className="comment-list">
-            {Array.from({length: 4}).map((_, idx) =>
-                <Comment key={idx}/>
-            )}
-        </div>
+        <>
+            {comments.length === 0 ?
+                <h2>No Ratings!</h2> :
+                <div className="comment-list">
+                    {comments.map((comment) => <Comment key={comment._id} comment={comment}/>)}
+                </div>
+            }
+        </>
     )
 }
 

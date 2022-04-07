@@ -21,8 +21,8 @@ function Profile(props) {
             setLoading(false);
         }
 
-        fetchUser().catch((e) => {
-            console.log(e);
+        fetchUser().catch((err) => {
+            console.log(err);
             navigate("/error");
         });
     }, []);
@@ -47,7 +47,7 @@ function Profile(props) {
                             }
                         </Tab>
                         <Tab eventKey="user-comments" title="My Ratings">
-                            <CommentList/>
+                            <CommentList userId={id}/>
                         </Tab>
                     </Tabs>
                 </div>
