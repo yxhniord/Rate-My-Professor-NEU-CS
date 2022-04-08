@@ -16,6 +16,16 @@ exports.user_detail = function (req, res, next) {
   });
 };
 
+exports.user_detail_by_auth0id = function (req, res, next) {
+  User.find({ auth0_id: req.params.id }).exec(function (err, user) {
+    if (err) {
+      // return next(err);
+      return res.status(500).json({ message: err });
+    }
+    res.status(200).json(user);
+  });
+};
+
 // POST request: create a user.
 exports.user_create = [
   // Validate and sanitize fields.
