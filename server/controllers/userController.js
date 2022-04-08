@@ -62,35 +62,20 @@ exports.user_create = [
 
 // DELETE request: delete user.
 exports.user_delete = function (req, res, next) {
-  async.parallel(
+  User.findByIdAndUpdate(
+    req.params.id,
     {
-      user_comments: function (callback) {
-        Comment.find({ user: req.params.id }).exec(callback);
+      $set: {
+        nickname: "Deleted",
       },
     },
-    function (err, results) {
+    { new: true },
+    function (err, theuser) {
       if (err) {
-        // return next(err);
-        return res.status(500).json({ message: err });
+        res.status(500).json({ message: err });
+      } else {
+        res.status(200).json(theuser);
       }
-      // Success
-      if (results.user_comments.length > 0) {
-        // User has comments. Delete the comments first.
-        results.user_comments.forEach((commentId) => {
-          Comment.findByIdAndRemove(commentId, function deleteComment(err) {
-            if (err) {
-              return res.status(500).json({ message: err });
-            }
-          });
-        });
-      }
-      // Delete user.
-      User.findByIdAndRemove(req.params.id, function deleteUser(err) {
-        if (err) {
-          return res.status(500).json({ message: err });
-        }
-        res.status(200).json({ message: "User successfully deleted" });
-      });
     }
   );
 };
