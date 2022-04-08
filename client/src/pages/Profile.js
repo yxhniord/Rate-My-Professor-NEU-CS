@@ -11,7 +11,7 @@ function Profile(props) {
     const navigate = useNavigate();
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
-    const id = '62460604d66bdbab801b2c5b';
+    const id = '6250a8293e4be92ae062e5c0';
 
     useEffect(() => {
         async function fetchUser() {

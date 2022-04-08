@@ -10,20 +10,23 @@ import RatingDetails from "./pages/RatingDetails";
 import Signup from "./pages/Signup";
 import NewComment from "./pages/NewComment";
 import Error from "./pages/Error";
+import Auth0ProviderWithHistory from "./components/Auth0ProviderWithHistory";
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/signup" element={<Signup/>}/>
-                <Route path="/profile" element={<Profile/>}/>
-                <Route path="/search/:name" element={<SearchResults/>}/>
-                <Route path="/details/:profId" element={<RatingDetails/>}/>
-                <Route path={"/newComment/:profId"} element={<NewComment/>}/>
-                <Route path="/error" element={<Error/>}/>
-            </Routes>
+            <Auth0ProviderWithHistory>
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/signup" element={<Signup/>}/>
+                    <Route path="/profile" element={<Profile/>}/>
+                    <Route path="/search/:name" element={<SearchResults/>}/>
+                    <Route path="/details/:profId" element={<RatingDetails/>}/>
+                    <Route path={"/newComment/:profId"} element={<NewComment/>}/>
+                    <Route path="/error" element={<Error/>}/>
+                </Routes>
+            </Auth0ProviderWithHistory>
         </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')

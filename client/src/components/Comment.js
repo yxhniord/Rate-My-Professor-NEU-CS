@@ -10,13 +10,16 @@ function Comment({comment}) {
     const [professor, setProfessor] = React.useState(null);
 
     useEffect(() => {
-        fetch(`${baseUrl}/professor/id/${comment.professor}`)
-            .then(response => response.json())
-            .then(data => setProfessor(data))
-            .catch((err) => {
-                console.log(err);
-                navigate("/error");
-            });
+        async function fetchProfessor() {
+            const response = await fetch(`${baseUrl}/professor/id/${comment.professor}`);
+            const professor = await response.json();
+            setProfessor(professor);
+        }
+
+        fetchProfessor().catch((err) => {
+            console.log(err);
+            navigate("/error");
+        });
     }, []);
 
     // const comment = {
