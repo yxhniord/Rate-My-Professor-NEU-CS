@@ -19,20 +19,8 @@ exports.user_detail = function (req, res, next) {
 // POST request: create a user.
 exports.user_create = [
   // Validate and sanitize fields.
-  body("first_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("First name must be specified.")
-    .isAlphanumeric()
-    .withMessage("First name has non-alphanumeric characters."),
-  body("last_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Last name must be specified.")
-    .isAlphanumeric()
-    .withMessage("Last name has non-alphanumeric characters."),
+  body("nickname", "Nickname required").trim().isLength({ min: 1 }).escape(),
+  body("auth0_id", "auth0_id required").trim().isLength({ min: 1 }).escape(),
   body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
 
   // Process request after validation and sanitization.
@@ -42,8 +30,8 @@ exports.user_create = [
 
     // Create a user object with escaped and trimmed data.
     var user = new User({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
+      nickname: req.body.nickname,
+      auth0_id: req.body.auth0_id,
       campus: req.body.campus,
     });
 
@@ -100,20 +88,7 @@ exports.user_delete = function (req, res, next) {
 // POST request: update user.
 exports.user_update = [
   // Validate and sanitize fields.
-  body("first_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("First name must be specified.")
-    .isAlphanumeric()
-    .withMessage("First name has non-alphanumeric characters."),
-  body("last_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Last name must be specified.")
-    .isAlphanumeric()
-    .withMessage("Last name has non-alphanumeric characters."),
+  body("nickname", "Nickname required").trim().isLength({ min: 1 }).escape(),
   body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
 
   // Process request after validation and sanitization.
@@ -129,8 +104,7 @@ exports.user_update = [
       req.params.id,
       {
         $set: {
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
+          nickname: req.body.nickname,
           campus: req.body.campus,
         },
       },
