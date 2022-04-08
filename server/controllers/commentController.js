@@ -5,7 +5,6 @@ var Professor = require("../models/professor");
 var async = require("async");
 
 const { body, validationResult } = require("express-validator");
-const professor = require("../models/professor");
 
 // GET request: get comment list by professor id.
 exports.comment_list_byProfessorId = function (req, res, next) {
@@ -46,7 +45,7 @@ exports.comment_create = [
   // Validate and sanitize fields.
   body("course", "Course required").trim().isLength({ min: 1 }).escape(),
   body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
-  body("rate", "Invalid rate").isNumeric().escape(),
+  body("rate", "Invalid rate").isInt({ min: 0, max: 5 }).escape(),
   body("date", "Invalid date")
     .optional({ checkFalsy: true })
     .isISO8601()
@@ -83,16 +82,22 @@ exports.comment_create = [
 
         await comment.save(function (err, thecomment) {
           if (err) {
-            res.status(500).json({ message: err });
+            return res.status(500).json({ message: err });
           }
         });
 
-        // Add the comment to professor.
+        // Add the comment to professor and update the professor rate.
         if (results.professor.length == 0) {
           return res.status(500).json({ message: "No such professor" });
         }
         var professor = results.professor;
         professor.comment.push(comment._id);
+        const commentSize = professor.comment.length;
+        if (professor.rate == null) {
+          professor.rate = 0;
+        }
+        professor.rate =
+          (professor.rate * (commentSize - 1) + comment.rate) / commentSize;
         Professor.findByIdAndUpdate(
           req.body.professor,
           professor,

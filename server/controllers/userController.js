@@ -1,7 +1,4 @@
 var User = require("../models/user");
-var Comment = require("../models/comment");
-
-var async = require("async");
 
 const { body, validationResult } = require("express-validator");
 
