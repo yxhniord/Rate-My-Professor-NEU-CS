@@ -80,7 +80,7 @@ exports.comment_create = [
         // Create a comment object with escaped and trimmed data.
         const comment = new Comment(req.body);
 
-        await comment.save(function (err, thecomment) {
+        comment.save(function (err, thecomment) {
           if (err) {
             return res.status(500).json({ message: err });
           }
@@ -140,7 +140,6 @@ exports.comment_delete = async function (req, res, next) {
     if (!comment || err) {
       return res.status(500).json({ message: err });
     }
-    console.log(comment);
     async.parallel(
       {
         professor: function (callback) {
@@ -208,16 +207,17 @@ exports.comment_update = [
   // Validate and sanitize fields.
   body("course", "Course required").trim().isLength({ min: 1 }).escape(),
   body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
-  body("rate", "Invalid rate").isNumeric().escape(),
+  body("rate", "Invalid rate").isInt({ min: 0, max: 5 }).escape(),
   body("date", "Invalid date")
     .optional({ checkFalsy: true })
+    .notEmpty()
     .isISO8601()
     .toDate(),
   body("professor", "Professor required").notEmpty(),
   body("user", "User required").notEmpty(),
 
   // Process request after validation and sanitization.
-  (req, res, next) => {
+  async (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
@@ -226,21 +226,56 @@ exports.comment_update = [
       return res.status(500).json({ message: errors.array() });
     }
 
-    Comment.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: {
-          ...req.body,
+    try {
+      await Comment.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            ...req.body,
+          },
         },
-      },
+        { new: true }
+      );
+    } catch (err) {
+      return res.status(500).json({ message: errors.array() });
+    }
+
+    // Change the professor rate.
+    const theprofessor = await Professor.findOne({
+      _id: req.body.professor,
+    }).exec();
+    if (!theprofessor) {
+      return res
+        .status(204)
+        .json({ message: `Professor ID ${req.body.professor} not found` });
+    }
+    var totalRate = 0;
+    const comments = Object.values(theprofessor.comment);
+    const commentSize = comments.length;
+    for (const commentId of comments) {
+      const thecomment = await Comment.findOne({ _id: commentId }).exec();
+      if (!thecomment) {
+        return res
+          .status(204)
+          .json({ message: `Comment ID ${commentId} not found` });
+      }
+      totalRate += thecomment.rate;
+    }
+    theprofessor.rate = totalRate / commentSize;
+
+    Professor.findByIdAndUpdate(
+      req.body.professor,
+      theprofessor,
       { new: true },
-      function (err, thecomment) {
-        if (!thecomment || err) {
-          return res.status(500).json({ message: err });
-        } else {
-          res.status(200).json(thecomment);
+      function (err) {
+        if (err) {
+          res.status(500).json({ message: err });
         }
       }
     );
+
+    res.status(200).json({
+      message: "Comment successfully updated",
+    });
   },
 ];
