@@ -136,70 +136,79 @@ exports.comment_create = [
 
 // DELETE request: delete comment.
 exports.comment_delete = async function (req, res, next) {
-  Comment.findById(req.params.id).exec(function (err, comment) {
-    if (!comment || err) {
-      return res.status(500).json({ message: err });
-    }
-    async.parallel(
-      {
-        professor: function (callback) {
-          Professor.findById(comment.professor).exec(callback);
-        },
-        user: function (callback) {
-          User.findById(comment.user).exec(callback);
-        },
+  const comment = await Comment.findOne({ _id: req.params.id }).exec();
+  if (!comment) {
+    return res
+      .status(204)
+      .json({ message: `Comment ID ${req.params.id} not found` });
+  }
+
+  async.parallel(
+    {
+      professor: function (callback) {
+        Professor.findById(comment.professor).exec(callback);
       },
-      function (err, results) {
+      user: function (callback) {
+        User.findById(comment.user).exec(callback);
+      },
+    },
+    async function (err, results) {
+      if (err) {
+        return res.status(500).json({ message: err });
+      }
+      // Remove comment from professor.
+      var professor = results.professor;
+      professor.comment = professor.comment.filter(
+        (e) => e.toString() !== comment._id.toString()
+      );
+      var totalRate = 0;
+      const commentSize = professor.comment.length;
+      for (const commentId of professor.comment) {
+        const thecomment = await Comment.findOne({ _id: commentId }).exec();
+        if (!thecomment) {
+          return res
+            .status(204)
+            .json({ message: `Comment ID ${commentId} not found` });
+        }
+        totalRate += thecomment.rate;
+      }
+      professor.rate = totalRate / commentSize;
+      Professor.findByIdAndUpdate(
+        comment.professor,
+        professor,
+        { new: true },
+        function (err) {
+          if (err) {
+            res.status(500).json({ message: err });
+          }
+        }
+      );
+
+      // Remove comment from user.
+      var user = results.user;
+      user.comment = user.comment.filter(
+        (e) => e.toString() !== comment._id.toString()
+      );
+      User.findByIdAndUpdate(comment.user, user, { new: true }, function (err) {
+        if (err) {
+          res.status(500).json({ message: err });
+        }
+      });
+
+      // Delete comment.
+      Comment.findByIdAndRemove(req.params.id, function deleteComment(err) {
         if (err) {
           return res.status(500).json({ message: err });
         }
-        // Remove comment from professor.
-        var professor = results.professor;
-        professor.comment = professor.comment.filter(
-          (e) => e.toString() !== comment._id.toString()
-        );
-        Professor.findByIdAndUpdate(
-          comment.professor,
-          professor,
-          { new: true },
-          function (err) {
-            if (err) {
-              res.status(500).json({ message: err });
-            }
-          }
-        );
-
-        // Remove comment from user.
-        var user = results.user;
-        user.comment = user.comment.filter(
-          (e) => e.toString() !== comment._id.toString()
-        );
-        User.findByIdAndUpdate(
-          comment.user,
-          user,
-          { new: true },
-          function (err) {
-            if (err) {
-              res.status(500).json({ message: err });
-            }
-          }
-        );
-
-        // Delete comment.
-        Comment.findByIdAndRemove(req.params.id, function deleteComment(err) {
-          if (err) {
-            return res.status(500).json({ message: err });
-          }
-          res.status(200).json({
-            message: "Comment successfully deleted",
-            comment: comment,
-            professor: professor,
-            user: user,
-          });
+        res.status(200).json({
+          message: "Comment successfully deleted",
+          comment: comment,
+          professor: professor,
+          user: user,
         });
-      }
-    );
-  });
+      });
+    }
+  );
 };
 
 // POST request: update comment.
