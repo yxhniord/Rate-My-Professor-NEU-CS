@@ -4,7 +4,7 @@ import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
-import {fetchCommentsById, fetchProfessorById} from "../function/Api";
+import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
@@ -26,10 +26,11 @@ function RatingDetails() {
             navigate("/error");
         });
 
-        fetchCommentsById(baseURL, profId)
+        fetchCommentsByProfessorId(baseURL, profId)
             .then((data) => {
                 setComments(data);
 
+                // TODO: result is wrong
                 let sum = 0;
                 for (let comment of data) {
                     sum += comment.rate;

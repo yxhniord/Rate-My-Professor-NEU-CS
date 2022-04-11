@@ -59,7 +59,7 @@ function Navigation() {
                                 </Spinner> :
                                 <>
                                     {isAuthenticated ? (
-                                        <Nav.Item>
+                                        <Nav.Item className="login-text" >
                                                     <span className="login-login" onClick={() => {
                                                         logout({returnTo: window.location.origin})
                                                     }}>
@@ -80,7 +80,7 @@ function Navigation() {
                                             </Link>
                                         </Nav.Item>
                                     ) : (
-                                        <Nav.Link style={{textDecorationColor: 'white'}}>
+                                        <Nav.Link style={{textDecorationColor: 'white'}} className="login-text" >
                                             <span className="login-login" onClick={loginWithRedirect}>
                                                 {' '}
                                                 {'Login'}

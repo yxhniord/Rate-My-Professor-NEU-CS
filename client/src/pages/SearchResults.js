@@ -35,11 +35,10 @@ function SearchResults() {
                 <main>
                     {/*TODO: add pagination if have time*/}
                     <Row lg={1} className="g-4 search-results">
-                        <h1>Are you looking for ...</h1>
-
                         {professors.length === 0 ?
                             <h3>No results found</h3> :
                             <>
+                                <h1>Are you looking for ...</h1>
                                 {professors.map((professor) => (
                                     <Col key={professor._id}>
                                         <Card className="search-result">

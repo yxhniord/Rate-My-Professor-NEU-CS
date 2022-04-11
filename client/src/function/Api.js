@@ -29,8 +29,18 @@ export const fetchProfessorsByName = async (baseURL, name) => {
     return await response.json();
 }
 
-export const fetchCommentsById = async (baseURL, profId) => {
+export const fetchCommentsByProfessorId = async (baseURL, profId) => {
     const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+    return await response.json();
+}
+
+export const fetchCommentById = async (baseURL, commentId) => {
+    const response = await fetch(`${baseURL}/comment/id/${commentId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
