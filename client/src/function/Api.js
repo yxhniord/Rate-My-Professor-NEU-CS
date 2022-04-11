@@ -1,5 +1,5 @@
-export const fetchDbUser = async (baseUrl, auth0_id) =>{
-    const response = await fetch(`${baseUrl}/user/auth0_id/${auth0_id}`, {
+export const fetchDbUser = async (baseURL, auth0_id) =>{
+    const response = await fetch(`${baseURL}/user/auth0_id/${auth0_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -9,7 +9,7 @@ export const fetchDbUser = async (baseUrl, auth0_id) =>{
     return await response.json();
 }
 
-export const fetchProfessorById = async (baseUrl, profId) => {
+export const fetchProfessorById = async (baseURL, profId) => {
     const response = await fetch(`${baseURL}/professor/id/${profId}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const fetchProfessorById = async (baseUrl, profId) => {
     return await response.json();
 }
 
-export const fetchProfessorsByName = async (baseUrl, name) => {
+export const fetchProfessorsByName = async (baseURL, name) => {
     const response = await fetch(`${baseURL}/professor/name/${name}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const fetchProfessorsByName = async (baseUrl, name) => {
     return await response.json();
 }
 
-export const fetchCommentsById = async (baseUrl, profId) => {
+export const fetchCommentsById = async (baseURL, profId) => {
     const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
         headers: {
             'Content-Type': 'application/json',

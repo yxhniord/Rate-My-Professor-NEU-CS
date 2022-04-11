@@ -8,7 +8,6 @@ function NewComment() {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
     const {profId, commentId} = useParams();
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
-    const {profId} = useParams();
     const navigate = useNavigate();
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState();
