@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGraduationCap, faUser} from '@fortawesome/free-solid-svg-icons'
@@ -6,32 +6,27 @@ import "../styles/Navigation.css";
 import {Link, useNavigate} from "react-router-dom";
 import {HashLink} from 'react-router-hash-link';
 import {useAuth0} from "@auth0/auth0-react";
+import {fetchDbUser} from "../function/Api.js";
 
 
 function Navigation() {
     const {isAuthenticated, loginWithRedirect, logout, user} = useAuth0();
+    const [loading, setLoading] = useState(true);
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const [dbUser, setDbUser] = React.useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function fetchDbUser() {
-            const response = await fetch(`${baseUrl}/user/auth0_id/${user.sub}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            const dbUser = await response.json();
-            setDbUser(dbUser[0]);
-        }
-
         if (isAuthenticated) {
-            fetchDbUser().catch(err => {
-                console.log(err);
-                navigate("/error");
-            });
+            fetchDbUser(baseUrl, user.sub)
+                .then(dbUsers => {
+                    setDbUser(dbUsers[0]);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                    navigate("/error");
+                });
         }
     }, [isAuthenticated, user]);
 
@@ -57,14 +52,14 @@ function Navigation() {
                     <Nav>
                         <Nav.Item className="login login-text">
                             {/*TODO: Need conditional name rendering*/}
-                            {isAuthenticated ? (
+                            {isAuthenticated && !loading ? (
                                 <>
-                                    <Nav.Link as={Link} to={"/profile"}
+                                    <Nav.Link as={Link} to={{pathname:"/profile", props:{dbUser: dbUser}}}
                                               style={{textDecoration: 'none', color: "white"}}>
-                                    <span className="login-login">
-                                        {'Hello, '}
-                                        {dbUser ? dbUser.nick_name : user.nickname}
-                                    </span>
+                                        <span className="login-login">
+                                            {'Hello, '}
+                                            {dbUser ? dbUser.nickname : user.nickname}
+                                        </span>
                                     </Nav.Link>
                                     <Nav.Item>
                                         <span className="login-login" onClick={() => {

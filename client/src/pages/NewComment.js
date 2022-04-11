@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
 import "../styles/NewComment.css";
 
 function NewComment() {
@@ -65,7 +63,6 @@ function NewComment() {
 
     return (
         <div>
-            <Navigation/>
 
             <main>
                 <Card className="new-comment-area">
@@ -137,7 +134,6 @@ function NewComment() {
                 </Card>
             </main>
 
-            <Footer/>
         </div>
 
     );

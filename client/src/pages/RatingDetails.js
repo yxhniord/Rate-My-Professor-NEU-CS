@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
 import "../styles/RatingDetails.css";
 import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
 
-function RatingDetails(props) {
+function RatingDetails() {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
@@ -63,7 +61,6 @@ function RatingDetails(props) {
 
     return (
         <div>
-            <Navigation/>
 
             {loading ?
                 <Spinner animation="border" role="status">
@@ -122,7 +119,6 @@ function RatingDetails(props) {
                     </section>
                 </main>
             }
-            <Footer/>
         </div>
     );
 }

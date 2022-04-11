@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from "react-router-dom";
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
 
@@ -35,7 +33,6 @@ function SearchResults() {
 
     return (
         <div>
-            <Navigation/>
             {loading ?
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>
@@ -76,7 +73,6 @@ function SearchResults() {
                 </main>
             }
 
-            <Footer/>
         </div>
     );
 }

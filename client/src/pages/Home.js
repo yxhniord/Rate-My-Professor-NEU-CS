@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
 import {Button, Carousel, Figure, Form, FormControl, Placeholder} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
@@ -19,7 +17,6 @@ function Home() {
 
     return (
         <div>
-            <Navigation/>
 
             <main>
                 <section id="search">
@@ -66,7 +63,6 @@ function Home() {
                 </section>
             </main>
 
-            <Footer/>
         </div>
     );
 }

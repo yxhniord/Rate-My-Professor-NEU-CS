@@ -1,6 +1,4 @@
 import React from 'react';
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
 import {Button, Card, Form} from "react-bootstrap";
 import "../styles/Login.css";
 import {Link} from "react-router-dom";
@@ -8,7 +6,6 @@ import {Link} from "react-router-dom";
 function Login(props) {
     return (
         <div>
-            <Navigation/>
 
             <main>
                 <Card className="login-area">
@@ -47,7 +44,6 @@ function Login(props) {
                 </Card>
             </main>
 
-            <Footer/>
         </div>
     );
 }
