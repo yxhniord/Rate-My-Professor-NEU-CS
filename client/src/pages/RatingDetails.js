@@ -4,9 +4,10 @@ import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
+import {fetchCommentsById, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -16,47 +17,31 @@ function RatingDetails() {
 
     // Get professor details and comments
     useEffect(() => {
-        async function fetchProfessor() {
-            const response = await fetch(`${baseURL}/professor/id/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setProfessor(data);
-        }
-
-        async function fetchComments() {
-            const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setComments(data);
-
-            let sum = 0;
-            for (let comment of data) {
-                sum += comment.rate;
-            }
-            setRating(Math.round(sum / comments.length));
-
-            setLoading(false);
-        }
-
-        fetchProfessor().catch((error) => {
+        fetchProfessorById(baseUrl, profId)
+            .then((data) => {
+                setProfessor(data);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });
 
-        fetchComments().catch((error) => {
+        fetchCommentsById(baseUrl, profId)
+            .then((data) => {
+                setComments(data);
+
+                let sum = 0;
+                for (let comment of data) {
+                    sum += comment.rate;
+                }
+                setRating(Math.round(sum / comments.length));
+
+                setLoading(false);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });
-
-
     }, []);
 
     return (

@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
 import "../styles/NewComment.css";
+import {fetchProfessorById} from "../function/Api";
 
 function NewComment() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
     const [professor, setProfessor] = useState({});
@@ -15,18 +16,11 @@ function NewComment() {
 
     // Get professor details and comments
     useEffect(() => {
-        async function fetchProfessor() {
-            const response = await fetch(`${baseURL}/professor/id/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setProfessor(data);
-        }
-
-        fetchProfessor().catch((error) => {
+        fetchProfessorById(baseUrl, profId)
+            .then((data) => {
+                setProfessor(data);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });

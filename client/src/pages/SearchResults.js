@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
+import {fetchProfessorsByName} from "../function/Api";
 
 function SearchResults() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const navigate = useNavigate();
     const {name} = useParams();
     const [loading, setLoading] = useState(true);
@@ -12,19 +13,13 @@ function SearchResults() {
 
     // GET/professor/name/:name
     useEffect(() => {
-        async function fetchProfessors() {
-            const response = await fetch(`${baseURL}/professor/name/${name}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setProfessors(data);
-            setLoading(false);
-        }
 
-        fetchProfessors().catch((error) => {
+        fetchProfessorsByName(baseUrl, name)
+            .then((data) => {
+                setProfessors(data);
+                setLoading(false);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });
