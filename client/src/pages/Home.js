@@ -106,15 +106,12 @@ function Home() {
                 }
 
                 <section id="about">
-                    <Figure className="neu-video">
-                        <Figure.Image
-                            alt="neu video"
-                            src="https://www.addictivetips.com/app/uploads/2018/12/YouTube-Screenshot-Button.jpg"
-                        />
-                        <Figure.Caption>
-                            Nulla vitae elit libero, a pharetra augue mollis interdum.
-                        </Figure.Caption>
-                    </Figure>
+                    <div className="neu-video">
+                        <iframe   src="https://www.youtube.com/embed/HwBcOli0YLM"
+                                 title="YouTube video player" frameBorder="0"
+                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                 allowFullScreen/>
+                    </div>
                     <div className="neu-description">
                         <Placeholder xs={6}/>
                         <Placeholder className="w-75"/> <Placeholder style={{width: '25%'}}/>

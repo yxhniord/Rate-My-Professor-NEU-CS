@@ -33,10 +33,17 @@
     padding: 5rem 3rem;
     display: flex;
     align-items: center;
+    justify-content: space-around;
 }
 
 .neu-video {
     width: 50%;
+    margin: 0 5% 0 5%;
+}
+
+.neu-video iframe {
+    width: 560px;
+    height: 315px;
 }
 
 .neu-description {
