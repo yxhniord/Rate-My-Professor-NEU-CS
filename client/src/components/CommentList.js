@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {fetchCommentsByUserId} from "../function/Api";
 
 function CommentList({userId}) {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const [comments, setComments] = useState([]);
 

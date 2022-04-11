@@ -4,7 +4,7 @@ export const fetchDbUser = async (baseURL, auth0_id) =>{
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            // 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
     });
     return await response.json();

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {Button, Carousel, Figure, Form, FormControl, Placeholder} from "react-bootstrap";
+import {Button, Carousel, Figure, Form, FormControl, Placeholder, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 import {useAuth0} from "@auth0/auth0-react";
 import {fetchCommentsByUserId, fetchDbUser} from "../function/Api";
+import Comment from "../components/Comment";
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -17,29 +18,28 @@ function Home() {
     const navigate = useNavigate();
 
 
-    // useEffect(() => {
-        // if (isAuthenticated && !isLoading) {
-        //     fetchDbUser(baseURL, user.sub)
-        //         .then(dbUsers => {
-        //             setDbUser(dbUsers[0]);
-        //             console.log(dbUsers[0]);
-        //             setLoading(false);
-        //         })
-        //         .catch(err => {
-        //             console.log(err);
-        //             navigate("/error");
-        //         });
+    useEffect(() => {
+        async function fetchCommentsByAuth0Id(baseURL, auth0Id) {
+            await fetchDbUser(baseURL, auth0Id)
+                .then(dbUsers => {
+                    let data = dbUsers[0]
+                    setDbUser(data)
+                    fetchCommentsByUserId(baseURL, data._id)
+                        .then(comments => {
+                            setComments(comments);
+                            setLoading(false);
+                        })
+                })
+        }
 
-            // fetchCommentsByUserId(baseURL, dbUser._id)
-            //     .then(data => {
-            //         setComments(data);
-            //     })
-            //     .catch((err) => {
-            //         console.log(err);
-            //         navigate("/error");
-            //     });
-    //     }
-    // }, [isLoading, isAuthenticated]);
+        if (isAuthenticated) {
+            fetchCommentsByAuth0Id(baseURL, user.sub)
+                .catch((err) => {
+                    console.log(err);
+                    navigate("/error");
+                });
+        }
+    }, [isLoading, isAuthenticated]);
 
 
     const handleSubmit = (event) => {
@@ -62,25 +62,42 @@ function Home() {
                     </Form>
                 </section>
 
-                {isAuthenticated && <section id="headline">
-                    {/*TODO: Map top five professors*/}
-                    {comments.length > 0 && <Carousel className="headline-img">
-                        {comments.map((comment) => {
-                            return (
-                                <Carousel.Item key={comment._id}>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://media.istockphoto.com/photos/old-school-chalkboard-picture-id547016978?b=1&k=20&m=547016978&s=170667a&w=0&h=CFpK3c30n2dD059xLC0PxngaX1wMn2Aa5erw9M0ub3s="
-                                        alt="First slide"
-                                    />
-                                    <Carousel.Caption>
-                                        <h3>First slide label</h3>
-                                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                                    </Carousel.Caption>
-                                </Carousel.Item>)
-                        })}
-                    </Carousel>}
-                </section>}
+                {isLoading ?
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner> :
+                    <>
+                        {isAuthenticated && <section id="headline">
+                            {/*TODO: Map top five professors*/}
+                            {loading ?
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner> :
+                                <>
+                                    {comments.length > 0 && <Carousel className="headline-img">
+                                        {comments.map((comment) => {
+                                            return (
+                                                <Carousel.Item key={comment._id}>
+                                                    <img
+                                                        className="d-block w-100"
+                                                        src="https://media.istockphoto.com/photos/old-school-chalkboard-picture-id547016978?b=1&k=20&m=547016978&s=170667a&w=0&h=CFpK3c30n2dD059xLC0PxngaX1wMn2Aa5erw9M0ub3s="
+                                                        alt="First slide"
+                                                    />
+                                                    <Comment key={comment._id} comment={comment}/>
+
+                                                    {/*<Carousel.Caption>*/}
+                                                    {/*    <h3>First slide label</h3>*/}
+                                                    {/*    <p>Nulla vitae elit libero, a pharetra augue mollis*/}
+                                                    {/*        interdum.</p>*/}
+                                                    {/*</Carousel.Caption>*/}
+                                                </Carousel.Item>)
+                                        })}
+                                    </Carousel>}
+                                </>
+                            }
+                        </section>}
+                    </>
+                }
 
                 <section id="about">
                     <Figure className="neu-video">

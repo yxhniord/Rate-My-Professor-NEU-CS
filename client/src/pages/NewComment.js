@@ -6,7 +6,7 @@ import {fetchCommentById, fetchDbUser, fetchProfessorById} from "../function/Api
 import {useAuth0} from "@auth0/auth0-react";
 
 function NewComment() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId, commentId} = useParams();
     const navigate = useNavigate();
     const {user} = useAuth0();

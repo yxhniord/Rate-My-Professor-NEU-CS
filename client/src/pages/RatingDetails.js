@@ -7,7 +7,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);

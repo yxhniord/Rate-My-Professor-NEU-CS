@@ -5,7 +5,7 @@ import "../styles/SearchResults.css";
 import {fetchProfessorsByName} from "../function/Api";
 
 function SearchResults() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {name} = useParams();
     const [loading, setLoading] = useState(true);

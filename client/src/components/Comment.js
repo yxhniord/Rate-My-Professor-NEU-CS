@@ -4,10 +4,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment";
 import "../styles/Comment.css";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function Comment({comment}) {
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseUrl = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const [professor, setProfessor] = React.useState(null);
 
