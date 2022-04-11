@@ -25,6 +25,7 @@ function App() {
                 <Route path="/search/:name" element={<SearchResults/>}/>
                 <Route path="/details/:profId" element={<RatingDetails/>}/>
                 <Route path="/newComment/:profId" element={<NewComment/>}/>
+                <Route path="/updateComment/:commentId" element={<NewComment/>}/>
                 <Route path="/error" element={<Error/>}/>
             </Routes>
             <Footer/>

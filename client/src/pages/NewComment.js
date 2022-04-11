@@ -5,6 +5,8 @@ import "../styles/NewComment.css";
 import {fetchProfessorById} from "../function/Api";
 
 function NewComment() {
+    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const {profId, commentId} = useParams();
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
