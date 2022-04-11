@@ -7,7 +7,6 @@ import {fetchProfessorById} from "../function/Api";
 function NewComment() {
     const baseURL = process.env.REACT_APP_BACKEND_URL;
     const {profId, commentId} = useParams();
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const navigate = useNavigate();
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState();
@@ -17,7 +16,7 @@ function NewComment() {
 
     // Get professor details and comments
     useEffect(() => {
-        fetchProfessorById(baseUrl, profId)
+        fetchProfessorById(baseURL, profId)
             .then((data) => {
                 setProfessor(data);
             })

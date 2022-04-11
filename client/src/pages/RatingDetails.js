@@ -7,7 +7,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {fetchCommentsById, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BACKEND_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ function RatingDetails() {
 
     // Get professor details and comments
     useEffect(() => {
-        fetchProfessorById(baseUrl, profId)
+        fetchProfessorById(baseURL, profId)
             .then((data) => {
                 setProfessor(data);
             })
@@ -26,7 +26,7 @@ function RatingDetails() {
             navigate("/error");
         });
 
-        fetchCommentsById(baseUrl, profId)
+        fetchCommentsById(baseURL, profId)
             .then((data) => {
                 setComments(data);
 

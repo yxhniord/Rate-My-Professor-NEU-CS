@@ -5,7 +5,7 @@ import "../styles/SearchResults.css";
 import {fetchProfessorsByName} from "../function/Api";
 
 function SearchResults() {
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BACKEND_URL;
     const navigate = useNavigate();
     const {name} = useParams();
     const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ function SearchResults() {
     // GET/professor/name/:name
     useEffect(() => {
 
-        fetchProfessorsByName(baseUrl, name)
+        fetchProfessorsByName(baseURL, name)
             .then((data) => {
                 setProfessors(data);
                 setLoading(false);

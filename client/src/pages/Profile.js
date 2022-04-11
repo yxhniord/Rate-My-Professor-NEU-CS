@@ -9,7 +9,7 @@ import {fetchDbUser} from "../function/Api.js";
 function Profile() {
     const {isAuthenticated, isLoading, user} = useAuth0();
     const [loading, setLoading] = useState(true);
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BACKEND_URL;
     const [dbUser, setDbUser] = React.useState(null);
     const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ function Profile() {
     useEffect(() => {
 
         if (isAuthenticated) {
-            fetchDbUser(baseUrl, user.sub)
+            fetchDbUser(baseURL, user.sub)
                 .then(dbUsers => {
                     setDbUser(dbUsers[0]);
                     setLoading(false);
