@@ -23,6 +23,11 @@
     padding: 1rem 20%;
 }
 
+.headline-caption {
+    top: 20%;
+    bottom: auto;
+}
+
 #about {
     max-height: 40%;
     padding: 5rem 3rem;

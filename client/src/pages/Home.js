@@ -5,8 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 import {useAuth0} from "@auth0/auth0-react";
-import {fetchCommentsByUserId, fetchDbUser} from "../function/Api";
-import Comment from "../components/Comment";
+import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById} from "../function/Api";
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -15,25 +14,33 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [dbUser, setDbUser] = useState(null);
     const [comments, setComments] = useState([]);
+    const [professors, setProfessors] = useState([]);
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        async function fetchCommentsByAuth0Id(baseURL, auth0Id) {
-            await fetchDbUser(baseURL, auth0Id)
+
+        if (isAuthenticated) {
+            // First get user from database if authenticated
+            fetchDbUser(baseURL, user.sub)
                 .then(dbUsers => {
-                    let data = dbUsers[0]
-                    setDbUser(data)
-                    fetchCommentsByUserId(baseURL, data._id)
+                    setDbUser(dbUsers[0]);
+
+                    // Then get comments from database based on user id
+                    fetchCommentsByUserId(baseURL, dbUsers[0]._id)
                         .then(comments => {
                             setComments(comments);
+
+                            // For each comment, get professors from database and store in an array
+                            for (let comment of comments) {
+                                fetchProfessorById(baseURL, comment.professor)
+                                    .then(professor => {
+                                        setProfessors(professors => [...professors, professor]);
+                                    })
+                            }
                             setLoading(false);
                         })
                 })
-        }
-
-        if (isAuthenticated) {
-            fetchCommentsByAuth0Id(baseURL, user.sub)
                 .catch((err) => {
                     console.log(err);
                     navigate("/error");
@@ -75,21 +82,21 @@ function Home() {
                                 </Spinner> :
                                 <>
                                     {comments.length > 0 && <Carousel className="headline-img">
-                                        {comments.map((comment) => {
+                                        {comments.map((comment, index) => {
                                             return (
-                                                <Carousel.Item key={comment._id}>
+                                                <Carousel.Item key={comment._id} >
                                                     <img
                                                         className="d-block w-100"
                                                         src="https://media.istockphoto.com/photos/old-school-chalkboard-picture-id547016978?b=1&k=20&m=547016978&s=170667a&w=0&h=CFpK3c30n2dD059xLC0PxngaX1wMn2Aa5erw9M0ub3s="
                                                         alt="First slide"
                                                     />
-                                                    <Comment key={comment._id} comment={comment}/>
-
-                                                    {/*<Carousel.Caption>*/}
-                                                    {/*    <h3>First slide label</h3>*/}
-                                                    {/*    <p>Nulla vitae elit libero, a pharetra augue mollis*/}
-                                                    {/*        interdum.</p>*/}
-                                                    {/*</Carousel.Caption>*/}
+                                                    <Carousel.Caption className="headline-caption" >
+                                                        <h3>{professors[index]?.first_name} {professors[index]?.last_name}</h3>
+                                                        <br/>
+                                                        <p>{comment.course && `Course: ${comment.course}`}</p>
+                                                        <p>{comment.rate && `Rating: ${comment.rate}`}</p>
+                                                        <p>{comment.content && `Comment: ${comment.content}`}</p>
+                                                    </Carousel.Caption>
                                                 </Carousel.Item>)
                                         })}
                                     </Carousel>}
