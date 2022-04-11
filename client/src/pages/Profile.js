@@ -10,7 +10,7 @@ function Profile() {
     const {isAuthenticated, isLoading, user} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseURL = process.env.REACT_APP_BACKEND_URL;
-    const [dbUser, setDbUser] = React.useState(null);
+    const [dbUser, setDbUser] = useState(null);
     const navigate = useNavigate();
 
 

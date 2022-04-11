@@ -3,6 +3,7 @@ export const fetchDbUser = async (baseURL, auth0_id) =>{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
     });
@@ -41,6 +42,16 @@ export const fetchCommentsByProfessorId = async (baseURL, profId) => {
 
 export const fetchCommentById = async (baseURL, commentId) => {
     const response = await fetch(`${baseURL}/comment/id/${commentId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+    return await response.json();
+}
+
+export const fetchCommentsByUserId = async (baseURL, userId) => {
+    const response = await fetch(`${baseURL}/comment/user/${userId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
