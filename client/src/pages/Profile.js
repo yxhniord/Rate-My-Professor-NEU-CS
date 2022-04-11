@@ -41,9 +41,9 @@ function Profile() {
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner> :
                                 <ListGroup variant="flush">
-                                    <ListGroupItem>Nickname: {dbUser ? dbUser.nickname : user.nickname}</ListGroupItem>
-                                    <ListGroupItem>Email: {user.email}</ListGroupItem>
-                                    <ListGroupItem>Campus: {dbUser.campus}</ListGroupItem>
+                                    <ListGroupItem><strong>Nickname:</strong> {dbUser ? dbUser.nickname : user.nickname}</ListGroupItem>
+                                    <ListGroupItem><strong>Email:</strong> {user.email}</ListGroupItem>
+                                    <ListGroupItem><strong>Campus:</strong> {dbUser.campus}</ListGroupItem>
                                 </ListGroup>
                             }
                         </Tab>

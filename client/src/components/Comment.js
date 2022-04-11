@@ -22,14 +22,6 @@ function Comment({comment}) {
         });
     }, []);
 
-    // const comment = {
-    //     course: "CS5610",
-    //     campus: "Vancouver",
-    //     rate: 5,
-    //     date: Date.now(),
-    //     content: "Descriptions: The household registration is also integral to the state’s control capacity. It splits the population into subcategories, divides the working population, and prevents both urban-rural and broad working-class solidarity.",
-    //     professorName: "Neda"
-    // };
     return (
         <Card className="mb-3">
             {professor != null &&
