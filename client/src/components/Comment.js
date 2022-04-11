@@ -1,8 +1,10 @@
 import React, {useEffect} from 'react';
 import {Card} from "react-bootstrap";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment";
 import "../styles/Comment.css";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Comment({comment}) {
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
@@ -24,9 +26,14 @@ function Comment({comment}) {
 
     return (
         <Card className="mb-3">
-            {professor != null &&
-                <Card.Header>{professor.first_name} {professor.last_name}</Card.Header>
-            }
+            <Card.Header className="comment-header">
+                {professor != null ?
+                    <span>{professor?.first_name} {professor?.last_name}</span> :
+                    <span>Loading</span>
+                }
+                <FontAwesomeIcon className="edit-icon" icon={faPenToSquare}
+                                 onClick={() => navigate(`/updateComment/${comment._id}`)}/>
+            </Card.Header>
             <Card.Body>
                 <Card.Title>
                     {comment.course} &nbsp;&nbsp;
