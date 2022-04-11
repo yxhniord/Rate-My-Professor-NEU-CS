@@ -75,7 +75,6 @@ function Home() {
                     </Spinner> :
                     <>
                         {isAuthenticated && <section id="headline">
-                            {/*TODO: Map top five professors*/}
                             {loading ?
                                 <Spinner animation="border" role="status">
                                     <span className="visually-hidden">Loading...</span>
@@ -88,7 +87,7 @@ function Home() {
                                                     <img
                                                         className="d-block w-100"
                                                         src="https://media.istockphoto.com/photos/old-school-chalkboard-picture-id547016978?b=1&k=20&m=547016978&s=170667a&w=0&h=CFpK3c30n2dD059xLC0PxngaX1wMn2Aa5erw9M0ub3s="
-                                                        alt="First slide"
+                                                        alt="Carousel background image"
                                                     />
                                                     <Carousel.Caption className="headline-caption" >
                                                         <h3>{professors[index]?.first_name} {professors[index]?.last_name}</h3>

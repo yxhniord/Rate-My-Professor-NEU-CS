@@ -55,23 +55,12 @@ function RatingDetails() {
                 <main>
                     <section className="prof-detail">
                         <div className="prof-description">
-                            <div className="prof-title">
+                            {/*<div className="prof-title">*/}
                                 <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
-                                <h2>
+                                <h1>
                                     {professor.first_name}{" "}{professor.last_name}
-                                </h2>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam,
-                                aspernatur autem consequatur cumque doloremque dolores eaque eius
-                                eligendi, eveniet fugiat harum illo illum ipsa ipsum iste itaque
-                                laboriosam laudantium libero magni molestiae nam natus necessitatibus
-                                neque nihil nobis non nostrum numquam odit officia omnis optio
-                                pariatur perspiciatis porro quaerat quas quia quibusdam quidem quis
-                                quod ratione repellat repudiandae rerum saepe sed sequi similique
-                                sint soluta temporibus tenetur totam ullam unde, veritatis voluptas
-                                voluptate voluptates.
-                            </p>
+                                </h1>
+                            {/*</div>*/}
                         </div>
                         <div className="prof-rating">
                             <h1>
