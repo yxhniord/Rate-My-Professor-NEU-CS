@@ -90,8 +90,6 @@ function NewComment() {
             professor: professor._id,
         };
 
-        console.log(createdNewComment);
-
         if (commentId !== undefined) {
             fetch(`${baseURL}/comment/update/${commentId}`, {
                 method: 'POST',

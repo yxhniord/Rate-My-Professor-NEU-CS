@@ -30,13 +30,13 @@ function RatingDetails() {
             .then((data) => {
                 setComments(data);
 
-                // TODO: result is wrong
-                let sum = 0;
-                for (let comment of data) {
-                    sum += comment.rate;
+                if (data.length > 0) {
+                    let sum = 0;
+                    for (let comment of data) {
+                        sum += comment.rate;
+                    }
+                    setRating(Math.round(sum / data.length));
                 }
-                setRating(Math.round(sum / comments.length));
-
                 setLoading(false);
             })
             .catch((error) => {
