@@ -46,7 +46,7 @@ function Navigation() {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto option-text">
                         <Nav.Link as={HashLink} to={"/#search"}>Search</Nav.Link>
-                        <Nav.Link as={HashLink} to={"/#headline"}>Top-Professors</Nav.Link>
+                        {isAuthenticated && <Nav.Link as={HashLink} to={"/#headline"}>Comments</Nav.Link>}
                         <Nav.Link as={HashLink} to={"/#about"}>About</Nav.Link>
                     </Nav>
                     <Nav>
