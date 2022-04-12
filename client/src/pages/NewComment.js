@@ -2,63 +2,125 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
 import "../styles/NewComment.css";
+import {fetchCommentById, fetchDbUser, fetchProfessorById} from "../function/Api";
+import {useAuth0} from "@auth0/auth0-react";
 
 function NewComment() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId, commentId} = useParams();
     const navigate = useNavigate();
+    const {user} = useAuth0();
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState();
     const [newCourse, setNewCourse] = useState("");
     const [newCampus, setNewCampus] = useState("");
     const [newComment, setNewComment] = useState("");
+    const [dbUser, setDbUser] = useState({});
+    let profIdFromComment;
 
-    // Get professor details and comments
     useEffect(() => {
-        async function fetchProfessor() {
-            const response = await fetch(`${baseURL}/professor/id/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
+        // fetch dbUser
+        fetchDbUser(baseURL, user.sub)
+            .then((data) => {
+                setDbUser(data[0]);
+            })
+            .catch((error) => {
+                console.log(`error from fetching user from database: ${error}`);
+                navigate("/error");
             });
-            const data = await response.json();
-            setProfessor(data);
+
+        // If update comment from updateComment/:commentId
+        // Set all fields according to data provided by comment id
+        // If auth0_id is not the same as the logged-in user, redirect to error-page
+        if (commentId !== undefined) {
+            fetchCommentById(baseURL, commentId)
+                .then((data) => {
+                    // const userIdFromComment = data.user;
+
+                    setNewCourse(data.course);
+                    setNewCampus(data.campus);
+                    setNewRating(data.rate);
+                    setNewComment(data.content);
+                    profIdFromComment=data.professor;
+                })
+                .then(() => {
+                    fetchProfessorById(baseURL, profIdFromComment)
+                        .then((data) => {
+                            setProfessor(data);
+                            console.log(data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            navigate("/error");
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    navigate("/error");
+                });
         }
 
-        fetchProfessor().catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+        // If new comment from professor/:profId
+        // Set only fields related to professor, others remain blank
+        else if (profId !== undefined) {
+            fetchProfessorById(baseURL, profId)
+                .then((data) => {
+                    setProfessor(data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    navigate("/error");
+                });
+        }
 
     }, []);
 
-    const handleSubmit = () => {
+    // Called when the submit button is clicked
+    const handleSubmit = (e) => {
+        e.preventDefault();
         const newDate = new Date();
-        // TODO: extract user id from local storage
+
         const createdNewComment = {
             course: newCourse,
             campus: newCampus,
             rate: newRating,
             date: newDate,
             content: newComment,
-            // user: ,
-            professor: profId,
+            user: dbUser._id,
+            professor: professor._id,
         };
 
-        fetch(`${baseURL}/comment/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(createdNewComment)
-        }).then(() => {
-            navigate(`/details/${profId}`);
-        }).catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+        if (commentId !== undefined) {
+            fetch(`${baseURL}/comment/update/${commentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(createdNewComment)
+            }).then(() => {
+                navigate(`/details/${professor._id}`);
+            }).catch((error) => {
+                console.log(error);
+                navigate("/error");
+            });
+        }
+
+        else if (profId !== undefined) {
+            fetch(`${baseURL}/comment/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(createdNewComment)
+            }).then(() => {
+                navigate(`/details/${professor._id}`);
+            }).catch((error) => {
+                console.log(error);
+                navigate("/error");
+            });
+        }
     };
 
     return (

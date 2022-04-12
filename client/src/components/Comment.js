@@ -4,21 +4,21 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment";
 import "../styles/Comment.css";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {fetchProfessorById} from "../function/Api";
 
 function Comment({comment}) {
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseUrl = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const [professor, setProfessor] = React.useState(null);
 
     useEffect(() => {
-        async function fetchProfessor() {
-            const response = await fetch(`${baseUrl}/professor/id/${comment.professor}`);
-            const professor = await response.json();
-            setProfessor(professor);
-        }
 
-        fetchProfessor().catch((err) => {
+        fetchProfessorById(baseUrl, comment.professor)
+            .then((data) => {
+                setProfessor(data);
+            })
+            .catch((err) => {
             console.log(err);
             navigate("/error");
         });

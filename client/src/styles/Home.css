@@ -23,18 +23,39 @@
     padding: 1rem 20%;
 }
 
+.headline-caption {
+    top: 20%;
+    bottom: auto;
+}
+
 #about {
     max-height: 40%;
     padding: 5rem 3rem;
+    max-width: 100vw
+}
+
+.about-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    margin: 2rem;
 }
 
 .neu-video {
-    width: 50%;
+    max-width: 50vw;
+}
+
+.neu-video > iframe {
+    width: 40vw;
+    height: 30vw;
 }
 
 .neu-description {
-    width: 50%;
-    padding: 1rem 2rem;
+    max-width: 50vw;
+    padding: 0 1rem;
+    text-align: left;
+}
+
+.neu-description > a {
+    color: inherit;
 }

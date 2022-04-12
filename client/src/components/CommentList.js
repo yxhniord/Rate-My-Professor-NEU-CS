@@ -1,24 +1,29 @@
-import React, {useEffect} from "react";
+import {useEffect, useState} from "react";
 import Comment from "./Comment";
 import "../styles/CommentList.css";
 import {useNavigate} from "react-router-dom";
+import {fetchCommentsByUserId} from "../function/Api";
 
 function CommentList({userId}) {
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
-    const [comments, setComments] = React.useState([]);
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
-        async function fetchComments() {
-            const response = await fetch(`${baseUrl}/comment/user/${userId}`);
-            const data = await response.json();
-            setComments(data);
-        }
+        // async function fetchComments() {
+        //     const response = await fetch(`${baseUrl}/comment/user/${userId}`);
+        //     const data = await response.json();
+        //     setComments(data);
+        // }
 
-        fetchComments().catch((err) => {
-            console.log(err);
-            navigate("/error");
-        });
+        fetchCommentsByUserId(baseURL, userId)
+            .then(data => {
+                setComments(data);
+            })
+            .catch((err) => {
+                console.log(err);
+                navigate("/error");
+            });
     }, [comments.length]);
 
     return (

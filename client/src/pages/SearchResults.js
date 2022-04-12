@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
+import {fetchProfessorsByName} from "../function/Api";
 
 function SearchResults() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {name} = useParams();
     const [loading, setLoading] = useState(true);
@@ -12,19 +13,13 @@ function SearchResults() {
 
     // GET/professor/name/:name
     useEffect(() => {
-        async function fetchProfessors() {
-            const response = await fetch(`${baseURL}/professor/name/${name}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setProfessors(data);
-            setLoading(false);
-        }
 
-        fetchProfessors().catch((error) => {
+        fetchProfessorsByName(baseURL, name)
+            .then((data) => {
+                setProfessors(data);
+                setLoading(false);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });
@@ -40,11 +35,10 @@ function SearchResults() {
                 <main>
                     {/*TODO: add pagination if have time*/}
                     <Row lg={1} className="g-4 search-results">
-                        <h1>Are you looking for ...</h1>
-
                         {professors.length === 0 ?
                             <h3>No results found</h3> :
                             <>
+                                <h1>Are you looking for ...</h1>
                                 {professors.map((professor) => (
                                     <Col key={professor._id}>
                                         <Card className="search-result">

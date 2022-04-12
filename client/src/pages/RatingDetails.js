@@ -4,9 +4,10 @@ import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
+import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -16,47 +17,32 @@ function RatingDetails() {
 
     // Get professor details and comments
     useEffect(() => {
-        async function fetchProfessor() {
-            const response = await fetch(`${baseURL}/professor/id/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setProfessor(data);
-        }
-
-        async function fetchComments() {
-            const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            setComments(data);
-
-            let sum = 0;
-            for (let comment of data) {
-                sum += comment.rate;
-            }
-            setRating(Math.round(sum / comments.length));
-
-            setLoading(false);
-        }
-
-        fetchProfessor().catch((error) => {
+        fetchProfessorById(baseURL, profId)
+            .then((data) => {
+                setProfessor(data);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });
 
-        fetchComments().catch((error) => {
+        fetchCommentsByProfessorId(baseURL, profId)
+            .then((data) => {
+                setComments(data);
+
+                if (data.length > 0) {
+                    let sum = 0;
+                    for (let comment of data) {
+                        sum += comment.rate;
+                    }
+                    setRating(Math.round(sum / data.length));
+                }
+                setLoading(false);
+            })
+            .catch((error) => {
             console.log(error);
             navigate("/error");
         });
-
-
     }, []);
 
     return (
@@ -69,23 +55,12 @@ function RatingDetails() {
                 <main>
                     <section className="prof-detail">
                         <div className="prof-description">
-                            <div className="prof-title">
+                            {/*<div className="prof-title">*/}
                                 <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
-                                <h2>
+                                <h1>
                                     {professor.first_name}{" "}{professor.last_name}
-                                </h2>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam,
-                                aspernatur autem consequatur cumque doloremque dolores eaque eius
-                                eligendi, eveniet fugiat harum illo illum ipsa ipsum iste itaque
-                                laboriosam laudantium libero magni molestiae nam natus necessitatibus
-                                neque nihil nobis non nostrum numquam odit officia omnis optio
-                                pariatur perspiciatis porro quaerat quas quia quibusdam quidem quis
-                                quod ratione repellat repudiandae rerum saepe sed sequi similique
-                                sint soluta temporibus tenetur totam ullam unde, veritatis voluptas
-                                voluptate voluptates.
-                            </p>
+                                </h1>
+                            {/*</div>*/}
                         </div>
                         <div className="prof-rating">
                             <h1>

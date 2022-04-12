@@ -12,7 +12,7 @@ import {fetchDbUser} from "../function/Api.js";
 function Navigation() {
     const {isLoading, isAuthenticated, loginWithRedirect, logout, user} = useAuth0();
     const [loading, setLoading] = useState(true);
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const baseUrl = process.env.REACT_APP_BASE_URL;
     const [dbUser, setDbUser] = React.useState(null);
     const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ function Navigation() {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto option-text">
                         <Nav.Link as={HashLink} to={"/#search"}>Search</Nav.Link>
-                        <Nav.Link as={HashLink} to={"/#headline"}>Top-Professors</Nav.Link>
+                        {isAuthenticated && <Nav.Link as={HashLink} to={"/#headline"}>Comments</Nav.Link>}
                         <Nav.Link as={HashLink} to={"/#about"}>About</Nav.Link>
                     </Nav>
                     <Nav>
@@ -59,13 +59,13 @@ function Navigation() {
                                 </Spinner> :
                                 <>
                                     {isAuthenticated ? (
-                                        <Nav.Item>
-                                                    <span className="login-login" onClick={() => {
-                                                        logout({returnTo: window.location.origin})
-                                                    }}>
-                                                        {' '}
-                                                        {'Logout    '}
-                                                    </span>
+                                        <Nav.Item className="login-text login-box" >
+                                            <span className="login-login" onClick={() => {
+                                                logout({returnTo: window.location.origin})
+                                            }}>
+                                                {' '}
+                                                {'Logout    '}
+                                            </span>
                                             <Link to={"/profile"}
                                                   style={{textDecoration: 'none', color: "white"}}>
                                                 {loading ?
@@ -75,19 +75,20 @@ function Navigation() {
                                                     <span className="login-login">
                                                             {'Hello, '}
                                                         {dbUser ? dbUser.nickname : user.nickname}
-                                                        </span>}
+                                                    </span>
+                                                }
                                                 <FontAwesomeIcon className="login-icon" icon={faUser}/>
                                             </Link>
                                         </Nav.Item>
                                     ) : (
-                                        <Nav.Link style={{textDecorationColor: 'white'}}>
+                                        <Nav.Item style={{textDecorationColor: 'white'}} className="login-text login-box" >
                                             <span className="login-login" onClick={loginWithRedirect}>
                                                 {' '}
                                                 {'Login'}
                                             </span>
                                             <FontAwesomeIcon className="login-icon" icon={faUser}
                                                              onClick={loginWithRedirect}/>
-                                        </Nav.Link>
+                                        </Nav.Item>
                                     )}
                                 </>
                             }
