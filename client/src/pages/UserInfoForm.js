@@ -59,10 +59,12 @@ function UserInfoForm() {
             // fetch dbUser
             fetchDbUser(baseURL, user.sub)
                 .then((data) => {
-                    let dbUser = data[0];
-                    setDbUser(dbUser);
-                    setNewNickname(dbUser.nickname);
-                    setNewCampus(dbUser.campus);
+                    if (data.length!==0){
+                        let dbUser = data[0];
+                        setDbUser(dbUser);
+                        setNewNickname(dbUser.nickname);
+                        setNewCampus(dbUser.campus);
+                    }
                     setLoading(false);
                 })
                 .catch((error) => {

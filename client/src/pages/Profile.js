@@ -19,8 +19,12 @@ function Profile() {
         if (isAuthenticated) {
             fetchDbUser(baseURL, user.sub)
                 .then(dbUsers => {
-                    setDbUser(dbUsers[0]);
-                    setLoading(false);
+                    if (dbUsers.length===0){
+                        navigate("/userInfoForm");
+                    } else {
+                        setDbUser(dbUsers[0]);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);

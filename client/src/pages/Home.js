@@ -24,22 +24,26 @@ function Home() {
             // First get user from database if authenticated
             fetchDbUser(baseURL, user.sub)
                 .then(dbUsers => {
-                    setDbUser(dbUsers[0]);
+                    if (dbUsers.length===0){
+                        navigate("/userInfoForm");
+                    } else {
+                        setDbUser(dbUsers[0]);
 
-                    // Then get comments from database based on user id
-                    fetchCommentsByUserId(baseURL, dbUsers[0]._id)
-                        .then(comments => {
-                            setComments(comments);
+                        // Then get comments from database based on user id
+                        fetchCommentsByUserId(baseURL, dbUsers[0]._id)
+                            .then(comments => {
+                                setComments(comments);
 
-                            // For each comment, get professors from database and store in an array
-                            for (let comment of comments) {
-                                fetchProfessorById(baseURL, comment.professor)
-                                    .then(professor => {
-                                        setProfessors(professors => [...professors, professor]);
-                                    })
-                            }
-                            setLoading(false);
-                        })
+                                // For each comment, get professors from database and store in an array
+                                for (let comment of comments) {
+                                    fetchProfessorById(baseURL, comment.professor)
+                                        .then(professor => {
+                                            setProfessors(professors => [...professors, professor]);
+                                        })
+                                }
+                                setLoading(false);
+                            });
+                    }
                 })
                 .catch((err) => {
                     console.log(err);

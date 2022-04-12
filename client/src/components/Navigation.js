@@ -20,7 +20,11 @@ function Navigation() {
         if (isAuthenticated) {
             fetchDbUser(baseUrl, user.sub)
                 .then(dbUsers => {
-                    setDbUser(dbUsers[0]);
+                    if (dbUsers.length===0){
+                        navigate("/userInfoForm");
+                    } else {
+                        setDbUser(dbUsers[0]);
+                    }
                     setLoading(false);
                 })
                 .catch(err => {
