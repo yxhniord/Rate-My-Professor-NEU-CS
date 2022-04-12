@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ListGroup, ListGroupItem, Spinner, Tab, Tabs} from "react-bootstrap";
+import {Button, ListGroup, ListGroupItem, Spinner, Tab, Tabs} from "react-bootstrap";
 import CommentList from "../components/CommentList";
 import "../styles/Profile.css"
 import {useAuth0} from "@auth0/auth0-react";
@@ -19,8 +19,12 @@ function Profile() {
         if (isAuthenticated) {
             fetchDbUser(baseURL, user.sub)
                 .then(dbUsers => {
-                    setDbUser(dbUsers[0]);
-                    setLoading(false);
+                    if (dbUsers.length===0){
+                        navigate("/userInfoForm");
+                    } else {
+                        setDbUser(dbUsers[0]);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
@@ -41,9 +45,15 @@ function Profile() {
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner> :
                                 <ListGroup variant="flush">
-                                    <ListGroupItem><strong>Nickname:</strong> {dbUser ? dbUser.nickname : user.nickname}</ListGroupItem>
+                                    <ListGroupItem><strong>Nickname:</strong> {dbUser ? dbUser.nickname : user.nickname}
+                                    </ListGroupItem>
                                     <ListGroupItem><strong>Email:</strong> {user.email}</ListGroupItem>
                                     <ListGroupItem><strong>Campus:</strong> {dbUser.campus}</ListGroupItem>
+                                    <ListGroupItem>
+                                        <Button variant="dark" onClick={() => navigate(`/userInfoForm`)}>
+                                            Edit
+                                        </Button>
+                                    </ListGroupItem>
                                 </ListGroup>
                             }
                         </Tab>
