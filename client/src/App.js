@@ -12,6 +12,7 @@ import React from "react";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UserInfoForm from "./pages/UserInfoForm";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/details/:profId" element={<RatingDetails/>}/>
                 <Route path="/newComment/:profId" element={<NewComment/>}/>
                 <Route path="/updateComment/:commentId" element={<NewComment/>}/>
+                <Route path="/userInfoForm" element={<UserInfoForm/>}/>
                 <Route path="/error" element={<Error/>}/>
             </Routes>
             <Footer/>
