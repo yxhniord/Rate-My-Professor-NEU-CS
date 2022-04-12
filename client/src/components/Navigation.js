@@ -43,6 +43,7 @@ function Navigation() {
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
+
                 <Link to={"/"} style={{textDecoration: 'none'}}>
                     <Navbar.Brand>
                         <FontAwesomeIcon className="head-icon" icon={faGraduationCap}/>
@@ -51,57 +52,53 @@ function Navigation() {
                     </span>
                     </Navbar.Brand>
                 </Link>
+
                 <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+
                 <Navbar.Collapse id="responsive-navbar-nav">
+
                     <Nav className="me-auto option-text">
                         <Nav.Link as={HashLink} to={"/#search"}>Search</Nav.Link>
                         {isAuthenticated && <Nav.Link as={HashLink} to={"/#headline"}>Comments</Nav.Link>}
                         <Nav.Link as={HashLink} to={"/#about"}>About</Nav.Link>
                     </Nav>
-                    <Nav>
-                        <Nav.Item className="login login-text">
 
-                            {isLoading ?
-                                <Spinner animation="border" role="status">
-                                    <span className="visually-hidden">Loading...</span>
-                                </Spinner> :
-                                <>
-                                    {isAuthenticated ? (
-                                        <Nav.Item className="login-text login-box">
-                                            <span className="login-login" onClick={() => {
-                                                logout({returnTo: window.location.origin})
-                                            }}>
+                    <Nav>
+                        {isAuthenticated ? (
+                            <Nav.Item className="login">
+                                {loading || isLoading ?
+                                    <Spinner animation="border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner> :
+                                    <>
+                                        <div className="login-text">
+                                            <Link to={"/profile"}
+                                                  style={{textDecoration: 'none', color: "white"}}>
+                                                        <span>
+                                                            {'Hello, '}
+                                                            {dbUser ? dbUser.nickname : user.nickname}
+                                                        </span>
+                                            </Link>
+                                            <span className="logout-text" onClick={() => {logout({returnTo: window.location.origin})}}>
                                                 {' '}
                                                 {'Logout    '}
                                             </span>
-                                            <Link to={"/profile"}
-                                                  style={{textDecoration: 'none', color: "white"}}>
-                                                {loading ?
-                                                    <Spinner animation="border" role="status">
-                                                        <span className="visually-hidden">Loading...</span>
-                                                    </Spinner> :
-                                                    <span className="login-login">
-                                                            {'Hello, '}
-                                                        {dbUser ? dbUser.nickname : user.nickname}
-                                                    </span>
-                                                }
-                                                <FontAwesomeIcon className="login-icon" icon={faUser}/>
-                                            </Link>
-                                        </Nav.Item>
-                                    ) : (
-                                        <Nav.Item style={{textDecorationColor: 'white'}}
-                                                  className="login-text login-box">
-                                            <span className="login-login" onClick={loginWithRedirect}>
-                                                {' '}
-                                                {'Login'}
-                                            </span>
-                                            <FontAwesomeIcon className="login-icon" icon={faUser}
-                                                             onClick={loginWithRedirect}/>
-                                        </Nav.Item>
-                                    )}
-                                </>
-                            }
-                        </Nav.Item>
+                                        </div>
+                                        <Link to={"/profile"}
+                                              style={{textDecoration: 'none', color: "white"}}>
+                                            <FontAwesomeIcon className="login-icon" icon={faUser}/>
+                                        </Link>
+                                    </>}
+                            </Nav.Item>
+                        ) : (
+                            <Nav.Item className="login">
+                                <span className="login-text" onClick={loginWithRedirect}>
+                                    {' '}
+                                    {'Login'}
+                                </span>
+                                <FontAwesomeIcon className="login-icon" icon={faUser} onClick={loginWithRedirect}/>
+                            </Nav.Item>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
