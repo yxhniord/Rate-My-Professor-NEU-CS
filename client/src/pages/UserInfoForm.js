@@ -1,15 +1,18 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "../styles/UserInfoForm.css";
 import {Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
+import {fetchDbUser} from "../function/Api";
 
 function UserInfoForm() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
-    const {isLoading, user} = useAuth0();
+    const {isLoading,isAuthenticated, user} = useAuth0();
+    const [loading, setLoading] = useState(true);
     const [newNickname, setNewNickname] = useState("nickname");
     const [newCampus, setNewCampus] = useState("Vancouver");
+    const [dbUser, setDbUser] = useState(null);
     const handleSumbit = (e) => {
         e.preventDefault();
         const newUserInfo = {
@@ -18,27 +21,64 @@ function UserInfoForm() {
             auth0_id: user.sub
         };
 
-        fetch(`${baseURL}/user/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(newUserInfo)
-        }).then(() => {
-            navigate('/profile');
-        }).catch(err => {
-            console.log(err);
-            navigate("/error");
-        })
+        if (dbUser == null) {
+            // create new user
+            fetch(`${baseURL}/user/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(newUserInfo)
+            }).then(() => {
+                navigate('/profile');
+            }).catch(err => {
+                console.log(err);
+                navigate("/error");
+            })
+        } else {
+            // update existing user
+            fetch(`${baseURL}/user/update/${dbUser._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(newUserInfo)
+            }).then(() => {
+                navigate('/profile');
+            }).catch(err => {
+                console.log(err);
+                navigate("/error");
+            })
+        }
     };
+
+    useEffect(() => {
+        if (!isLoading && isAuthenticated) {
+            // fetch dbUser
+            fetchDbUser(baseURL, user.sub)
+                .then((data) => {
+                    let dbUser = data[0];
+                    setDbUser(dbUser);
+                    setNewNickname(dbUser.nickname);
+                    setNewCampus(dbUser.campus);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.log(`error from fetching user from database: ${error}`);
+                    navigate("/error");
+                });
+        }
+
+    }, [isLoading]);
 
     return (
         <div>
 
             <main>
                 <Card className="user-info-form">
-                    {isLoading ?
+                    {isLoading || loading ?
                         <Spinner animation="border" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner> :
