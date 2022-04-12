@@ -10,7 +10,7 @@ import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById} from "../functio
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const [name, setName] = useState("");
-    const {isAuthenticated, isLoading, user} = useAuth0();
+    const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [dbUser, setDbUser] = useState(null);
     const [comments, setComments] = useState([]);
@@ -19,12 +19,12 @@ function Home() {
 
 
     useEffect(() => {
-
-        if (isAuthenticated) {
+        async function fetchData() {
             // First get user from database if authenticated
-            fetchDbUser(baseURL, user.sub)
+            const token = await getAccessTokenSilently();
+            fetchDbUser(baseURL, user.sub, token)
                 .then(dbUsers => {
-                    if (dbUsers.length===0){
+                    if (dbUsers.length === 0) {
                         navigate("/userInfoForm");
                     } else {
                         setDbUser(dbUsers[0]);
@@ -45,6 +45,10 @@ function Home() {
                             });
                     }
                 })
+        }
+
+        if (isAuthenticated) {
+            fetchData()
                 .catch((err) => {
                     console.log(err);
                     navigate("/error");

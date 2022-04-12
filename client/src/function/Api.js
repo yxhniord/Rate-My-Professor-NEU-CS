@@ -1,11 +1,37 @@
-export const fetchDbUser = async (baseURL, auth0_id) =>{
+export const fetchDbUser = async (baseURL, auth0_id, token) => {
     const response = await fetch(`${baseURL}/user/auth0_id/${auth0_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            // 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            'Authorization': `Bearer ${token}`
         }
+    });
+    return await response.json();
+}
+
+export const createNewUser = async (baseURL, user, token) => {
+    const response = await fetch(`${baseURL}/user/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(user)
+    });
+    return await response.json();
+}
+
+export const updateUser = async (baseURL, user, token) => {
+    const response = await fetch(`${baseURL}/user/update/${user._id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(user)
     });
     return await response.json();
 }
