@@ -3,51 +3,39 @@ import "../styles/UserInfoForm.css";
 import {Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
-import {fetchDbUser} from "../function/Api";
+import {createNewUser, fetchDbUser, updateUser} from "../function/Api";
 
 function UserInfoForm() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
-    const {isLoading,isAuthenticated, user} = useAuth0();
+    const {isLoading, isAuthenticated, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [newNickname, setNewNickname] = useState("nickname");
     const [newCampus, setNewCampus] = useState("Vancouver");
     const [dbUser, setDbUser] = useState(null);
-    const handleSumbit = (e) => {
+    const handleSumbit = async (e) => {
         e.preventDefault();
         const newUserInfo = {
             nickname: newNickname,
             campus: newCampus,
             auth0_id: user.sub
         };
-
+        const token = await getAccessTokenSilently();
         if (dbUser == null) {
             // create new user
-            fetch(`${baseURL}/user/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(newUserInfo)
-            }).then(() => {
-                navigate('/profile');
-            }).catch(err => {
+            createNewUser(baseURL, newUserInfo, token)
+                .then(() => {
+                    navigate('/profile');
+                }).catch(err => {
                 console.log(err);
                 navigate("/error");
             })
         } else {
             // update existing user
-            fetch(`${baseURL}/user/update/${dbUser._id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(newUserInfo)
-            }).then(() => {
-                navigate('/profile');
-            }).catch(err => {
+            updateUser(baseURL, newUserInfo, token)
+                .then(() => {
+                    navigate('/profile');
+                }).catch(err => {
                 console.log(err);
                 navigate("/error");
             })
@@ -55,11 +43,12 @@ function UserInfoForm() {
     };
 
     useEffect(() => {
-        if (!isLoading && isAuthenticated) {
+        async function fetchData() {
             // fetch dbUser
-            fetchDbUser(baseURL, user.sub)
+            const token = await getAccessTokenSilently();
+            fetchDbUser(baseURL, user.sub, token)
                 .then((data) => {
-                    if (data.length!==0){
+                    if (data.length !== 0) {
                         let dbUser = data[0];
                         setDbUser(dbUser);
                         setNewNickname(dbUser.nickname);
@@ -67,6 +56,11 @@ function UserInfoForm() {
                     }
                     setLoading(false);
                 })
+
+        }
+
+        if (!isLoading && isAuthenticated) {
+            fetchData()
                 .catch((error) => {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");

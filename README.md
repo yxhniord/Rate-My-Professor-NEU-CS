@@ -69,8 +69,14 @@ Use this space to show useful examples of how a project can be used. Additional 
      3. Display professor's information
      4. Display user's information
 
+- [x] Iteration 2
 
-- [ ] Iteration 2
+  - Server
+    1. Add professor rate automatic calculation
+    2. Change user model and controller to add more fields
+    3. Change get professor list by name to be case insensitive
+  - Client
+
 - [ ] Iteration 3
 - [ ] Iteration 4
 
@@ -84,7 +90,8 @@ Contributions of all team members.
 
 Server development
 
-- server end API
+- Database design
+- Server end API (CRUD for professor, user, comment)
 
 ### Yuheng Miao
 

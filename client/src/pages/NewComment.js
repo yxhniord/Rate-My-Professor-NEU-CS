@@ -9,7 +9,7 @@ function NewComment() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {profId, commentId} = useParams();
-    const {isLoading, user} = useAuth0();
+    const {isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState();
@@ -23,7 +23,8 @@ function NewComment() {
     useEffect(async () => {
         if (!isLoading) {
             // fetch dbUser
-            await fetchDbUser(baseURL, user.sub)
+            const token = await getAccessTokenSilently();
+            await fetchDbUser(baseURL, user.sub, token)
                 .then((data) => {
                     if (data.length === 0) {
                         navigate("/userInfoForm");
@@ -59,7 +60,7 @@ function NewComment() {
                                 });
                         }
 
-                            // If new comment from professor/:profId
+                        // If new comment from professor/:profId
                         // Set only fields related to professor, others remain blank
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
@@ -78,8 +79,6 @@ function NewComment() {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");
                 });
-
-
         }
     }, [isLoading]);
 

@@ -10,23 +10,28 @@ import {fetchDbUser} from "../function/Api.js";
 
 
 function Navigation() {
-    const {isLoading, isAuthenticated, loginWithRedirect, logout, user} = useAuth0();
+    const {isLoading, isAuthenticated, loginWithRedirect, logout, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseUrl = process.env.REACT_APP_BASE_URL;
     const [dbUser, setDbUser] = React.useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuthenticated) {
-            fetchDbUser(baseUrl, user.sub)
+        async function fetchData() {
+            const token = await getAccessTokenSilently();
+            fetchDbUser(baseUrl, user.sub, token)
                 .then(dbUsers => {
-                    if (dbUsers.length===0){
+                    if (dbUsers.length === 0) {
                         navigate("/userInfoForm");
                     } else {
                         setDbUser(dbUsers[0]);
                     }
                     setLoading(false);
                 })
+        }
+
+        if (isAuthenticated) {
+            fetchData()
                 .catch(err => {
                     console.log(err);
                     navigate("/error");
@@ -62,7 +67,7 @@ function Navigation() {
                                 </Spinner> :
                                 <>
                                     {isAuthenticated ? (
-                                        <Nav.Item className="login-text login-box" >
+                                        <Nav.Item className="login-text login-box">
                                             <span className="login-login" onClick={() => {
                                                 logout({returnTo: window.location.origin})
                                             }}>
@@ -84,7 +89,8 @@ function Navigation() {
                                             </Link>
                                         </Nav.Item>
                                     ) : (
-                                        <Nav.Item style={{textDecorationColor: 'white'}} className="login-text login-box" >
+                                        <Nav.Item style={{textDecorationColor: 'white'}}
+                                                  className="login-text login-box">
                                             <span className="login-login" onClick={loginWithRedirect}>
                                                 {' '}
                                                 {'Login'}
