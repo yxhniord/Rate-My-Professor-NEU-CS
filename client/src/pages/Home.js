@@ -118,7 +118,7 @@ function Home() {
                                     allowFullScreen/>
                         </Col>
                         <Col as={Container} xs={12} md={6} className="neu-description">
-                            <a href="https://www.northeastern.edu/experience/">
+                            <a href="https://www.northeastern.edu/experience/" target="_blank">
                                 <h3>Northeastern University</h3>
                             </a>
                             <h6>Experience is at the core of all we do.</h6>
