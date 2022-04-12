@@ -55,7 +55,6 @@ function Navigation() {
                     </Nav>
                     <Nav>
                         <Nav.Item className="login login-text">
-                            {/*TODO: Need conditional name rendering*/}
 
                             {isLoading ?
                                 <Spinner animation="border" role="status">

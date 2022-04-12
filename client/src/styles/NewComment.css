@@ -1,5 +1,5 @@
 .new-comment-area {
-    margin: 5rem 30%
+    margin: 3rem 20%
 }
 
 .new-comment-title {
@@ -14,4 +14,8 @@
     flex-direction: column;
     justify-content: center;
     padding: 1rem;
+}
+
+.wrong-input-alert {
+    margin: 2rem 20%;
 }

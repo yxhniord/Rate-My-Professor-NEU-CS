@@ -7,8 +7,8 @@ import {useAuth0} from "@auth0/auth0-react";
 
 function NewComment() {
     const baseURL = process.env.REACT_APP_BASE_URL;
-    const {profId, commentId} = useParams();
     const navigate = useNavigate();
+    const {profId, commentId} = useParams();
     const {isLoading, user} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
@@ -17,8 +17,8 @@ function NewComment() {
     const [newCampus, setNewCampus] = useState("");
     const [newComment, setNewComment] = useState("");
     const [dbUser, setDbUser] = useState({});
-    let profIdFromComment;
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
+    let profIdFromComment;
 
     useEffect(async () => {
         if (!isLoading) {
@@ -35,8 +35,6 @@ function NewComment() {
                         if (commentId !== undefined) {
                             fetchCommentById(baseURL, commentId)
                                 .then((data) => {
-                                    // const userIdFromComment = data.user;
-
                                     setNewCourse(data.course);
                                     setNewCampus(data.campus);
                                     setNewRating(data.rate);
@@ -88,8 +86,10 @@ function NewComment() {
     // Called when the submit button is clicked
     const handleSubmit = (e) => {
         e.preventDefault();
+        // Reset error message everytime submit button is clicked
         setWrongInputMessage([]);
 
+        // New comment JSON object
         const newDate = new Date();
         const createdNewComment = {
             course: newCourse,
@@ -101,9 +101,11 @@ function NewComment() {
             professor: professor._id,
         };
 
+        // In case of updating a comment
         if (commentId !== undefined) {
             updateComment(baseURL, commentId, createdNewComment)
                 .then((response) => {
+                    // Check if inputs are valid
                     if (response) {
                         let array = []
                         for (let m of response.message) {
@@ -118,9 +120,11 @@ function NewComment() {
                     console.log(error);
                     navigate("/error");
                 });
+        //    In case of creating new comment
         } else if (profId !== undefined) {
             createComment(baseURL, createdNewComment)
                 .then((response) => {
+                    // Check if inputs are valid
                     if (response) {
                         let array = []
                         for (let m of response.message) {
@@ -148,7 +152,7 @@ function NewComment() {
                     </Spinner> :
                     <>
                         {wrongInputMessage.length > 0 &&
-                            <Alert variant="danger" dismissible>
+                            <Alert className="wrong-input-alert" variant="danger" dismissible>
                                 <Alert.Heading>Some required fields are missing!</Alert.Heading>
                                 {wrongInputMessage.map((errMessage, index) => <p key={index}>{index + 1}: {errMessage}</p>)}
                             </Alert>
