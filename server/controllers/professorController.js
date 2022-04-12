@@ -9,7 +9,10 @@ const { body, validationResult } = require("express-validator");
 exports.professor_list = function (req, res, next) {
   var name = req.params.name;
   Professor.find({
-    $or: [{ first_name: new RegExp(name) }, { last_name: new RegExp(name) }],
+    $or: [
+      { first_name: new RegExp(name, "i") },
+      { last_name: new RegExp(name, "i") },
+    ],
   })
     .sort({ first_name: 1, last_name: 1 })
     .exec(function (err, professor_list) {
@@ -101,7 +104,9 @@ exports.professor_delete = function (req, res, next) {
         if (err) {
           return res.status(500).json({ message: err });
         }
-        res.status(200).json({ message: "Professor successfully deleted" });
+        res.status(200).json({
+          message: "Professor successfully deleted",
+        });
       });
     }
   );
