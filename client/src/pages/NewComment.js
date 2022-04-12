@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
+import {Alert, Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import "../styles/NewComment.css";
-import {fetchCommentById, fetchDbUser, fetchProfessorById} from "../function/Api";
+import {createComment, fetchCommentById, fetchDbUser, fetchProfessorById, updateComment} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
 
 function NewComment() {
@@ -18,6 +18,7 @@ function NewComment() {
     const [newComment, setNewComment] = useState("");
     const [dbUser, setDbUser] = useState({});
     let profIdFromComment;
+    const [wrongInputMessage, setWrongInputMessage] = useState([]);
 
     useEffect(async () => {
         if (!isLoading) {
@@ -60,7 +61,7 @@ function NewComment() {
                                 });
                         }
 
-                        // If new comment from professor/:profId
+                            // If new comment from professor/:profId
                         // Set only fields related to professor, others remain blank
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
@@ -87,8 +88,9 @@ function NewComment() {
     // Called when the submit button is clicked
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newDate = new Date();
+        setWrongInputMessage([]);
 
+        const newDate = new Date();
         const createdNewComment = {
             course: newCourse,
             campus: newCampus,
@@ -100,33 +102,41 @@ function NewComment() {
         };
 
         if (commentId !== undefined) {
-            fetch(`${baseURL}/comment/update/${commentId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(createdNewComment)
-            }).then(() => {
-                navigate(`/details/${professor._id}`);
-            }).catch((error) => {
-                console.log(error);
-                navigate("/error");
-            });
+            updateComment(baseURL, commentId, createdNewComment)
+                .then((response) => {
+                    if (response) {
+                        // wrongInputMessage.push(...wrongInputMessage, response.message);
+                        // console.log(wrongInputMessage);
+                        // let i = 0;
+                        // while (i < wrongInputMessage.length) {
+                        //     console.log(wrongInputMessage[i]);
+                        //     i++;
+                        // }
+                    } else {
+                        navigate(`/details/${professor._id}`);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    navigate("/error");
+                });
         } else if (profId !== undefined) {
-            fetch(`${baseURL}/comment/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(createdNewComment)
-            }).then(() => {
-                navigate(`/details/${professor._id}`);
-            }).catch((error) => {
-                console.log(error);
-                navigate("/error");
-            });
+            createComment(baseURL, createdNewComment)
+                .then((response) => {
+                    if (response) {
+                        let array = []
+                        for (let m of response.message) {
+                            array.push(m.msg);
+                        }
+                        setWrongInputMessage(array);
+                    } else {
+                        navigate(`/details/${professor._id}`);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    navigate("/error");
+                });
         }
     };
 
@@ -138,73 +148,83 @@ function NewComment() {
                     <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner> :
-                    <Card className="new-comment-area">
-                        <Card.Header className="new-comment-title" as="h3">
-                            Create A New Comment
-                        </Card.Header>
-                        <Card.Body>
-                            <Form className="new-comment-input">
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
-                                    <Col sm="2">
-                                        For
-                                    </Col>
-                                    <Col sm="10">
-                                        <strong>{professor.first_name} {professor.last_name}</strong>
-                                    </Col>
-                                </Form.Group>
+                    <>
+                        {wrongInputMessage.length > 0 &&
+                            <Alert variant="danger" dismissible>
+                                <Alert.Heading>Some required fields are missing!</Alert.Heading>
+                                {wrongInputMessage.map((errMessage, index) => <p key={index}>{index + 1}: {errMessage}</p>)}
+                            </Alert>
+                        }
+                        <Card className="new-comment-area">
+                            <Card.Header className="new-comment-title" as="h3">
+                                Create A New Comment
+                            </Card.Header>
+                            <Card.Body>
+                                <Form className="new-comment-input">
+                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
+                                        <Col sm="2">
+                                            For
+                                        </Col>
+                                        <Col sm="10">
+                                            <strong>{professor.first_name} {professor.last_name}</strong>
+                                        </Col>
+                                    </Form.Group>
 
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
-                                    <Form.Label column sm="2">
-                                        Rating
-                                    </Form.Label>
-                                    <Col sm="10">
-                                        <Form.Control placeholder="__ out of 5" autoComplete="off" value={
-                                            newRating
+                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
+                                        <Form.Label column md="2">
+                                            Rating*
+                                        </Form.Label>
+                                        <Col md="10">
+                                            <Form.Control placeholder="__ out of 5" autoComplete="off" value={
+                                                newRating
+                                            } onChange={(e) => {
+                                                setNewRating(e.target.value)
+                                            }}/>
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
+                                        <Form.Label column md="2">
+                                            Course*
+                                        </Form.Label>
+                                        <Col md="4">
+                                            <Form.Control placeholder="CS-XXXX" autoComplete="off" value={
+                                                newCourse
+                                            } onChange={(e) => {
+                                                setNewCourse(e.target.value)
+                                            }}/>
+                                        </Col>
+                                        <Form.Label column sm="2">
+                                            at*
+                                        </Form.Label>
+                                        <Col sm="4">
+                                            <Form.Control placeholder="Campus name" autoComplete="off" value={
+                                                newCampus
+                                            } onChange={(e) => {
+                                                setNewCampus(e.target.value)
+                                            }}/>
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                                        <Form.Label>Enter your comments here</Form.Label>
+                                        <Form.Control as="textarea" rows={5} autoComplete="off" value={
+                                            newComment
                                         } onChange={(e) => {
-                                            setNewRating(e.target.value)
+                                            setNewComment(e.target.value)
                                         }}/>
-                                    </Col>
-                                </Form.Group>
+                                    </Form.Group>
 
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
-                                    <Form.Label column sm="2">
-                                        Course
-                                    </Form.Label>
-                                    <Col sm="4">
-                                        <Form.Control placeholder="CS-XXXX" autoComplete="off" value={
-                                            newCourse
-                                        } onChange={(e) => {
-                                            setNewCourse(e.target.value)
-                                        }}/>
-                                    </Col>
-                                    <Form.Label column sm="2">
-                                        at
-                                    </Form.Label>
-                                    <Col sm="4">
-                                        <Form.Control placeholder="Campus name" autoComplete="off" value={
-                                            newCampus
-                                        } onChange={(e) => {
-                                            setNewCampus(e.target.value)
-                                        }}/>
-                                    </Col>
-                                </Form.Group>
+                                    <p>Fields with * are required</p>
 
-                                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                    <Form.Label>Enter your comments here</Form.Label>
-                                    <Form.Control as="textarea" rows={5} autoComplete="off" value={
-                                        newComment
-                                    } onChange={(e) => {
-                                        setNewComment(e.target.value)
-                                    }}/>
-                                </Form.Group>
-
-                                <br/>
-                                <Button variant="dark" type="submit" onClick={handleSubmit}>
-                                    Submit
-                                </Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
+                                    <br/>
+                                    <Button variant="dark" type="submit" onClick={handleSubmit}>
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </Card.Body>
+                        </Card>
+                    </>
                 }
 
             </main>

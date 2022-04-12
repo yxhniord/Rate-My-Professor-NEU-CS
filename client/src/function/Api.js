@@ -59,3 +59,29 @@ export const fetchCommentsByUserId = async (baseURL, userId) => {
     });
     return await response.json();
 }
+
+export const updateComment = async (baseURL, commentId, createdNewComment) => {
+    const response = await fetch(`${baseURL}/comment/update/${commentId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(createdNewComment)
+    });
+
+    return response.status === 500 ? await response.json() : null;
+}
+
+export const createComment = async (baseURL, createdNewComment) => {
+    const response = await fetch(`${baseURL}/comment/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(createdNewComment)
+    });
+
+    return response.status === 500 ? await response.json() : null;
+}
