@@ -105,13 +105,11 @@ function NewComment() {
             updateComment(baseURL, commentId, createdNewComment)
                 .then((response) => {
                     if (response) {
-                        // wrongInputMessage.push(...wrongInputMessage, response.message);
-                        // console.log(wrongInputMessage);
-                        // let i = 0;
-                        // while (i < wrongInputMessage.length) {
-                        //     console.log(wrongInputMessage[i]);
-                        //     i++;
-                        // }
+                        let array = []
+                        for (let m of response.message) {
+                            array.push(m.msg);
+                        }
+                        setWrongInputMessage(array);
                     } else {
                         navigate(`/details/${professor._id}`);
                     }
