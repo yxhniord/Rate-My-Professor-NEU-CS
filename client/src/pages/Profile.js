@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {fetchDbUser} from "../function/Api.js";
 
 function Profile() {
-    const {isAuthenticated, isLoading, user} = useAuth0();
+    const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseURL = process.env.REACT_APP_BASE_URL;
     const [dbUser, setDbUser] = useState(null);
@@ -15,17 +15,21 @@ function Profile() {
 
 
     useEffect(() => {
-
-        if (isAuthenticated) {
-            fetchDbUser(baseURL, user.sub)
+        async function fetchData() {
+            const token = await getAccessTokenSilently();
+            fetchDbUser(baseURL, user.sub, token)
                 .then(dbUsers => {
-                    if (dbUsers.length===0){
+                    if (dbUsers.length === 0) {
                         navigate("/userInfoForm");
                     } else {
                         setDbUser(dbUsers[0]);
                         setLoading(false);
                     }
-                })
+                });
+        }
+
+        if (isAuthenticated) {
+            fetchData()
                 .catch(err => {
                     console.log(err);
                     navigate("/error");

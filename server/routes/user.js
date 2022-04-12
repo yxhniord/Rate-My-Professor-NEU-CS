@@ -1,6 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var user_controller = require("../controllers/userController");
+const {checkJWT} = require('../checkJWT');
+
+router.all("*", checkJWT);
 
 // GET users listing.
 router.get("/", function (req, res, next) {

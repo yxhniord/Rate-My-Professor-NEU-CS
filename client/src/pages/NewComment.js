@@ -9,7 +9,7 @@ function NewComment() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId, commentId} = useParams();
     const navigate = useNavigate();
-    const {isLoading, user} = useAuth0();
+    const {isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState();
@@ -19,10 +19,11 @@ function NewComment() {
     const [dbUser, setDbUser] = useState({});
     let profIdFromComment;
 
-    useEffect(async () => {
-        if (!isLoading) {
+    useEffect(() => {
+        async function fetchData() {
             // fetch dbUser
-            await fetchDbUser(baseURL, user.sub)
+            const token = await getAccessTokenSilently();
+            await fetchDbUser(baseURL, user.sub, token)
                 .then((data) => {
                     if (data.length === 0) {
                         navigate("/userInfoForm");
@@ -48,39 +49,29 @@ function NewComment() {
                                             setProfessor(data);
                                             setLoading(false);
                                             console.log(data);
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
-                                            navigate("/error");
                                         });
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    navigate("/error");
                                 });
                         }
 
-                        // If new comment from professor/:profId
+                            // If new comment from professor/:profId
                         // Set only fields related to professor, others remain blank
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
                                 .then((data) => {
                                     setProfessor(data);
                                     setLoading(false);
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    navigate("/error");
                                 });
                         }
                     }
                 })
+        }
+
+        if (!isLoading) {
+            fetchData()
                 .catch((error) => {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");
                 });
-
-
         }
     }, [isLoading]);
 
