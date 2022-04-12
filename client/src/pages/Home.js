@@ -111,13 +111,13 @@ function Home() {
             <section id="about">
                 <Container fluid className="about-container">
                     <Row>
-                        <Col as="Container" xs={12} md={6} className="neu-video">
+                        <Col as={Container} xs={12} md={6} className="neu-video">
                             <iframe src="https://www.youtube.com/embed/HwBcOli0YLM"
                                     title="YouTube video player" frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen/>
                         </Col>
-                        <Col as="Container" xs={12} md={6} className="neu-description">
+                        <Col as={Container} xs={12} md={6} className="neu-description">
                             <a href="https://www.northeastern.edu/experience/">
                                 <h3>Northeastern University</h3>
                             </a>
