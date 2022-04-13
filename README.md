@@ -65,7 +65,7 @@ Use this space to show useful examples of how a project can be used. Additional 
   2. Created React components and placeholders to represent the functionalities
   3. Connected frontend and backend and realized the following functions:
      1. Jump to login/signup pages
-     2. Search for professors by name or part of a name (eg. "AA", "TTT")
+     2. Search for professors by name or part of a name ***(eg. "AA", "bb","Test")***
      3. Display professor's information
      4. Display user's information
 
@@ -75,6 +75,7 @@ Use this space to show useful examples of how a project can be used. Additional 
     1. Add professor rate automatic calculation
     2. Change user model and controller to add more fields
     3. Change get professor list by name to be case-insensitive
+    4. Secure user-related API calls
   - Client
     1. Implement add-new-comment and update-existing-comment functionalities.
     2. Display user comments as carousel on homepage when user's logged in.
@@ -85,7 +86,7 @@ Use this space to show useful examples of how a project can be used. Additional 
 - [ ] Iteration 3
 - [ ] Iteration 4
 
-<!-- CONTRIBUTion -->
+<!-- CONTRIBUTION -->
 
 ## Contribution
 
@@ -109,7 +110,7 @@ Client development
 Client development
 
 - Client profile detail page. Comment and CommentList components.
-- Client security.
+- Client authentication (Signup/Login, Protected route) and Server API security.
 
 <!-- LICENSE -->
 
@@ -126,3 +127,11 @@ Distributed under the MIT License.
 - Zhiwei Bao - zhiv.bao@gmail.com
 
 Project Link: [https://neu-rate-my-prof.herokuapp.com/](https://neu-rate-my-prof.herokuapp.com/)
+
+## Screenshots
+
+### Homepage
+![Homepage](screenshots/Homepage.png)
+
+### Professor Detail
+![Professor Detail](screenshots/ProfDetail.png)

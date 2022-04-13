@@ -32,7 +32,7 @@ function UserInfoForm() {
             })
         } else {
             // update existing user
-            updateUser(baseURL, newUserInfo, token)
+            updateUser(baseURL, dbUser._id,newUserInfo, token)
                 .then(() => {
                     navigate('/profile');
                 }).catch(err => {

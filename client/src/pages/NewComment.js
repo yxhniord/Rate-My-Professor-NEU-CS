@@ -12,7 +12,7 @@ function NewComment() {
     const {isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
-    const [newRating, setNewRating] = useState();
+    const [newRating, setNewRating] = useState("");
     const [newCourse, setNewCourse] = useState("");
     const [newCampus, setNewCampus] = useState("");
     const [newComment, setNewComment] = useState("");

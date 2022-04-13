@@ -72,19 +72,21 @@ function Navigation() {
                                     </Spinner> :
                                     <>
                                         <div className="login-text">
-                                            <Link to={"/profile"}
+                                            <Link role="button" to={"/profile"}
                                                   style={{textDecoration: 'none', color: "white"}}>
                                                         <span>
                                                             {'Hello, '}
                                                             {dbUser ? dbUser.nickname : user.nickname}
                                                         </span>
                                             </Link>
-                                            <span className="logout-text" onClick={() => {logout({returnTo: window.location.origin})}}>
+                                            <span role="button" className="logout-text" onClick={() => {
+                                                logout({returnTo: window.location.origin})
+                                            }}>
                                                 {' '}
                                                 {'Logout    '}
                                             </span>
                                         </div>
-                                        <Link to={"/profile"}
+                                        <Link role="button" to={"/profile"}
                                               style={{textDecoration: 'none', color: "white"}}>
                                             <FontAwesomeIcon className="login-icon" icon={faUser}/>
                                         </Link>
@@ -92,11 +94,12 @@ function Navigation() {
                             </Nav.Item>
                         ) : (
                             <Nav.Item className="login">
-                                <span className="login-text" onClick={loginWithRedirect}>
+                                <span role="button" className="login-text" onClick={loginWithRedirect}>
                                     {' '}
                                     {'Login'}
                                 </span>
-                                <FontAwesomeIcon className="login-icon" icon={faUser} onClick={loginWithRedirect}/>
+                                <FontAwesomeIcon role="button" className="login-icon" icon={faUser}
+                                                 onClick={loginWithRedirect}/>
                             </Nav.Item>
                         )}
                     </Nav>

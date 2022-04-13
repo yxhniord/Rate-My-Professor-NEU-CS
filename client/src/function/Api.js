@@ -23,8 +23,8 @@ export const createNewUser = async (baseURL, user, token) => {
     return await response.json();
 }
 
-export const updateUser = async (baseURL, user, token) => {
-    const response = await fetch(`${baseURL}/user/update/${user._id}`, {
+export const updateUser = async (baseURL, userId, user, token) => {
+    const response = await fetch(`${baseURL}/user/update/${userId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
