@@ -25,6 +25,7 @@ function App() {
                 <Route path="/updateComment/:commentId" element={<ProtectedRoute protectedComponent={NewComment}/>}/>
                 <Route path="/userInfoForm" element={<ProtectedRoute protectedComponent={UserInfoForm}/>}/>
                 <Route path="/error" element={<Error/>}/>
+                <Route path="*" element={<p>Sorry! Nothing to show.</p>}/>
             </Routes>
             <Footer/>
         </div>
