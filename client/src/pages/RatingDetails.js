@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import "../styles/RatingDetails.css";
-import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
+import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
@@ -22,9 +22,9 @@ function RatingDetails() {
                 setProfessor(data);
             })
             .catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+                console.log(error);
+                navigate("/error");
+            });
 
         fetchCommentsByProfessorId(baseURL, profId)
             .then((data) => {
@@ -40,9 +40,9 @@ function RatingDetails() {
                 setLoading(false);
             })
             .catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+                console.log(error);
+                navigate("/error");
+            });
     }, []);
 
     return (
@@ -53,24 +53,28 @@ function RatingDetails() {
                     <span className="visually-hidden">Loading...</span>
                 </Spinner> :
                 <main>
-                    <section className="prof-detail">
-                        <div className="prof-description">
-                            {/*<div className="prof-title">*/}
-                                <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
-                                <h1>
-                                    {professor.first_name}{" "}{professor.last_name}
-                                </h1>
-                            {/*</div>*/}
-                        </div>
-                        <div className="prof-rating">
-                            <h1>
-                                {isNaN(rating) ? 0 : rating} / 5
-                            </h1>
-                            <Button className="add-rating" variant="dark"
-                                    onClick={() => navigate(`/newComment/${profId}`)}>
-                                Add Comment
-                            </Button>
-                        </div>
+                    <section>
+                        <Container fluid>
+                            <Row className="prof-detail">
+                                <Col className="prof-description">
+                                    {/*<div className="prof-title">*/}
+                                    <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
+                                    <h3>
+                                        {professor.first_name}{" "}{professor.last_name}
+                                    </h3>
+                                    {/*</div>*/}
+                                </Col>
+                                <Col className="prof-rating">
+                                    <h3>
+                                        {isNaN(rating) ? 0 : rating} / 5
+                                    </h3>
+                                    <Button className="add-rating" variant="dark"
+                                            onClick={() => navigate(`/newComment/${profId}`)}>
+                                        Add Comment
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Container>
                     </section>
 
                     <section className="comment-detail">
@@ -79,11 +83,11 @@ function RatingDetails() {
                                 <Col key={comment._id}>
                                     <Card className="comment-item">
                                         <Card.Body className="comment-item-rating">
-                                            <Card.Text as="h3">{comment.rate} / 5</Card.Text>
+                                            <Card.Text as="h4">{comment.rate} / 5</Card.Text>
                                         </Card.Body>
                                         <Card.Body className={"comment-item-content"}>
-                                            <Card.Title as={"h4"}>{comment.course}</Card.Title>
-                                            <Card.Text>
+                                            <Card.Title as={"h6"}>{comment.course}</Card.Title>
+                                            <Card.Text as="p">
                                                 From {comment.campus} campus: {comment.content}
                                             </Card.Text>
                                         </Card.Body>

@@ -68,7 +68,7 @@ function Home() {
         <main>
             <section id="search">
                 <Form className="search-area" onSubmit={handleSubmit}>
-                    <FormControl className="search-box" placeholder="Type the name of your professor" size="lg" value={name}
+                    <FormControl className="search-box" placeholder="Type professor's name" size="lg" value={name}
                                  onChange={(e) => setName(e.target.value)}/>
                     <Button variant="dark" type="submit" size="lg">
                         <FontAwesomeIcon className="search-icon" icon={faMagnifyingGlass}/>

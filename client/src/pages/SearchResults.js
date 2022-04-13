@@ -38,7 +38,7 @@ function SearchResults() {
                         {professors.length === 0 ?
                             <h3>No results found</h3> :
                             <>
-                                <h1>Are you looking for ...</h1>
+                                <h3>Are you looking for ...</h3>
                                 {professors.map((professor) => (
                                     <Col key={professor._id}>
                                         <Card className="search-result">
@@ -48,13 +48,13 @@ function SearchResults() {
                                                       style={{color: 'inherit', textDecoration: 'inherit'}}>
 
                                                     <Card.Title
-                                                        as="h2">{professor.first_name}{" "}{professor.last_name}
+                                                        as="h6">{professor.first_name}{" "}{professor.last_name}
                                                     </Card.Title>
                                                 </Link>
                                             </Card.Body>
                                             <Card.Body className={"search-result-content"}>
-                                                <Card.Title>Top comment</Card.Title>
-                                                <Card.Text>
+                                                <Card.Title as="h6">Top comment</Card.Title>
+                                                <Card.Text as="p">
                                                     {professor.comment.length} {professor.comment.length > 1? " students" : " student"} commented on this professor.
                                                 </Card.Text>
                                             </Card.Body>

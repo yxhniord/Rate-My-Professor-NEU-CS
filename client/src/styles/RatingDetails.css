@@ -1,4 +1,5 @@
 .prof-detail {
+    max-width: 100vw;
     padding: 3rem;
     display: flex;
     justify-content: space-around;
@@ -12,15 +13,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 .prof-description > .prof-icon {
-    margin-right: 2rem;
+    margin-right: 1rem;
     font-size: 3rem;
-}
-
-.prof-description > h1 {
-    text-align: center;
 }
 
 /* Right panel */
@@ -29,7 +27,7 @@
     text-align: center;
 }
 
-.prof-rating > h1 {
+.prof-rating > h3 {
     color: crimson;
     margin-bottom: 2rem;
 }
