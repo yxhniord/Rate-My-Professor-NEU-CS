@@ -48,12 +48,11 @@ function SearchResults() {
                                                       style={{color: 'inherit', textDecoration: 'inherit'}}>
 
                                                     <Card.Title
-                                                        as="h6">{professor.first_name}{" "}{professor.last_name}
+                                                        as="h4">{professor.first_name}{" "}{professor.last_name}
                                                     </Card.Title>
                                                 </Link>
                                             </Card.Body>
                                             <Card.Body className={"search-result-content"}>
-                                                <Card.Title as="h6">Top comment</Card.Title>
                                                 <Card.Text as="p">
                                                     {professor.comment.length} {professor.comment.length > 1? " students" : " student"} commented on this professor.
                                                 </Card.Text>

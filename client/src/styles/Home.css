@@ -24,8 +24,24 @@
 }
 
 .headline-caption {
-    top: 20%;
+    top: 15%;
     bottom: auto;
+    font-size: 1.2rem;
+}
+
+.headline-caption > p {
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .headline-caption {
+        font-size: 0.3rem;
+    }
+    .headline-caption > .headline-prof-comment {
+        visibility: hidden;
+    }
 }
 
 #about {
@@ -37,7 +53,7 @@
 .about-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin: 2rem;
 }
 

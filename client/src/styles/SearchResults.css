@@ -13,12 +13,12 @@
 }
 
 .search-result-rating {
-    width: 30%;
+    width: 40%;
     border-right: darkgrey 1px solid;
     text-align: center;
 }
 
 .search-result-content {
-    width: 70%;
+    width: 60%;
     padding: 1.5rem;
 }

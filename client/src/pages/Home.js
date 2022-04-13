@@ -98,10 +98,9 @@ function Home() {
                                                 />
                                                 <Carousel.Caption className="headline-caption">
                                                     <h3>{professors[index]?.first_name} {professors[index]?.last_name}</h3>
-                                                    <br/>
-                                                    <p>{comment.course && `Course: ${comment.course}`}</p>
-                                                    <p>{comment.rate && `Rating: ${comment.rate}`}</p>
-                                                    <p>{comment.content && `Comment: ${comment.content}`}</p>
+                                                    {comment.course && <p>Course: {comment.course}</p>}
+                                                    {comment.rate && <p>Rating: {comment.rate}</p>}
+                                                    {comment.content && <p className="headline-prof-comment">Comment: {comment.content}</p>}
                                                 </Carousel.Caption>
                                             </Carousel.Item>)
                                     })}
