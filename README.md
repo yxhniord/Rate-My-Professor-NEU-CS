@@ -74,8 +74,13 @@ Use this space to show useful examples of how a project can be used. Additional 
   - Server
     1. Add professor rate automatic calculation
     2. Change user model and controller to add more fields
-    3. Change get professor list by name to be case insensitive
+    3. Change get professor list by name to be case-insensitive
   - Client
+    1. Implement add-new-comment and update-existing-comment functionalities.
+    2. Display user comments as carousel on homepage when user's logged in.
+    3. Authenticate and authorize users to add/edit comments.
+    4. Redirect user from Auth0 sign up page to information collection page.
+    5. Improve accessibility and mobile responsiveness.
 
 - [ ] Iteration 3
 - [ ] Iteration 4
@@ -97,13 +102,14 @@ Server development
 
 Client development
 
-- client home, login, search results, and professor rating details pages.
+- client home, search results, professor rating details, add/modify comments pages.
 
 ### Zhiwei Bao
 
 Client development
 
 - Client profile detail page. Comment and CommentList components.
+- Client security.
 
 <!-- LICENSE -->
 
