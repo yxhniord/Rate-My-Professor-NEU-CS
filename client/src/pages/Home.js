@@ -70,7 +70,7 @@ function Home() {
                 <Form className="search-area" onSubmit={handleSubmit}>
                     <FormControl className="search-box" placeholder="Type professor's name" size="lg" value={name}
                                  onChange={(e) => setName(e.target.value)}/>
-                    <Button variant="dark" type="submit" size="lg">
+                    <Button variant="dark" type="submit" size="lg" aria-label="search">
                         <FontAwesomeIcon className="search-icon" icon={faMagnifyingGlass}/>
                     </Button>
                 </Form>
@@ -97,7 +97,7 @@ function Home() {
                                                     alt="Carousel background image"
                                                 />
                                                 <Carousel.Caption className="headline-caption">
-                                                    <h3>{professors[index]?.first_name} {professors[index]?.last_name}</h3>
+                                                    <h1>{professors[index]?.first_name} {professors[index]?.last_name}</h1>
                                                     {comment.course && <p>Course: {comment.course}</p>}
                                                     {comment.rate && <p>Rating: {comment.rate}</p>}
                                                     {comment.content && <p className="headline-prof-comment">Comment: {comment.content}</p>}
@@ -122,9 +122,9 @@ function Home() {
                         </Col>
                         <Col as={Container} xs={12} md={6} className="neu-description">
                             <a href="https://www.northeastern.edu/experience/" target="_blank">
-                                <h3>Northeastern University</h3>
+                                <h1>Northeastern University</h1>
                             </a>
-                            <h6>Experience is at the core of all we do.</h6>
+                            <h2>Experience is at the core of all we do.</h2>
                             <p>It’s what you gain when you
                                 make the world your classroom, your laboratory, and your platform to create change
                                 or grow your enterprise. To find ways of doing things differently, and better. And to
