@@ -1,17 +1,15 @@
-.login-area {
-    margin: 5rem 30%
+.user-info-form {
+    margin: 5rem 35%;
 }
 
-.login-title {
+.user-info-form-title {
     display: flex;
     justify-content: center;
     padding: 1rem;
 }
 
-.login-input {
-    padding: 1rem 0 2rem 0;
+.user-info-form-input {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
 }

@@ -1,86 +1,94 @@
 import React, {useEffect, useState} from 'react';
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
 import "../styles/RatingDetails.css";
-import {Card, Col, Row, Spinner} from "react-bootstrap";
+import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate, useParams} from "react-router-dom";
+import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 
-function RatingDetails(props) {
-    const baseURL = process.env.REACT_APP_BACKEND_URL;
+function RatingDetails() {
+    const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
-    const [professor, setProfessor] = useState({});
     const [loading, setLoading] = useState(true);
+    const [professor, setProfessor] = useState({});
+    const [comments, setComments] = useState([]);
+    const [rating, setRating] = useState(0);
 
+    // Get professor details and comments
     useEffect(() => {
-        async function fetchProfessor() {
-            const response = await fetch(`${baseURL}/professor/id/${profId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
+        fetchProfessorById(baseURL, profId)
+            .then((data) => {
+                setProfessor(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                navigate("/error");
             });
-            const data = await response.json();
-            setProfessor(data);
-            setLoading(false);
-        }
 
-        fetchProfessor().catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+        fetchCommentsByProfessorId(baseURL, profId)
+            .then((data) => {
+                setComments(data);
+
+                if (data.length > 0) {
+                    let sum = 0;
+                    for (let comment of data) {
+                        sum += comment.rate;
+                    }
+                    setRating(Math.round(sum / data.length));
+                }
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                navigate("/error");
+            });
     }, []);
-
-    //TODO: fetch comments from comment id
 
     return (
         <div>
-            <Navigation/>
 
             {loading ?
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>
                 </Spinner> :
                 <main>
-                    <section className="prof-detail">
-                        <div className="prof-description">
-                            <div className="prof-title">
-                                <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
-                                <h2>
-                                    {professor.first_name}{" "}{professor.last_name}
-                                </h2>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam,
-                                aspernatur autem consequatur cumque doloremque dolores eaque eius
-                                eligendi, eveniet fugiat harum illo illum ipsa ipsum iste itaque
-                                laboriosam laudantium libero magni molestiae nam natus necessitatibus
-                                neque nihil nobis non nostrum numquam odit officia omnis optio
-                                pariatur perspiciatis porro quaerat quas quia quibusdam quidem quis
-                                quod ratione repellat repudiandae rerum saepe sed sequi similique
-                                sint soluta temporibus tenetur totam ullam unde, veritatis voluptas
-                                voluptate voluptates.
-                            </p>
-                        </div>
-                        <h1 className="prof-rating">
-                            5 / 5
-                        </h1>
+                    <section>
+                        <Container fluid>
+                            <Row className="prof-detail">
+                                <Col className="prof-description">
+                                    {/*<div className="prof-title">*/}
+                                    <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
+                                    <h3>
+                                        {professor.first_name}{" "}{professor.last_name}
+                                    </h3>
+                                    {/*</div>*/}
+                                </Col>
+                                <Col className="prof-rating">
+                                    <h3>
+                                        {isNaN(rating) ? 0 : rating} / 5
+                                    </h3>
+                                    <Button className="add-rating" variant="dark"
+                                            onClick={() => navigate(`/newComment/${profId}`)}>
+                                        Add Comment
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Container>
                     </section>
 
                     <section className="comment-detail">
                         <Row lg={1} className="g-4 comment-items">
-                            {Array.from({length: 4}).map((_, idx) => (
-                                <Col key={idx}>
+                            {comments.map((comment) => (
+                                <Col key={comment._id}>
                                     <Card className="comment-item">
                                         <Card.Body className="comment-item-rating">
-                                            <Card.Text as="h3">{idx} / 5</Card.Text>
+                                            <Card.Text as="h4">{comment.rate} / 5</Card.Text>
                                         </Card.Body>
                                         <Card.Body className={"comment-item-content"}>
-                                            <Card.Title>{`CS 000${idx}`}</Card.Title>
-                                            <Card.Text>
-                                                {"Comments: The household registration is also integral to the state’s control capacity. It splits the population into subcategories, divides the working population, and prevents both urban-rural and broad working-class solidarity."}
+                                            <Card.Title as={"h6"}>{comment.course}</Card.Title>
+                                            <Card.Text as="p">
+                                                From {comment.campus} campus: {comment.content}
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>
@@ -90,7 +98,6 @@ function RatingDetails(props) {
                     </section>
                 </main>
             }
-            <Footer/>
         </div>
     );
 }

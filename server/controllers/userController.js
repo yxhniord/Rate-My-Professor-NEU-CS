@@ -1,7 +1,4 @@
 var User = require("../models/user");
-var Comment = require("../models/comment");
-
-var async = require("async");
 
 const { body, validationResult } = require("express-validator");
 
@@ -16,23 +13,21 @@ exports.user_detail = function (req, res, next) {
   });
 };
 
+exports.user_detail_by_auth0id = function (req, res, next) {
+  User.find({ auth0_id: req.params.id }).exec(function (err, user) {
+    if (err) {
+      // return next(err);
+      return res.status(500).json({ message: err });
+    }
+    res.status(200).json(user);
+  });
+};
+
 // POST request: create a user.
 exports.user_create = [
   // Validate and sanitize fields.
-  body("first_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("First name must be specified.")
-    .isAlphanumeric()
-    .withMessage("First name has non-alphanumeric characters."),
-  body("last_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Last name must be specified.")
-    .isAlphanumeric()
-    .withMessage("Last name has non-alphanumeric characters."),
+  body("nickname", "Nickname required").trim().isLength({ min: 1 }).escape(),
+  body("auth0_id", "auth0_id required").trim().isLength({ min: 1 }).escape(),
   body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
 
   // Process request after validation and sanitization.
@@ -42,8 +37,8 @@ exports.user_create = [
 
     // Create a user object with escaped and trimmed data.
     var user = new User({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
+      nickname: req.body.nickname,
+      auth0_id: req.body.auth0_id,
       campus: req.body.campus,
     });
 
@@ -64,35 +59,20 @@ exports.user_create = [
 
 // DELETE request: delete user.
 exports.user_delete = function (req, res, next) {
-  async.parallel(
+  User.findByIdAndUpdate(
+    req.params.id,
     {
-      user_comments: function (callback) {
-        Comment.find({ user: req.params.id }).exec(callback);
+      $set: {
+        nickname: "Deleted",
       },
     },
-    function (err, results) {
+    { new: true },
+    function (err, theuser) {
       if (err) {
-        // return next(err);
-        return res.status(500).json({ message: err });
+        res.status(500).json({ message: err });
+      } else {
+        res.status(200).json(theuser);
       }
-      // Success
-      if (results.user_comments.length > 0) {
-        // User has comments. Delete the comments first.
-        results.user_comments.forEach((commentId) => {
-          Comment.findByIdAndRemove(commentId, function deleteComment(err) {
-            if (err) {
-              return res.status(500).json({ message: err });
-            }
-          });
-        });
-      }
-      // Delete user.
-      User.findByIdAndRemove(req.params.id, function deleteUser(err) {
-        if (err) {
-          return res.status(500).json({ message: err });
-        }
-        res.status(200).json({ message: "User successfully deleted" });
-      });
     }
   );
 };
@@ -100,20 +80,7 @@ exports.user_delete = function (req, res, next) {
 // POST request: update user.
 exports.user_update = [
   // Validate and sanitize fields.
-  body("first_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("First name must be specified.")
-    .isAlphanumeric()
-    .withMessage("First name has non-alphanumeric characters."),
-  body("last_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Last name must be specified.")
-    .isAlphanumeric()
-    .withMessage("Last name has non-alphanumeric characters."),
+  body("nickname", "Nickname required").trim().isLength({ min: 1 }).escape(),
   body("campus", "Campus required").trim().isLength({ min: 1 }).escape(),
 
   // Process request after validation and sanitization.
@@ -129,8 +96,7 @@ exports.user_update = [
       req.params.id,
       {
         $set: {
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
+          nickname: req.body.nickname,
           campus: req.body.campus,
         },
       },

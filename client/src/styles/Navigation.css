@@ -22,16 +22,18 @@
 .login-text {
     display: flex;
     flex-direction: column;
-    font-size: 1.2rem;
+    align-items: center;
+    font-size: 1rem;
     color: white;
 }
 
-.login-login {
-    font-size: 1rem;
-    color: white;
+.logout-text {
+    color: darkgrey;
+    font-size: 0.8rem;
 }
 
 .login-icon {
     font-size: 1.5rem;
     margin-left: 1rem;
+    color: white;
 }
