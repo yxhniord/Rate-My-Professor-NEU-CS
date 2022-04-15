@@ -10,7 +10,7 @@ function UserInfoForm() {
     const navigate = useNavigate();
     const {isLoading, isAuthenticated, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
-    const [newNickname, setNewNickname] = useState("nickname");
+    const [newNickname, setNewNickname] = useState("");
     const [newCampus, setNewCampus] = useState("Vancouver");
     const [dbUser, setDbUser] = useState(null);
     const handleSumbit = async (e) => {

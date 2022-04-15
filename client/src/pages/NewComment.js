@@ -60,7 +60,7 @@ function NewComment() {
                                 });
                         }
 
-                        // If new comment from professor/:profId
+                            // If new comment from professor/:profId
                         // Set only fields related to professor, others remain blank
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
@@ -83,7 +83,7 @@ function NewComment() {
     }, [isLoading]);
 
     // Called when the submit button is clicked
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Reset error message everytime submit button is clicked
         setWrongInputMessage([]);
@@ -99,10 +99,11 @@ function NewComment() {
             user: dbUser._id,
             professor: professor._id,
         };
-
+        const token = await getAccessTokenSilently();
         // In case of updating a comment
         if (commentId !== undefined) {
-            updateComment(baseURL, commentId, createdNewComment)
+
+            updateComment(baseURL, commentId, createdNewComment, token)
                 .then((response) => {
                     // Check if inputs are valid
                     if (response) {
@@ -119,9 +120,9 @@ function NewComment() {
                     console.log(error);
                     navigate("/error");
                 });
-        //    In case of creating new comment
+            //    In case of creating new comment
         } else if (profId !== undefined) {
-            createComment(baseURL, createdNewComment)
+            createComment(baseURL, createdNewComment, token)
                 .then((response) => {
                     // Check if inputs are valid
                     if (response) {
@@ -153,7 +154,8 @@ function NewComment() {
                         {wrongInputMessage.length > 0 &&
                             <Alert className="wrong-input-alert" variant="danger" dismissible>
                                 <Alert.Heading>Some required fields are missing!</Alert.Heading>
-                                {wrongInputMessage.map((errMessage, index) => <p key={index}>{index + 1}: {errMessage}</p>)}
+                                {wrongInputMessage.map((errMessage, index) => <p
+                                    key={index}>{index + 1}: {errMessage}</p>)}
                             </Alert>
                         }
                         <Card className="new-comment-area">

@@ -86,12 +86,13 @@ export const fetchCommentsByUserId = async (baseURL, userId) => {
     return await response.json();
 }
 
-export const updateComment = async (baseURL, commentId, createdNewComment) => {
+export const updateComment = async (baseURL, commentId, createdNewComment, token) => {
     const response = await fetch(`${baseURL}/comment/update/${commentId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(createdNewComment)
     });
@@ -99,12 +100,13 @@ export const updateComment = async (baseURL, commentId, createdNewComment) => {
     return response.status === 500 ? await response.json() : null;
 }
 
-export const createComment = async (baseURL, createdNewComment) => {
+export const createComment = async (baseURL, createdNewComment, token) => {
     const response = await fetch(`${baseURL}/comment/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(createdNewComment)
     });
