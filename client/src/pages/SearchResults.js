@@ -20,9 +20,9 @@ function SearchResults() {
                 setLoading(false);
             })
             .catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+                console.log(error);
+                navigate("/error");
+            });
 
     }, []);
 
@@ -54,7 +54,8 @@ function SearchResults() {
                                             </Card.Body>
                                             <Card.Body className={"search-result-content"}>
                                                 <Card.Text as="p">
-                                                    {professor.comment.length} {professor.comment.length > 1? " students" : " student"} commented on this professor.
+                                                    {professor.comment.length} {professor.comment.length > 1 ? " students" : " student"} commented
+                                                    on this professor.
                                                 </Card.Text>
                                             </Card.Body>
 

@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
 router.get("/professor/:id", comment_controller.comment_list_byProfessorId);
 
 // GET request: get comment list by user id.
-router.get("/user/:id", comment_controller.comment_list_byUserId);
+router.get("/user/:id", checkJWT, comment_controller.comment_list_byUserId);
 
 // GET request: get one comment.
 router.get("/id/:id", comment_controller.comment_detail);
