@@ -72,7 +72,7 @@ function Navigation() {
                                     </Spinner> :
                                     <>
                                         <div className="login-text">
-                                            <Link role="button" to={"/profile"}
+                                            <Link role="button" to={"/profile/user-info"}
                                                   style={{textDecoration: 'none', color: "white"}}>
                                                         <span>
                                                             {'Hello, '}
@@ -86,7 +86,7 @@ function Navigation() {
                                                 {'Logout    '}
                                             </span>
                                         </div>
-                                        <Link role="button" to={"/profile"}
+                                        <Link role="button" to={"/profile/user-info"}
                                               style={{textDecoration: 'none', color: "white"}}>
                                             <FontAwesomeIcon className="login-icon" icon={faUser}/>
                                         </Link>

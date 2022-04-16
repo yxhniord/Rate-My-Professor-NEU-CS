@@ -3,17 +3,18 @@ import {Button, ListGroup, ListGroupItem, Spinner, Tab, Tabs} from "react-bootst
 import CommentList from "../components/CommentList";
 import "../styles/Profile.css"
 import {useAuth0} from "@auth0/auth0-react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {fetchDbUser, deleteCommentByCommentId, fetchCommentsByUserId} from "../function/Api.js";
 
 function Profile() {
     const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseURL = process.env.REACT_APP_BASE_URL;
+    const tabKey = useParams().key;
+    const [key, setKey] = useState(tabKey);
     const [dbUser, setDbUser] = useState(null);
     const [comments, setComments] = useState([]);
     const navigate = useNavigate();
-
 
     useEffect(() => {
         async function fetchData() {
@@ -71,7 +72,7 @@ function Profile() {
 
             <main>
                 <div className="profile-area">
-                    <Tabs defaultActiveKey="user-info" id="profile-tabs" className="mb-3">
+                    <Tabs id="profile-tabs" activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
                         <Tab eventKey="user-info" title="Profile">
                             {loading || isLoading || dbUser == null ?
                                 <Spinner animation="border" role="status">
