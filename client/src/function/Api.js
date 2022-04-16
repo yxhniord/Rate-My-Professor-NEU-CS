@@ -86,6 +86,20 @@ export const fetchCommentsByUserId = async (baseURL, userId) => {
     return await response.json();
 }
 
+export const createComment = async (baseURL, createdNewComment, token) => {
+    const response = await fetch(`${baseURL}/comment/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(createdNewComment)
+    });
+
+    return response.status === 500 ? await response.json() : null;
+}
+
 export const updateComment = async (baseURL, commentId, createdNewComment, token) => {
     const response = await fetch(`${baseURL}/comment/update/${commentId}`, {
         method: 'POST',
@@ -100,16 +114,15 @@ export const updateComment = async (baseURL, commentId, createdNewComment, token
     return response.status === 500 ? await response.json() : null;
 }
 
-export const createComment = async (baseURL, createdNewComment, token) => {
-    const response = await fetch(`${baseURL}/comment/create`, {
-        method: 'POST',
+export const deleteCommentByCommentId = async (baseURL, commentId, token) => {
+    const response = await fetch(`${baseURL}/comment/delete/${commentId}`, {
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(createdNewComment)
+        }
     });
 
-    return response.status === 500 ? await response.json() : null;
+    return await response.json();
 }

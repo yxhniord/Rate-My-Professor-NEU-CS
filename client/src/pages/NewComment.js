@@ -20,8 +20,8 @@ function NewComment() {
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
     let profIdFromComment;
 
-    useEffect(async () => {
-        if (!isLoading) {
+    useEffect(() => {
+        async function fetchData(){
             // fetch dbUser
             const token = await getAccessTokenSilently();
             await fetchDbUser(baseURL, user.sub, token)
@@ -60,7 +60,7 @@ function NewComment() {
                                 });
                         }
 
-                            // If new comment from professor/:profId
+                        // If new comment from professor/:profId
                         // Set only fields related to professor, others remain blank
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
@@ -75,6 +75,10 @@ function NewComment() {
                         }
                     }
                 })
+        }
+
+        if (!isLoading) {
+            fetchData()
                 .catch((error) => {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");
@@ -141,11 +145,6 @@ function NewComment() {
                 });
         }
     };
-
-    // Called when the delete button is clicked
-    const handleDelete = (e) =>{
-        e.preventDefault();
-    }
 
     return (
         <div>
@@ -228,9 +227,6 @@ function NewComment() {
                                     <br/>
                                     <Button className="mb-3" variant="dark" type="submit" onClick={handleSubmit}>
                                         Submit
-                                    </Button>
-                                    <Button variant="danger" type="submit" onClick={handleDelete}>
-                                        Delete
                                     </Button>
                                 </Form>
                             </Card.Body>

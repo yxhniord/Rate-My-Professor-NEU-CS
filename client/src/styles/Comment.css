@@ -8,6 +8,10 @@
     width: 60vw;
 }
 
-.edit-icon {
+.icons {
     font-size: 1.2rem;
+}
+
+.edit-icon {
+    margin-right: 1rem;
 }
