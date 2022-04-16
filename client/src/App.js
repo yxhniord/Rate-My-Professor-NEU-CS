@@ -18,7 +18,7 @@ function App() {
             <Navigation/>
             <Routes>
                 <Route path="/" element={<Home/>}/>
-                <Route path="/profile" element={<ProtectedRoute protectedComponent={Profile}/>}/>
+                <Route path="/profile/:key" element={<ProtectedRoute protectedComponent={Profile}/>}/>
                 <Route path="/search/:name" element={<SearchResults/>}/>
                 <Route path="/details/:profId" element={<RatingDetails/>}/>
                 <Route path="/newComment/:profId" element={<ProtectedRoute protectedComponent={NewComment}/>}/>

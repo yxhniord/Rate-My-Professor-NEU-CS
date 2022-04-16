@@ -13,34 +13,6 @@ function UserInfoForm() {
     const [newNickname, setNewNickname] = useState("");
     const [newCampus, setNewCampus] = useState("Vancouver");
     const [dbUser, setDbUser] = useState(null);
-    const handleSumbit = async (e) => {
-        e.preventDefault();
-        const newUserInfo = {
-            nickname: newNickname,
-            campus: newCampus,
-            auth0_id: user.sub
-        };
-        const token = await getAccessTokenSilently();
-        if (dbUser == null) {
-            // create new user
-            createNewUser(baseURL, newUserInfo, token)
-                .then(() => {
-                    navigate('/profile');
-                }).catch(err => {
-                console.log(err);
-                navigate("/error");
-            })
-        } else {
-            // update existing user
-            updateUser(baseURL, dbUser._id, newUserInfo, token)
-                .then(() => {
-                    navigate('/profile');
-                }).catch(err => {
-                console.log(err);
-                navigate("/error");
-            })
-        }
-    };
 
     useEffect(() => {
         async function fetchData() {
@@ -68,6 +40,35 @@ function UserInfoForm() {
         }
 
     }, [isLoading]);
+
+    const handleSumbit = async (e) => {
+        e.preventDefault();
+        const newUserInfo = {
+            nickname: newNickname,
+            campus: newCampus,
+            auth0_id: user.sub
+        };
+        const token = await getAccessTokenSilently();
+        if (dbUser == null) {
+            // create new user
+            createNewUser(baseURL, newUserInfo, token)
+                .then(() => {
+                    navigate('/profile/user-info');
+                }).catch(err => {
+                console.log(err);
+                navigate("/error");
+            })
+        } else {
+            // update existing user
+            updateUser(baseURL, dbUser._id, newUserInfo, token)
+                .then(() => {
+                    navigate('/profile/user-info');
+                }).catch(err => {
+                console.log(err);
+                navigate("/error");
+            })
+        }
+    };
 
     return (
         <div>

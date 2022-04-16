@@ -117,7 +117,8 @@ function NewComment() {
                         }
                         setWrongInputMessage(array);
                     } else {
-                        navigate(`/details/${professor._id}`);
+                        console.log("Successfully updated comment");
+                        navigate(`/profile/user-comments`);
                     }
                 })
                 .catch((error) => {
@@ -136,6 +137,7 @@ function NewComment() {
                         }
                         setWrongInputMessage(array);
                     } else {
+                        console.log('new comment created');
                         navigate(`/details/${professor._id}`);
                     }
                 })
