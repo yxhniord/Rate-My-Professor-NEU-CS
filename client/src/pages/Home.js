@@ -30,7 +30,7 @@ function Home() {
                         setDbUser(dbUsers[0]);
 
                         // Then get comments from database based on user id
-                        fetchCommentsByUserId(baseURL, dbUsers[0]._id)
+                        fetchCommentsByUserId(baseURL, dbUsers[0]._id, token)
                             .then(comments => {
                                 setComments(comments);
 
@@ -100,7 +100,8 @@ function Home() {
                                                     <h1>{professors[index]?.first_name} {professors[index]?.last_name}</h1>
                                                     {comment.course && <p>Course: {comment.course}</p>}
                                                     {comment.rate && <p>Rating: {comment.rate}</p>}
-                                                    {comment.content && <p className="headline-prof-comment">Comment: {comment.content}</p>}
+                                                    {comment.content &&
+                                                        <p className="headline-prof-comment">Comment: {comment.content}</p>}
                                                 </Carousel.Caption>
                                             </Carousel.Item>)
                                     })}

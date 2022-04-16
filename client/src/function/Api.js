@@ -76,11 +76,12 @@ export const fetchCommentById = async (baseURL, commentId) => {
     return await response.json();
 }
 
-export const fetchCommentsByUserId = async (baseURL, userId) => {
+export const fetchCommentsByUserId = async (baseURL, userId, token) => {
     const response = await fetch(`${baseURL}/comment/user/${userId}`, {
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     });
     return await response.json();
