@@ -142,6 +142,11 @@ function NewComment() {
         }
     };
 
+    // Called when the delete button is clicked
+    const handleDelete = (e) =>{
+        e.preventDefault();
+    }
+
     return (
         <div>
 
@@ -221,8 +226,11 @@ function NewComment() {
                                     <p>Fields with * are required</p>
 
                                     <br/>
-                                    <Button variant="dark" type="submit" onClick={handleSubmit}>
+                                    <Button className="mb-3" variant="dark" type="submit" onClick={handleSubmit}>
                                         Submit
+                                    </Button>
+                                    <Button variant="danger" type="submit" onClick={handleDelete}>
+                                        Delete
                                     </Button>
                                 </Form>
                             </Card.Body>

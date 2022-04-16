@@ -19,19 +19,22 @@ function Comment({comment}) {
                 setProfessor(data);
             })
             .catch((err) => {
-            console.log(err);
-            navigate("/error");
-        });
+                console.log(err);
+                navigate("/error");
+            });
     }, []);
 
     return (
         <Card className="mb-3">
             <Card.Header className="comment-header">
                 {professor != null ?
-                    <span>{professor?.first_name} {professor?.last_name}</span> :
+                    <span role="button"
+                          onClick={() => navigate(`/details/${professor._id}`)}>
+                        {professor?.first_name} {professor?.last_name}
+                    </span> :
                     <span>Loading</span>
                 }
-                <FontAwesomeIcon className="edit-icon" icon={faPenToSquare}
+                <FontAwesomeIcon role="button" className="edit-icon" icon={faPenToSquare}
                                  onClick={() => navigate(`/updateComment/${comment._id}`)}/>
             </Card.Header>
             <Card.Body>
