@@ -3,6 +3,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
 import {fetchProfessorsByName} from "../function/Api";
+import NewProfessor from "./NewProfessor";
 
 function SearchResults() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -64,6 +65,8 @@ function SearchResults() {
                                 ))}
                             </>}
                     </Row>
+
+                    <NewProfessor/>
                 </main>
             }
 
