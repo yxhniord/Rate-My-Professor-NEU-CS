@@ -56,6 +56,20 @@ export const fetchProfessorsByName = async (baseURL, name) => {
     return await response.json();
 }
 
+export const createProfessor = async (baseURL, createdNewProfessor, token) => {
+    const response = await fetch(`${baseURL}/professor/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(createdNewProfessor)
+    });
+
+    return await response.json();
+}
+
 export const fetchCommentsByProfessorId = async (baseURL, profId) => {
     const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
         headers: {

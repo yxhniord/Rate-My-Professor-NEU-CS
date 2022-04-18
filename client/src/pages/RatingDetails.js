@@ -3,13 +3,14 @@ import "../styles/RatingDetails.css";
 import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useLocation} from "react-router-dom";
 import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [comments, setComments] = useState([]);
@@ -43,7 +44,7 @@ function RatingDetails() {
                 console.log(error);
                 navigate("/error");
             });
-    }, []);
+    }, [location.key]);
 
     return (
         <div>
@@ -66,7 +67,7 @@ function RatingDetails() {
                                 </Col>
                                 <Col className="prof-rating">
                                     <h3>
-                                        {isNaN(rating) ? 0 : rating} / 5
+                                        {professor.rate} / 5
                                     </h3>
                                     <Button className="add-rating" variant="dark"
                                             onClick={() => navigate(`/newComment/${profId}`)}>

@@ -2,7 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {Alert, Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import "../styles/NewProfessor.css";
-import {createComment, fetchCommentById, fetchDbUser, fetchProfessorById, updateComment} from "../function/Api";
+import {
+    createComment,
+    createProfessor,
+    fetchCommentById,
+    fetchDbUser,
+    fetchProfessorById,
+    updateComment
+} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
 
 function NewProfessor() {
@@ -15,28 +22,28 @@ function NewProfessor() {
     const [dbUser, setDbUser] = useState({});
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
 
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         // fetch dbUser
-    //         const token = await getAccessTokenSilently();
-    //         await fetchDbUser(baseURL, user.sub, token)
-    //             .then((data) => {
-    //                 if (data.length === 0) {
-    //                     navigate("/userInfoForm");
-    //                 } else {
-    //                     setDbUser(data[0]);
-    //                 }
-    //             })
-    //     }
-    //
-    //     if (!isLoading) {
-    //         fetchData()
-    //             .catch((error) => {
-    //                 console.log(`error from fetching user from database: ${error}`);
-    //                 navigate("/error");
-    //             });
-    //     }
-    // }, [isLoading]);
+    useEffect(() => {
+        async function fetchData() {
+            // fetch dbUser
+            const token = await getAccessTokenSilently();
+            await fetchDbUser(baseURL, user.sub, token)
+                .then((data) => {
+                    if (data.length === 0) {
+                        navigate("/userInfoForm");
+                    } else {
+                        setDbUser(data[0]);
+                    }
+                })
+        }
+
+        if (!isLoading) {
+            fetchData()
+                .catch((error) => {
+                    console.log(`error from fetching user from database: ${error}`);
+                    navigate("/error");
+                });
+        }
+    }, [isLoading]);
 
     // Called when the submit button is clicked
     const handleSubmit = async (e) => {
@@ -51,6 +58,18 @@ function NewProfessor() {
         };
         const token = await getAccessTokenSilently();
 
+        createProfessor(baseURL, createdNewProfessor, token)
+            .then(response => {
+                if (response.message !== undefined) {
+                    let array = []
+                    for (let m of response.message) {
+                        array.push(m.msg);
+                    }
+                    setWrongInputMessage(array);
+                } else {
+                    navigate(`/details/${response._id}`)
+                }
+            })
 
     };
 
