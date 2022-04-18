@@ -207,11 +207,12 @@ function NewComment() {
                                             at*
                                         </Form.Label>
                                         <Col sm="4">
-                                            <Form.Control placeholder="Campus name" autoComplete="off" value={
-                                                newCampus
-                                            } onChange={(e) => {
-                                                setNewCampus(e.target.value)
-                                            }}/>
+                                            <Form.Select aria-label="Default select example" onChange={e => setNewCampus(e.target.value)}>
+                                                <option>Select your campus</option>
+                                                <option value="Vancouver">Vancouver</option>
+                                                <option value="Seattle">Seattle</option>
+                                                <option value="Boston">Boston</option>
+                                            </Form.Select>
                                         </Col>
                                     </Form.Group>
 
