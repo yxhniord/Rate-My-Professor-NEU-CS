@@ -11,6 +11,7 @@ import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserInfoForm from "./pages/UserInfoForm";
+import NewProfessor from "./pages/NewProfessor";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/newComment/:profId" element={<ProtectedRoute protectedComponent={NewComment}/>}/>
                 <Route path="/updateComment/:commentId" element={<ProtectedRoute protectedComponent={NewComment}/>}/>
                 <Route path="/userInfoForm" element={<ProtectedRoute protectedComponent={UserInfoForm}/>}/>
+                <Route path="/newProfessor" element={<ProtectedRoute protectedComponent={NewProfessor}/> }/>
                 <Route path="/error" element={<Error/>}/>
                 <Route path="*" element={<p>Sorry! Nothing to show.</p>}/>
             </Routes>

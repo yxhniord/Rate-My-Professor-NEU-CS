@@ -67,7 +67,7 @@ function RatingDetails() {
                                 </Col>
                                 <Col className="prof-rating">
                                     <h3>
-                                        {professor.rate} / 5
+                                        {professor.rate ? professor.rate : 0} / 5
                                     </h3>
                                     <Button className="add-rating" variant="dark"
                                             onClick={() => navigate(`/newComment/${profId}`)}>

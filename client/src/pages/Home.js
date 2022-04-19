@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 import {useAuth0} from "@auth0/auth0-react";
-import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById} from "../function/Api";
+import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById, fetchTopRateProfessors} from "../function/Api";
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -33,6 +33,7 @@ function Home() {
                         fetchCommentsByUserId(baseURL, dbUsers[0]._id, token)
                             .then(comments => {
                                 setComments(comments);
+                                setProfessors([]);
 
                                 // For each comment, get professors from database and store in an array
                                 for (let comment of comments) {
@@ -49,6 +50,16 @@ function Home() {
 
         if (isAuthenticated) {
             fetchData()
+                .catch((err) => {
+                    console.log(err);
+                    navigate("/error");
+                });
+        } else {
+            fetchTopRateProfessors(baseURL)
+                .then(data => {
+                    setProfessors(data);
+                    setLoading(false);
+                })
                 .catch((err) => {
                     console.log(err);
                     navigate("/error");
@@ -88,7 +99,7 @@ function Home() {
                             </Spinner> :
                             <>
                                 {comments.length > 0 && <Carousel className="headline-img">
-                                    {comments.map((comment, index) => {
+                                    {comments.slice(0, 5).map((comment, index) => {
                                         return (
                                             <Carousel.Item key={comment._id}>
                                                 <img

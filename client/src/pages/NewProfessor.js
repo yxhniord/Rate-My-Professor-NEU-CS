@@ -15,7 +15,7 @@ import {useAuth0} from "@auth0/auth0-react";
 function NewProfessor() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
-    const {isLoading, user, getAccessTokenSilently} = useAuth0();
+    const {isLoading, isAuthenticated, user, getAccessTokenSilently} = useAuth0();
     const [professor, setProfessor] = useState({});
     const [fName, setFName] = useState("");
     const [lName, setLName] = useState("");
@@ -36,14 +36,14 @@ function NewProfessor() {
                 })
         }
 
-        if (!isLoading) {
+        if (!isLoading && isAuthenticated) {
             fetchData()
                 .catch((error) => {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");
                 });
         }
-    }, [isLoading]);
+    }, [isLoading, isAuthenticated]);
 
     // Called when the submit button is clicked
     const handleSubmit = async (e) => {

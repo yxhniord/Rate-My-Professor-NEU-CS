@@ -64,9 +64,13 @@ function SearchResults() {
                                     </Col>
                                 ))}
                             </>}
+                        <h5>
+                            No professor found?{" "}
+                            <Link to="/newProfessor">
+                                Create a new one
+                            </Link>
+                        </h5>
                     </Row>
-
-                    <NewProfessor/>
                 </main>
             }
 

@@ -117,7 +117,6 @@ function NewComment() {
                         }
                         setWrongInputMessage(array);
                     } else {
-                        console.log("Successfully updated comment");
                         navigate(`/profile/user-comments`);
                     }
                 })

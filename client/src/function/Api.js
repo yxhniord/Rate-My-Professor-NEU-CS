@@ -56,6 +56,16 @@ export const fetchProfessorsByName = async (baseURL, name) => {
     return await response.json();
 }
 
+export const fetchTopRateProfessors = async (baseURL) => {
+    const response = await fetch(`${baseURL}/professor/list`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+    return await response.json();
+}
+
 export const createProfessor = async (baseURL, createdNewProfessor, token) => {
     const response = await fetch(`${baseURL}/professor/create`, {
         method: 'POST',
