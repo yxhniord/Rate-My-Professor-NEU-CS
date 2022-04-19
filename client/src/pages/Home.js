@@ -9,16 +9,37 @@ import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById, fetchTopRateProf
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
+    const youtubeAPI = process.env.REACT_APP_YOUTUBE_API;
+    const youtubeAPIKey = process.env.REACT_APP_YOUTUBE_API_KEY;
     const [name, setName] = useState("");
     const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
+    const [youtubeLoading, setYoutubeLoading] = useState(true);
+    const [videoMetaInfo, setVideoMetaInfo] = useState(null);
     const [dbUser, setDbUser] = useState(null);
     const [comments, setComments] = useState([]);
     const [professors, setProfessors] = useState([]);
     const navigate = useNavigate();
 
+    async function getYouTubePlaylistItems() {
+        const res = await fetch(`${youtubeAPI}/search?part=snippet&type=video&q=northeastern+university&maxResults=5&key=${youtubeAPIKey}`);
+        return await res.json();
+    }
 
     useEffect(() => {
+        getYouTubePlaylistItems()
+            .then((res) => {
+                if (res?.error) {
+                    return;
+                }
+                const index = Math.floor(Math.random() * res.items.length);
+                setVideoMetaInfo(res.items[index]);
+                setYoutubeLoading(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
         async function fetchData() {
             // First get user from database if authenticated
             const token = await getAccessTokenSilently();
@@ -65,7 +86,7 @@ function Home() {
                     navigate("/error");
                 });
         }
-    }, [isLoading, isAuthenticated]);
+    }, [isLoading, isAuthenticated, youtubeLoading]);
 
 
     const handleSubmit = (event) => {
@@ -158,10 +179,16 @@ function Home() {
                 <Container fluid className="about-container">
                     <Row>
                         <Col as={Container} xs={12} md={6} className="neu-video">
-                            <iframe src="https://www.youtube.com/embed/HwBcOli0YLM"
-                                    title="YouTube video player" frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen/>
+                            {youtubeLoading || videoMetaInfo == null ?
+                                <iframe src={`https://www.youtube.com/embed/HwBcOli0YLM`}
+                                        title="YouTube video player" frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen/> :
+                                <iframe src={`https://www.youtube.com/embed/${videoMetaInfo.id.videoId}`}
+                                        title="YouTube video player" frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen/>
+                            }
                         </Col>
                         <Col as={Container} xs={12} md={6} className="neu-description">
                             <a href="https://www.northeastern.edu/experience/" target="_blank">
