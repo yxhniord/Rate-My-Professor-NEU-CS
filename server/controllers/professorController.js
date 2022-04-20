@@ -23,6 +23,19 @@ exports.professor_list = function (req, res, next) {
     });
 };
 
+// GET request: get top 5 professors list by rate.
+exports.professor_list_byrate = function (req, res, next) {
+  Professor.find({})
+    .sort({ rate: -1 })
+    .limit(5)
+    .exec(function (err, professor_list) {
+      if (err) {
+        return res.status(500).json({ message: err });
+      }
+      res.status(200).json(professor_list);
+    });
+};
+
 // GET request: get one professor.
 exports.professor_detail = function (req, res, next) {
   Professor.findById(req.params.id).exec(function (err, professor) {

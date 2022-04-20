@@ -59,7 +59,7 @@ function Navigation() {
 
                     <Nav className="me-auto option-text">
                         <Nav.Link as={HashLink} to={"/#search"}>Search</Nav.Link>
-                        {isAuthenticated && <Nav.Link as={HashLink} to={"/#headline"}>Comments</Nav.Link>}
+                        <Nav.Link as={HashLink} to={"/#headline"}>{isAuthenticated ? "Comments" : "Top-Professors"}</Nav.Link>
                         <Nav.Link as={HashLink} to={"/#about"}>About</Nav.Link>
                     </Nav>
 
@@ -72,7 +72,7 @@ function Navigation() {
                                     </Spinner> :
                                     <>
                                         <div className="login-text">
-                                            <Link role="button" to={"/profile"}
+                                            <Link role="button" to={"/profile/user-info"}
                                                   style={{textDecoration: 'none', color: "white"}}>
                                                         <span>
                                                             {'Hello, '}
@@ -86,7 +86,7 @@ function Navigation() {
                                                 {'Logout    '}
                                             </span>
                                         </div>
-                                        <Link role="button" to={"/profile"}
+                                        <Link role="button" to={"/profile/user-info"}
                                               style={{textDecoration: 'none', color: "white"}}>
                                             <FontAwesomeIcon className="login-icon" icon={faUser}/>
                                         </Link>

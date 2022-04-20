@@ -1,0 +1,21 @@
+.new-professor-area {
+    margin: 3rem 20%
+}
+
+.new-professor-title {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.new-professor-input {
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.wrong-input-alert {
+    margin: 2rem 20%;
+}

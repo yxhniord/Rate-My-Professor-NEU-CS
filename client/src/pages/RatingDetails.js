@@ -3,17 +3,17 @@ import "../styles/RatingDetails.css";
 import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useLocation} from "react-router-dom";
 import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 
 function RatingDetails() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [comments, setComments] = useState([]);
-    const [rating, setRating] = useState(0);
 
     // Get professor details and comments
     useEffect(() => {
@@ -29,21 +29,13 @@ function RatingDetails() {
         fetchCommentsByProfessorId(baseURL, profId)
             .then((data) => {
                 setComments(data);
-
-                if (data.length > 0) {
-                    let sum = 0;
-                    for (let comment of data) {
-                        sum += comment.rate;
-                    }
-                    setRating(Math.round(sum / data.length));
-                }
                 setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
                 navigate("/error");
             });
-    }, []);
+    }, [location.key]);
 
     return (
         <div>
@@ -66,7 +58,7 @@ function RatingDetails() {
                                 </Col>
                                 <Col className="prof-rating">
                                     <h3>
-                                        {isNaN(rating) ? 0 : rating} / 5
+                                        {professor.rate ? professor.rate : 0} / 5
                                     </h3>
                                     <Button className="add-rating" variant="dark"
                                             onClick={() => navigate(`/newComment/${profId}`)}>

@@ -20,8 +20,8 @@ function NewComment() {
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
     let profIdFromComment;
 
-    useEffect(async () => {
-        if (!isLoading) {
+    useEffect(() => {
+        async function fetchData() {
             // fetch dbUser
             const token = await getAccessTokenSilently();
             await fetchDbUser(baseURL, user.sub, token)
@@ -60,7 +60,7 @@ function NewComment() {
                                 });
                         }
 
-                        // If new comment from professor/:profId
+                            // If new comment from professor/:profId
                         // Set only fields related to professor, others remain blank
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
@@ -75,6 +75,10 @@ function NewComment() {
                         }
                     }
                 })
+        }
+
+        if (!isLoading) {
+            fetchData()
                 .catch((error) => {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");
@@ -83,7 +87,7 @@ function NewComment() {
     }, [isLoading]);
 
     // Called when the submit button is clicked
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Reset error message everytime submit button is clicked
         setWrongInputMessage([]);
@@ -99,10 +103,11 @@ function NewComment() {
             user: dbUser._id,
             professor: professor._id,
         };
-
+        const token = await getAccessTokenSilently();
         // In case of updating a comment
         if (commentId !== undefined) {
-            updateComment(baseURL, commentId, createdNewComment)
+
+            updateComment(baseURL, commentId, createdNewComment, token)
                 .then((response) => {
                     // Check if inputs are valid
                     if (response) {
@@ -112,16 +117,16 @@ function NewComment() {
                         }
                         setWrongInputMessage(array);
                     } else {
-                        navigate(`/details/${professor._id}`);
+                        navigate(`/profile/user-comments`);
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                     navigate("/error");
                 });
-        //    In case of creating new comment
+            //    In case of creating new comment
         } else if (profId !== undefined) {
-            createComment(baseURL, createdNewComment)
+            createComment(baseURL, createdNewComment, token)
                 .then((response) => {
                     // Check if inputs are valid
                     if (response) {
@@ -153,7 +158,8 @@ function NewComment() {
                         {wrongInputMessage.length > 0 &&
                             <Alert className="wrong-input-alert" variant="danger" dismissible>
                                 <Alert.Heading>Some required fields are missing!</Alert.Heading>
-                                {wrongInputMessage.map((errMessage, index) => <p key={index}>{index + 1}: {errMessage}</p>)}
+                                {wrongInputMessage.map((errMessage, index) => <p
+                                    key={index}>{index + 1}: {errMessage}</p>)}
                             </Alert>
                         }
                         <Card className="new-comment-area">
@@ -199,11 +205,12 @@ function NewComment() {
                                             at*
                                         </Form.Label>
                                         <Col sm="4">
-                                            <Form.Control placeholder="Campus name" autoComplete="off" value={
-                                                newCampus
-                                            } onChange={(e) => {
-                                                setNewCampus(e.target.value)
-                                            }}/>
+                                            <Form.Select aria-label="Default select example" onChange={e => setNewCampus(e.target.value)}>
+                                                <option>Select your campus</option>
+                                                <option value="Vancouver">Vancouver</option>
+                                                <option value="Seattle">Seattle</option>
+                                                <option value="Boston">Boston</option>
+                                            </Form.Select>
                                         </Col>
                                     </Form.Group>
 
@@ -219,7 +226,7 @@ function NewComment() {
                                     <p>Fields with * are required</p>
 
                                     <br/>
-                                    <Button variant="dark" type="submit" onClick={handleSubmit}>
+                                    <Button className="mb-3" variant="dark" type="submit" onClick={handleSubmit}>
                                         Submit
                                     </Button>
                                 </Form>

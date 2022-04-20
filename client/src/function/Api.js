@@ -56,6 +56,30 @@ export const fetchProfessorsByName = async (baseURL, name) => {
     return await response.json();
 }
 
+export const fetchTopRateProfessors = async (baseURL) => {
+    const response = await fetch(`${baseURL}/professor/list`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+    return await response.json();
+}
+
+export const createProfessor = async (baseURL, createdNewProfessor, token) => {
+    const response = await fetch(`${baseURL}/professor/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(createdNewProfessor)
+    });
+
+    return await response.json();
+}
+
 export const fetchCommentsByProfessorId = async (baseURL, profId) => {
     const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
         headers: {
@@ -76,22 +100,24 @@ export const fetchCommentById = async (baseURL, commentId) => {
     return await response.json();
 }
 
-export const fetchCommentsByUserId = async (baseURL, userId) => {
+export const fetchCommentsByUserId = async (baseURL, userId, token) => {
     const response = await fetch(`${baseURL}/comment/user/${userId}`, {
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     });
     return await response.json();
 }
 
-export const updateComment = async (baseURL, commentId, createdNewComment) => {
-    const response = await fetch(`${baseURL}/comment/update/${commentId}`, {
+export const createComment = async (baseURL, createdNewComment, token) => {
+    const response = await fetch(`${baseURL}/comment/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(createdNewComment)
     });
@@ -99,15 +125,29 @@ export const updateComment = async (baseURL, commentId, createdNewComment) => {
     return response.status === 500 ? await response.json() : null;
 }
 
-export const createComment = async (baseURL, createdNewComment) => {
-    const response = await fetch(`${baseURL}/comment/create`, {
+export const updateComment = async (baseURL, commentId, createdNewComment, token) => {
+    const response = await fetch(`${baseURL}/comment/update/${commentId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(createdNewComment)
     });
 
     return response.status === 500 ? await response.json() : null;
+}
+
+export const deleteCommentByCommentId = async (baseURL, commentId, token) => {
+    const response = await fetch(`${baseURL}/comment/delete/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return await response.json();
 }

@@ -3,6 +3,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
 import {fetchProfessorsByName} from "../function/Api";
+import NewProfessor from "./NewProfessor";
 
 function SearchResults() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -20,9 +21,9 @@ function SearchResults() {
                 setLoading(false);
             })
             .catch((error) => {
-            console.log(error);
-            navigate("/error");
-        });
+                console.log(error);
+                navigate("/error");
+            });
 
     }, []);
 
@@ -54,7 +55,8 @@ function SearchResults() {
                                             </Card.Body>
                                             <Card.Body className={"search-result-content"}>
                                                 <Card.Text as="p">
-                                                    {professor.comment.length} {professor.comment.length > 1? " students" : " student"} commented on this professor.
+                                                    {professor.comment.length} {professor.comment.length > 1 ? " students" : " student"} commented
+                                                    on this professor.
                                                 </Card.Text>
                                             </Card.Body>
 
@@ -62,6 +64,12 @@ function SearchResults() {
                                     </Col>
                                 ))}
                             </>}
+                        <h5>
+                            No professor found?{" "}
+                            <Link to="/newProfessor">
+                                Create a new one
+                            </Link>
+                        </h5>
                     </Row>
                 </main>
             }

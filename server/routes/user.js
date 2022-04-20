@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var user_controller = require("../controllers/userController");
-const {checkJWT} = require('../checkJWT');
+const { checkJWT } = require("../checkJWT");
 
 router.all("*", checkJWT);
 
