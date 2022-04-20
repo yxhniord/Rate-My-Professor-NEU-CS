@@ -136,7 +136,6 @@ function NewComment() {
                         }
                         setWrongInputMessage(array);
                     } else {
-                        console.log('new comment created');
                         navigate(`/details/${professor._id}`);
                     }
                 })

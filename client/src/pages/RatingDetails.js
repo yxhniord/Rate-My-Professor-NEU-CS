@@ -14,7 +14,6 @@ function RatingDetails() {
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [comments, setComments] = useState([]);
-    const [rating, setRating] = useState(0);
 
     // Get professor details and comments
     useEffect(() => {
@@ -30,14 +29,6 @@ function RatingDetails() {
         fetchCommentsByProfessorId(baseURL, profId)
             .then((data) => {
                 setComments(data);
-
-                if (data.length > 0) {
-                    let sum = 0;
-                    for (let comment of data) {
-                        sum += comment.rate;
-                    }
-                    setRating(Math.round(sum / data.length));
-                }
                 setLoading(false);
             })
             .catch((error) => {
