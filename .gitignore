@@ -1,2 +1,6 @@
 .idea
 .vscode
+
+#heroku deploy
+neu-rate-my-prof/
+neu-rate-my-prof-server/

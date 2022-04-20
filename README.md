@@ -83,7 +83,16 @@ Use this space to show useful examples of how a project can be used. Additional 
     4. Redirect user from Auth0 sign up page to information collection page.
     5. Improve accessibility and mobile responsiveness.
 
-- [ ] Iteration 3
+- [x] Iteration 3
+
+    - Server
+        1. - Add display 5 professors by rate API.
+    - Client
+        1. Implement add user feature.
+        2. Implement delete comment feature.
+        3. Implement YouTube API.
+        4. Enforce authorization on protected pages.
+
 - [ ] Iteration 4
 
 <!-- CONTRIBUTION -->
@@ -103,7 +112,7 @@ Server development
 
 Client development
 
-- client home, search results, professor rating details, add/modify comments pages.
+- Client home, search results, professor rating details, add/modify comments pages, add professor page.
 
 ### Zhiwei Bao
 
@@ -111,6 +120,7 @@ Client development
 
 - Client profile detail page. Comment and CommentList components.
 - Client authentication (Signup/Login, Protected route) and Server API security.
+- Homepage YouTube API.
 
 <!-- LICENSE -->
 
