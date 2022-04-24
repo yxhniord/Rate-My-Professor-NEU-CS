@@ -7,7 +7,8 @@ export const fetchDbUser = async (baseURL, auth0_id, token) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    return await response.json();
+    const users = await response.json();
+    return users.length === 0 ? null : users[0];
 }
 
 export const createNewUser = async (baseURL, user, token) => {

@@ -7,37 +7,51 @@ import {Link, useNavigate} from "react-router-dom";
 import {HashLink} from 'react-router-hash-link';
 import {useAuth0} from "@auth0/auth0-react";
 import {fetchDbUser} from "../function/Api.js";
+import {useDispatch, useSelector} from "react-redux";
+import {getUserInfo} from "../actions/userActions";
 
 
 function Navigation() {
     const {isLoading, isAuthenticated, loginWithRedirect, logout, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseUrl = process.env.REACT_APP_BASE_URL;
-    const [dbUser, setDbUser] = React.useState(null);
+    const dbUser = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    // const [dbUser, setDbUser] = React.useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function fetchData() {
-            const token = await getAccessTokenSilently();
-            fetchDbUser(baseUrl, user.sub, token)
-                .then(dbUsers => {
-                    if (dbUsers.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
-                        setDbUser(dbUsers[0]);
-                    }
-                    setLoading(false);
-                })
-        }
-
-        if (isAuthenticated) {
-            fetchData()
-                .catch(err => {
-                    console.log(err);
-                    navigate("/error");
-                });
-        }
-    }, [isAuthenticated, user]);
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         const token = await getAccessTokenSilently();
+    //         dispatch(getUserInfo(baseUrl, user.sub, token))
+    //             .then((res) => {
+    //                 // console.log(res);
+    //                 // console.log(dbUser);
+    //                 if (dbUser === null) {
+    //                     navigate("/userInfoForm");
+    //                 } else {
+    //                     setLoading(false);
+    //                 }
+    //             });
+    //         // fetchDbUser(baseUrl, user.sub, token)
+    //         //     .then(dbUsers => {
+    //         //         if (dbUsers.length === 0) {
+    //         //             navigate("/userInfoForm");
+    //         //         } else {
+    //         //             setDbUser(dbUsers[0]);
+    //         //         }
+    //         //         setLoading(false);
+    //         //     })
+    //     }
+    //
+    //     if (isAuthenticated) {
+    //         fetchData()
+    //             .catch(err => {
+    //                 console.log(err);
+    //                 navigate("/error");
+    //             });
+    //     }
+    // }, [isAuthenticated, user]);
 
 
     return (

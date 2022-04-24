@@ -6,6 +6,8 @@ import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 import {useAuth0} from "@auth0/auth0-react";
 import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById, fetchTopRateProfessors} from "../function/Api";
+import {useDispatch, useSelector} from "react-redux";
+import {getUserInfo} from "../actions/userActions";
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -16,7 +18,9 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [youtubeLoading, setYoutubeLoading] = useState(true);
     const [videoMetaInfo, setVideoMetaInfo] = useState(null);
-    const [dbUser, setDbUser] = useState(null);
+    const dbUser = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    // const [dbUser, setDbUser] = useState(null);
     const [comments, setComments] = useState([]);
     const [professors, setProfessors] = useState([]);
     const navigate = useNavigate();
@@ -40,37 +44,26 @@ function Home() {
                 console.log(err);
             });
 
-        async function fetchData() {
-            // First get user from database if authenticated
+        async function getComments() {
             const token = await getAccessTokenSilently();
-            fetchDbUser(baseURL, user.sub, token)
-                .then(dbUsers => {
-                    if (dbUsers.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
-                        setDbUser(dbUsers[0]);
+            fetchCommentsByUserId(baseURL, dbUser._id, token)
+                .then(comments => {
+                    setComments(comments);
+                    setProfessors([]);
 
-                        // Then get comments from database based on user id
-                        fetchCommentsByUserId(baseURL, dbUsers[0]._id, token)
-                            .then(comments => {
-                                setComments(comments);
-                                setProfessors([]);
-
-                                // For each comment, get professors from database and store in an array
-                                for (let comment of comments) {
-                                    fetchProfessorById(baseURL, comment.professor)
-                                        .then(professor => {
-                                            setProfessors(professors => [...professors, professor]);
-                                        })
-                                }
-                                setLoading(false);
-                            });
+                    // For each comment, get professors from database and store in an array
+                    for (let comment of comments) {
+                        fetchProfessorById(baseURL, comment.professor)
+                            .then(professor => {
+                                setProfessors(professors => [...professors, professor]);
+                            })
                     }
+                    setLoading(false);
                 })
         }
 
-        if (isAuthenticated) {
-            fetchData()
+        if (dbUser) {
+            getComments()
                 .catch((err) => {
                     console.log(err);
                     navigate("/error");
@@ -86,7 +79,7 @@ function Home() {
                     navigate("/error");
                 });
         }
-    }, [isLoading, isAuthenticated, youtubeLoading]);
+    }, [youtubeLoading, dbUser]);
 
 
     const handleSubmit = (event) => {
@@ -119,7 +112,7 @@ function Home() {
                     <>
                         {/* If authenticated, display user comments*/}
                         {/* If not authenticated, display a list of professors with highest ratings*/}
-                        {isAuthenticated ?
+                        {dbUser ?
                             // Is authenticated
                             <Carousel className="headline-img">
                                 {/* Display a message if no user comments are found */}
