@@ -4,7 +4,8 @@ import CommentList from "../components/CommentList";
 import "../styles/Profile.css"
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate, useParams} from "react-router-dom";
-import {fetchDbUser, deleteCommentByCommentId, fetchCommentsByUserId} from "../function/Api.js";
+import {deleteCommentByCommentId, fetchCommentsByUserId} from "../function/Api.js";
+import {useSelector} from "react-redux";
 
 function Profile() {
     const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
@@ -12,35 +13,40 @@ function Profile() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const tabKey = useParams().key;
     const [key, setKey] = useState(tabKey);
-    const [dbUser, setDbUser] = useState(null);
+    const dbUser = useSelector(state => state.user.user);
+    const userLoading = useSelector(state => state.user.loading);
     const [comments, setComments] = useState([]);
     const navigate = useNavigate();
 
+
     useEffect(() => {
+        let isSubscribed = true;
+
         async function fetchData() {
             const token = await getAccessTokenSilently();
-            fetchDbUser(baseURL, user.sub, token)
-                .then(dbUsers => {
-                    if (dbUsers.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
-                        setDbUser(dbUsers[0]);
-                        fetchCommentsByUserId(baseURL, dbUsers[0]._id, token)
-                            .then(data => {
-                                setComments(data);
-                            })
-                        setLoading(false);
+
+            fetchCommentsByUserId(baseURL, dbUser._id, token)
+                .then(data => {
+                    if (isSubscribed) {
+                        setComments(data);
                     }
                 });
+            if (isSubscribed) {
+                setLoading(false);
+            }
         }
 
-        if (isAuthenticated) {
+        if (isAuthenticated && !userLoading && dbUser) {
             fetchData()
                 .catch(err => {
                     console.log(err);
                     navigate("/error");
                 });
+        } else {
+            setLoading(false);
         }
+
+        return () => isSubscribed = false;
     }, [isLoading, isAuthenticated, comments.length]);
 
     const deleteComment = (commentId) => {

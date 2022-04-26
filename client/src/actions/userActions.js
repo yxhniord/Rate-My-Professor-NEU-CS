@@ -1,44 +1,38 @@
 import {
-    GET_USER_INFO,
-    CREATE_USER_INFO,
-    UPDATE_USER_INFO,
+    REQUEST_USER_INFO,
     LOGOUT,
+    SUCCESS,
     FAIL
 } from "../constants/actionTypes";
-import {fetchDbUser} from "../function/Api";
+
 
 // Action creators
-// GET: user
-export const getUserInfo = (baseURL, auth0_id, token) => async (dispatch) => {
-    try {
-        const user = await fetchDbUser(baseURL, auth0_id, token);
-        const action = {
-            type: GET_USER_INFO,
-            payload: user
-        };
-        dispatch(action);
-    } catch (e) {
-        console.log(`Fail to get user info: ${e}`);
-        dispatch({
-            type: FAIL,
-            payload: e
-        });
+// Request user info
+export const fetchUserRequest = () => {
+    return {
+        type: REQUEST_USER_INFO
     }
 };
 
-// CREATE: user
-export const createUserInfo = async (dispatch, user) => {
-    try {
-        const action = {
-            type: CREATE_USER_INFO,
-            payload: user
-        };
-        dispatch(action);
-    } catch (e) {
-        console.log(`Fail to create user info: ${e}`);
-        dispatch({
-            type: FAIL,
-            payload: e
-        });
+// Request success
+export const fetchUserSuccess = (user) => {
+    return {
+        type: SUCCESS,
+        payload: user
+    }
+};
+
+// Request fail
+export const fetchUserFail = (error) => {
+    return {
+        type: FAIL,
+        payload: error
+    }
+};
+
+// Logout
+export const userLogout = () => {
+    return {
+        type: LOGOUT
     }
 };

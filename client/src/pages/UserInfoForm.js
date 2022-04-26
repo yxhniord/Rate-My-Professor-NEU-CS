@@ -3,43 +3,51 @@ import "../styles/UserInfoForm.css";
 import {Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
-import {createNewUser, fetchDbUser, updateUser} from "../function/Api";
+import {createNewUser, updateUser} from "../function/Api";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchUserFail, fetchUserRequest, fetchUserSuccess} from "../actions/userActions";
 
 function UserInfoForm() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
-    const {isLoading, isAuthenticated, user, getAccessTokenSilently} = useAuth0();
-    const [loading, setLoading] = useState(true);
+    const {isLoading, user, getAccessTokenSilently} = useAuth0();
+    const loading = useSelector(state => state.user.loading);
     const [newNickname, setNewNickname] = useState("");
     const [newCampus, setNewCampus] = useState("Vancouver");
-    const [dbUser, setDbUser] = useState(null);
+    const dbUser = useSelector(state => state.user.user);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        async function fetchData() {
-            // fetch dbUser
-            const token = await getAccessTokenSilently();
-            fetchDbUser(baseURL, user.sub, token)
-                .then((data) => {
-                    if (data.length !== 0) {
-                        let dbUser = data[0];
-                        setDbUser(dbUser);
-                        setNewNickname(dbUser.nickname);
-                        setNewCampus(dbUser.campus);
-                    }
-                    setLoading(false);
+        if (dbUser) {
+            setNewNickname(dbUser.nickname);
+            setNewCampus(dbUser.campus);
+        }
+    }, []);
+
+
+    const createUser = (baseURL, newUserInfo, token) => {
+        return async function (dispatch) {
+            dispatch(fetchUserRequest());
+            await createNewUser(baseURL, newUserInfo, token)
+                .then((res) => {
+                    navigate('/profile/user-info');
+                    dispatch(fetchUserSuccess(res));
                 })
-
+                .then(error => dispatch(fetchUserFail(error)))
         }
+    }
 
-        if (!isLoading && isAuthenticated) {
-            fetchData()
-                .catch((error) => {
-                    console.log(`error from fetching user from database: ${error}`);
-                    navigate("/error");
-                });
+    const updateUserInfo = (baseURL, userId, newUserInfo, token) => {
+        return async function (dispatch) {
+            dispatch(fetchUserRequest());
+            await updateUser(baseURL, userId, newUserInfo, token)
+                .then((res) => {
+                    navigate('/profile/user-info');
+                    dispatch(fetchUserSuccess(res));
+                })
+                .then(error => dispatch(fetchUserFail(error)))
         }
-
-    }, [isLoading]);
+    }
 
     const handleSumbit = async (e) => {
         e.preventDefault();
@@ -51,22 +59,10 @@ function UserInfoForm() {
         const token = await getAccessTokenSilently();
         if (dbUser == null) {
             // create new user
-            createNewUser(baseURL, newUserInfo, token)
-                .then(() => {
-                    navigate('/profile/user-info');
-                }).catch(err => {
-                console.log(err);
-                navigate("/error");
-            })
+            dispatch(createUser(baseURL, newUserInfo, token));
         } else {
             // update existing user
-            updateUser(baseURL, dbUser._id, newUserInfo, token)
-                .then(() => {
-                    navigate('/profile/user-info');
-                }).catch(err => {
-                console.log(err);
-                navigate("/error");
-            })
+            dispatch(updateUserInfo(baseURL, dbUser._id, newUserInfo, token));
         }
     };
 

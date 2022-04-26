@@ -1,23 +1,39 @@
 import {
-    GET_USER_INFO,
-    CREATE_USER_INFO,
-    UPDATE_USER_INFO,
-    LOGOUT
+    REQUEST_USER_INFO,
+    LOGOUT,
+    SUCCESS,
+    FAIL
 } from "../constants/actionTypes";
 
-const userReducer = (user = {}, action) => {
+const initialState = {
+    user: null,
+    loading: false,
+    error: null
+};
+
+const userReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GET_USER_INFO:
-            console.log("GET_USER_INFO", action.payload);
-            return action.payload;
-        case CREATE_USER_INFO:
-            return action.payload;
-        case UPDATE_USER_INFO:
-            return action.payload;
+        case REQUEST_USER_INFO:
+            return {
+                ...state,
+                loading: true
+            };
+        case SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                user: action.payload
+            };
+        case FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            };
         case LOGOUT:
-            return null;
+            return initialState;
         default:
-            return user;
+            return state;
     }
 }
 

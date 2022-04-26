@@ -5,22 +5,20 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 import {useAuth0} from "@auth0/auth0-react";
-import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById, fetchTopRateProfessors} from "../function/Api";
-import {useDispatch, useSelector} from "react-redux";
-import {getUserInfo} from "../actions/userActions";
+import {fetchCommentsByUserId, fetchProfessorById, fetchTopRateProfessors} from "../function/Api";
+import {useSelector} from "react-redux";
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const youtubeAPI = process.env.REACT_APP_YOUTUBE_API;
     const youtubeAPIKey = process.env.REACT_APP_YOUTUBE_API_KEY;
     const [name, setName] = useState("");
-    const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
+    const {getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [youtubeLoading, setYoutubeLoading] = useState(true);
     const [videoMetaInfo, setVideoMetaInfo] = useState(null);
-    const dbUser = useSelector(state => state.user);
-    const dispatch = useDispatch();
-    // const [dbUser, setDbUser] = useState(null);
+    const dbUser = useSelector(state => state.user.user);
+    const userLoading = useSelector(state => state.user.loading);
     const [comments, setComments] = useState([]);
     const [professors, setProfessors] = useState([]);
     const navigate = useNavigate();
@@ -31,6 +29,7 @@ function Home() {
     }
 
     useEffect(() => {
+
         getYouTubePlaylistItems()
             .then((res) => {
                 if (res?.error) {
@@ -46,6 +45,7 @@ function Home() {
 
         async function getComments() {
             const token = await getAccessTokenSilently();
+            console.log(dbUser)
             fetchCommentsByUserId(baseURL, dbUser._id, token)
                 .then(comments => {
                     setComments(comments);
@@ -62,24 +62,27 @@ function Home() {
                 })
         }
 
-        if (dbUser) {
-            getComments()
-                .catch((err) => {
-                    console.log(err);
-                    navigate("/error");
-                });
-        } else {
-            fetchTopRateProfessors(baseURL)
-                .then(data => {
-                    setProfessors(data);
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    navigate("/error");
-                });
+        if (!userLoading) {
+            if (dbUser) {
+                getComments()
+                    .catch((err) => {
+                        console.log(err);
+                        navigate("/error");
+                    });
+            } else {
+                fetchTopRateProfessors(baseURL)
+                    .then(data => {
+                        setProfessors(data);
+                        setLoading(false);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        navigate("/error");
+                    });
+            }
         }
-    }, [youtubeLoading, dbUser]);
+
+    }, [youtubeLoading, userLoading, dbUser]);
 
 
     const handleSubmit = (event) => {
@@ -147,7 +150,7 @@ function Home() {
                             </Carousel> :
                             // Not authenticated
                             <Carousel className="headline-img">
-                                {professors.length > 0 && professors.slice(0, 5).map((professor, index) => {
+                                {professors.length > 0 && professors.slice(0, 5).map((professor) => {
                                     return (
                                         <Carousel.Item key={professor._id}>
                                             <img
@@ -174,11 +177,11 @@ function Home() {
                         <Col as={Container} xs={12} md={6} className="neu-video">
                             {youtubeLoading || videoMetaInfo == null ?
                                 <iframe src={`https://www.youtube.com/embed/HwBcOli0YLM`}
-                                        title="YouTube video player" frameBorder="0"
+                                        title="YouTube video player"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen/> :
                                 <iframe src={`https://www.youtube.com/embed/${videoMetaInfo.id.videoId}`}
-                                        title="YouTube video player" frameBorder="0"
+                                        title="YouTube video player"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen/>
                             }

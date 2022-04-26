@@ -1,58 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Container, Nav, Navbar, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGraduationCap, faUser} from '@fortawesome/free-solid-svg-icons'
 import "../styles/Navigation.css";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {HashLink} from 'react-router-hash-link';
 import {useAuth0} from "@auth0/auth0-react";
-import {fetchDbUser} from "../function/Api.js";
 import {useDispatch, useSelector} from "react-redux";
-import {getUserInfo} from "../actions/userActions";
+import {userLogout} from "../actions/userActions";
 
 
 function Navigation() {
-    const {isLoading, isAuthenticated, loginWithRedirect, logout, user, getAccessTokenSilently} = useAuth0();
-    const [loading, setLoading] = useState(true);
-    const baseUrl = process.env.REACT_APP_BASE_URL;
-    const dbUser = useSelector(state => state.user);
+    const {isLoading, isAuthenticated, loginWithRedirect, logout, user} = useAuth0();
+    const dbUser = useSelector(state => state.user.user);
+    const loading = useSelector(state => state.user.loading);
     const dispatch = useDispatch();
-    // const [dbUser, setDbUser] = React.useState(null);
-    const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         const token = await getAccessTokenSilently();
-    //         dispatch(getUserInfo(baseUrl, user.sub, token))
-    //             .then((res) => {
-    //                 // console.log(res);
-    //                 // console.log(dbUser);
-    //                 if (dbUser === null) {
-    //                     navigate("/userInfoForm");
-    //                 } else {
-    //                     setLoading(false);
-    //                 }
-    //             });
-    //         // fetchDbUser(baseUrl, user.sub, token)
-    //         //     .then(dbUsers => {
-    //         //         if (dbUsers.length === 0) {
-    //         //             navigate("/userInfoForm");
-    //         //         } else {
-    //         //             setDbUser(dbUsers[0]);
-    //         //         }
-    //         //         setLoading(false);
-    //         //     })
-    //     }
-    //
-    //     if (isAuthenticated) {
-    //         fetchData()
-    //             .catch(err => {
-    //                 console.log(err);
-    //                 navigate("/error");
-    //             });
-    //     }
-    // }, [isAuthenticated, user]);
-
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -94,7 +56,8 @@ function Navigation() {
                                                         </span>
                                             </Link>
                                             <span role="button" className="logout-text" onClick={() => {
-                                                logout({returnTo: window.location.origin})
+                                                logout({returnTo: window.location.origin});
+                                                dispatch(userLogout());
                                             }}>
                                                 {' '}
                                                 {'Logout    '}
