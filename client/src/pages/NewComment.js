@@ -2,21 +2,23 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {Alert, Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import "../styles/NewComment.css";
-import {createComment, fetchCommentById, fetchDbUser, fetchProfessorById, updateComment} from "../function/Api";
+import {createComment, fetchCommentById, fetchProfessorById, updateComment} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
+import {useSelector} from "react-redux";
 
 function NewComment() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {profId, commentId} = useParams();
-    const {isLoading, user, getAccessTokenSilently} = useAuth0();
+    const {isLoading, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState("");
     const [newCourse, setNewCourse] = useState("");
     const [newCampus, setNewCampus] = useState("");
     const [newComment, setNewComment] = useState("");
-    const [dbUser, setDbUser] = useState({});
+    const dbUser = useSelector(state => state.user.user);
+    const userLoading = useSelector(state => state.user.loading);
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
     let profIdFromComment;
 
@@ -24,70 +26,61 @@ function NewComment() {
         let isMounted = true;
 
         async function fetchData() {
-            // fetch dbUser
-            const token = await getAccessTokenSilently();
-            await fetchDbUser(baseURL, user.sub, token)
-                .then((data) => {
-                    if (data.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
+            // If update comment from updateComment/:commentId
+            // Set all fields according to data provided by comment id
+            // If auth0_id is not the same as the logged-in user, redirect to error-page
+            if (commentId !== undefined) {
+                fetchCommentById(baseURL, commentId)
+                    .then((data) => {
                         if (isMounted) {
-                            setDbUser(data[0]);
+                            setNewCourse(data.course);
+                            setNewCampus(data.campus);
+                            setNewRating(data.rate);
+                            setNewComment(data.content);
+                            profIdFromComment = data.professor;
                         }
-                        // If update comment from updateComment/:commentId
-                        // Set all fields according to data provided by comment id
-                        // If auth0_id is not the same as the logged-in user, redirect to error-page
-                        if (commentId !== undefined) {
-                            fetchCommentById(baseURL, commentId)
-                                .then((data) => {
-                                    if (isMounted) {
-                                        setNewCourse(data.course);
-                                        setNewCampus(data.campus);
-                                        setNewRating(data.rate);
-                                        setNewComment(data.content);
-                                        profIdFromComment = data.professor;
-                                    }
-                                })
-                                .then(() => {
-                                    fetchProfessorById(baseURL, profIdFromComment)
-                                        .then((data) => {
-                                            if (isMounted) {
-                                                setProfessor(data);
-                                                setLoading(false);
-                                            }
-                                            console.log(data);
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
-                                            navigate("/error");
-                                        });
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    navigate("/error");
-                                });
-                        }
+                    })
+                    .then(() => {
+                        if (profIdFromComment === undefined) return;
+                        fetchProfessorById(baseURL, profIdFromComment)
+                            .then((data) => {
+                                if (isMounted) {
+                                    setProfessor(data);
+                                    setLoading(false);
+                                }
+                                console.log(data);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                navigate("/error");
+                            });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        navigate("/error");
+                    });
+            }
 
-                            // If new comment from professor/:profId
-                        // Set only fields related to professor, others remain blank
-                        else if (profId !== undefined) {
-                            fetchProfessorById(baseURL, profId)
-                                .then((data) => {
-                                    if (isMounted) {
-                                        setProfessor(data);
-                                        setLoading(false);
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    navigate("/error");
-                                });
+                // If new comment from professor/:profId
+            // Set only fields related to professor, others remain blank
+            else if (profId !== undefined) {
+                fetchProfessorById(baseURL, profId)
+                    .then((data) => {
+                        if (isMounted) {
+                            setProfessor(data);
+                            setLoading(false);
                         }
-                    }
-                })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        navigate("/error");
+                    });
+            }
+
+
         }
 
-        if (!isLoading) {
+        if (!isLoading && !userLoading && dbUser) {
             fetchData()
                 .catch((error) => {
                     console.log(`error from fetching user from database: ${error}`);
@@ -98,7 +91,7 @@ function NewComment() {
         return () => {
             isMounted = false;
         }
-    }, [isLoading]);
+    }, [isLoading, userLoading, dbUser]);
 
     // Called when the submit button is clicked
     const handleSubmit = async (e) => {
