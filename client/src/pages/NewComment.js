@@ -21,6 +21,8 @@ function NewComment() {
     let profIdFromComment;
 
     useEffect(() => {
+        let isMounted = true;
+
         async function fetchData() {
             // fetch dbUser
             const token = await getAccessTokenSilently();
@@ -29,24 +31,30 @@ function NewComment() {
                     if (data.length === 0) {
                         navigate("/userInfoForm");
                     } else {
-                        setDbUser(data[0]);
+                        if (isMounted) {
+                            setDbUser(data[0]);
+                        }
                         // If update comment from updateComment/:commentId
                         // Set all fields according to data provided by comment id
                         // If auth0_id is not the same as the logged-in user, redirect to error-page
                         if (commentId !== undefined) {
                             fetchCommentById(baseURL, commentId)
                                 .then((data) => {
-                                    setNewCourse(data.course);
-                                    setNewCampus(data.campus);
-                                    setNewRating(data.rate);
-                                    setNewComment(data.content);
-                                    profIdFromComment = data.professor;
+                                    if (isMounted) {
+                                        setNewCourse(data.course);
+                                        setNewCampus(data.campus);
+                                        setNewRating(data.rate);
+                                        setNewComment(data.content);
+                                        profIdFromComment = data.professor;
+                                    }
                                 })
                                 .then(() => {
                                     fetchProfessorById(baseURL, profIdFromComment)
                                         .then((data) => {
-                                            setProfessor(data);
-                                            setLoading(false);
+                                            if (isMounted) {
+                                                setProfessor(data);
+                                                setLoading(false);
+                                            }
                                             console.log(data);
                                         })
                                         .catch((error) => {
@@ -65,8 +73,10 @@ function NewComment() {
                         else if (profId !== undefined) {
                             fetchProfessorById(baseURL, profId)
                                 .then((data) => {
-                                    setProfessor(data);
-                                    setLoading(false);
+                                    if (isMounted) {
+                                        setProfessor(data);
+                                        setLoading(false);
+                                    }
                                 })
                                 .catch((error) => {
                                     console.log(error);
@@ -83,6 +93,10 @@ function NewComment() {
                     console.log(`error from fetching user from database: ${error}`);
                     navigate("/error");
                 });
+        }
+
+        return () => {
+            isMounted = false;
         }
     }, [isLoading]);
 
@@ -205,7 +219,8 @@ function NewComment() {
                                             at*
                                         </Form.Label>
                                         <Col sm="4">
-                                            <Form.Select aria-label="Default select example" onChange={e => setNewCampus(e.target.value)}>
+                                            <Form.Select aria-label="Default select example"
+                                                         onChange={e => setNewCampus(e.target.value)}>
                                                 <option>Select your campus</option>
                                                 <option value="Vancouver">Vancouver</option>
                                                 <option value="Seattle">Seattle</option>
