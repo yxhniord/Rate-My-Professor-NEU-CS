@@ -96,8 +96,10 @@ exports.comment_create = [
         if (professor.rate === null) {
           professor.rate = 0;
         }
-        professor.rate =
-          (professor.rate * (commentSize - 1) + comment.rate) / commentSize;
+        professor.rate = (
+          (professor.rate * (commentSize - 1) + comment.rate) /
+          commentSize
+        ).toFixed(1);
         console.log("Professor", professor);
         try {
           await Professor.findOneAndUpdate(
@@ -180,7 +182,7 @@ exports.comment_delete = async function (req, res, next) {
       if (commentSize === 0) {
         professor.rate = null;
       } else {
-        professor.rate = totalRate / commentSize;
+        professor.rate = (totalRate / commentSize).toFixed(1);
       }
       Professor.findByIdAndUpdate(
         comment.professor,
@@ -279,7 +281,7 @@ exports.comment_update = [
       }
       totalRate += thecomment.rate;
     }
-    theprofessor.rate = totalRate / commentSize;
+    theprofessor.rate = (totalRate / commentSize).toFixed(1);
 
     Professor.findByIdAndUpdate(
       req.body.professor,
