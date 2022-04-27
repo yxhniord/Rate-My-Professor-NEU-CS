@@ -98,11 +98,18 @@ exports.comment_create = [
         }
         professor.rate =
           (professor.rate * (commentSize - 1) + comment.rate) / commentSize;
+        console.log("Professor", professor);
         try {
-          await professor.save();
+          await Professor.findOneAndUpdate(
+            { _id: req.body.professor },
+            professor,
+            { new: true }
+          ).exec();
         } catch (error) {
-          res.status(500).json({ message: err });
+          console.log(error);
+          return res.status(500).json({ message: err });
         }
+        console.log("Professor saved", professor);
 
         // Add the comment to user.
         if (results.user.length == 0) {
@@ -111,10 +118,14 @@ exports.comment_create = [
         var user = results.user;
         user.comment.push(comment._id);
         try {
-          await user.save();
+          await User.findOneAndUpdate({ _id: req.body.user }, user, {
+            new: true,
+          }).exec();
         } catch (error) {
-          res.status(500).json({ message: err });
+          console.log(error);
+          return res.status(500).json({ message: err });
         }
+        console.log("User saved", user);
 
         return res.status(200).json({
           comment: comment,

@@ -73,6 +73,8 @@ exports.professor_create = [
     var professor = new Professor({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
+      rate: null,
+      comment: [],
     });
 
     if (!errors.isEmpty()) {
