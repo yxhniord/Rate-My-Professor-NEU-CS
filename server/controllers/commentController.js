@@ -100,7 +100,6 @@ exports.comment_create = [
           (professor.rate * (commentSize - 1) + comment.rate) /
           commentSize
         ).toFixed(1);
-        console.log("Professor", professor);
         try {
           await Professor.findOneAndUpdate(
             { _id: req.body.professor },
@@ -108,10 +107,8 @@ exports.comment_create = [
             { new: true }
           ).exec();
         } catch (error) {
-          console.log(error);
           return res.status(500).json({ message: err });
         }
-        console.log("Professor saved", professor);
 
         // Add the comment to user.
         if (results.user.length == 0) {
@@ -124,10 +121,8 @@ exports.comment_create = [
             new: true,
           }).exec();
         } catch (error) {
-          console.log(error);
           return res.status(500).json({ message: err });
         }
-        console.log("User saved", user);
 
         return res.status(200).json({
           comment: comment,
