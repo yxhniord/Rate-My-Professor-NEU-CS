@@ -80,11 +80,11 @@ exports.comment_create = [
         // Create a comment object with escaped and trimmed data.
         const comment = new Comment(req.body);
 
-        comment.save(function (err, thecomment) {
-          if (err) {
-            return res.status(500).json({ message: err });
-          }
-        });
+        try {
+          await comment.save();
+        } catch (error) {
+          return res.status(500).json({ message: err });
+        }
 
         // Add the comment to professor and update the professor rate.
         if (results.professor.length == 0) {
@@ -93,21 +93,22 @@ exports.comment_create = [
         var professor = results.professor;
         professor.comment.push(comment._id);
         const commentSize = professor.comment.length;
-        if (professor.rate == null) {
+        if (professor.rate === null) {
           professor.rate = 0;
         }
-        professor.rate =
-          (professor.rate * (commentSize - 1) + comment.rate) / commentSize;
-        Professor.findByIdAndUpdate(
-          req.body.professor,
-          professor,
-          { new: true },
-          function (err) {
-            if (err) {
-              res.status(500).json({ message: err });
-            }
-          }
-        );
+        professor.rate = (
+          (professor.rate * (commentSize - 1) + comment.rate) /
+          commentSize
+        ).toFixed(1);
+        try {
+          await Professor.findOneAndUpdate(
+            { _id: req.body.professor },
+            professor,
+            { new: true }
+          ).exec();
+        } catch (error) {
+          return res.status(500).json({ message: err });
+        }
 
         // Add the comment to user.
         if (results.user.length == 0) {
@@ -115,20 +116,19 @@ exports.comment_create = [
         }
         var user = results.user;
         user.comment.push(comment._id);
-        User.findByIdAndUpdate(
-          req.body.user,
-          user,
-          { new: true },
-          function (err) {
-            if (err) {
-              res.status(500).json({ message: err });
-            }
-          }
-        );
+        try {
+          await User.findOneAndUpdate({ _id: req.body.user }, user, {
+            new: true,
+          }).exec();
+        } catch (error) {
+          return res.status(500).json({ message: err });
+        }
 
-        return res
-          .status(200)
-          .json({ comment: comment, professor: professor, user: user });
+        return res.status(200).json({
+          comment: comment,
+          professor: professor,
+          user: user,
+        });
       }
     );
   },
@@ -164,7 +164,9 @@ exports.comment_delete = async function (req, res, next) {
       var totalRate = 0;
       const commentSize = professor.comment.length;
       for (const commentId of professor.comment) {
-        const thecomment = await Comment.findOne({ _id: commentId }).exec();
+        const thecomment = await Comment.findOne({
+          _id: commentId,
+        }).exec();
         if (!thecomment) {
           return res
             .status(204)
@@ -172,7 +174,11 @@ exports.comment_delete = async function (req, res, next) {
         }
         totalRate += thecomment.rate;
       }
-      professor.rate = totalRate / commentSize;
+      if (commentSize === 0) {
+        professor.rate = null;
+      } else {
+        professor.rate = (totalRate / commentSize).toFixed(1);
+      }
       Professor.findByIdAndUpdate(
         comment.professor,
         professor,
@@ -254,9 +260,9 @@ exports.comment_update = [
       _id: req.body.professor,
     }).exec();
     if (!theprofessor) {
-      return res
-        .status(204)
-        .json({ message: `Professor ID ${req.body.professor} not found` });
+      return res.status(204).json({
+        message: `Professor ID ${req.body.professor} not found`,
+      });
     }
     var totalRate = 0;
     const comments = Object.values(theprofessor.comment);
@@ -270,7 +276,7 @@ exports.comment_update = [
       }
       totalRate += thecomment.rate;
     }
-    theprofessor.rate = totalRate / commentSize;
+    theprofessor.rate = (totalRate / commentSize).toFixed(1);
 
     Professor.findByIdAndUpdate(
       req.body.professor,
