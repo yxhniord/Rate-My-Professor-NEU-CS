@@ -1,90 +1,79 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {Alert, Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
 import "../styles/NewComment.css";
-import {createComment, fetchCommentById, fetchDbUser, fetchProfessorById, updateComment} from "../function/Api";
+import {createComment, fetchCommentById, fetchProfessorById, updateComment} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
+import {UserContext} from "../function/context";
 
 function NewComment() {
     const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {profId, commentId} = useParams();
-    const {isLoading, user, getAccessTokenSilently} = useAuth0();
+    const {isLoading, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState("");
     const [newCourse, setNewCourse] = useState("");
     const [newCampus, setNewCampus] = useState("");
     const [newComment, setNewComment] = useState("");
-    const [dbUser, setDbUser] = useState({});
+    const {userContext} = useContext(UserContext);
+    // const [dbUser, setDbUser] = useState({});
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
     let profIdFromComment;
 
     useEffect(() => {
-        async function fetchData() {
-            // fetch dbUser
-            const token = await getAccessTokenSilently();
-            await fetchDbUser(baseURL, user.sub, token)
-                .then((data) => {
-                    if (data.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
-                        setDbUser(data[0]);
-                        // If update comment from updateComment/:commentId
-                        // Set all fields according to data provided by comment id
-                        // If auth0_id is not the same as the logged-in user, redirect to error-page
-                        if (commentId !== undefined) {
-                            fetchCommentById(baseURL, commentId)
-                                .then((data) => {
-                                    setNewCourse(data.course);
-                                    setNewCampus(data.campus);
-                                    setNewRating(data.rate);
-                                    setNewComment(data.content);
-                                    profIdFromComment = data.professor;
-                                })
-                                .then(() => {
-                                    fetchProfessorById(baseURL, profIdFromComment)
-                                        .then((data) => {
-                                            setProfessor(data);
-                                            setLoading(false);
-                                            console.log(data);
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
-                                            navigate("/error");
-                                        });
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    navigate("/error");
-                                });
-                        }
 
-                            // If new comment from professor/:profId
-                        // Set only fields related to professor, others remain blank
-                        else if (profId !== undefined) {
-                            fetchProfessorById(baseURL, profId)
+            if (!userContext.userLoading && userContext.user) {
+                // If update comment from updateComment/:commentId
+                // Set all fields according to data provided by comment id
+                // If auth0_id is not the same as the logged-in user, redirect to error-page
+                if (commentId !== undefined) {
+                    fetchCommentById(baseURL, commentId)
+                        .then((data) => {
+                            setNewCourse(data.course);
+                            setNewCampus(data.campus);
+                            setNewRating(data.rate);
+                            setNewComment(data.content);
+                            profIdFromComment = data.professor;
+                        })
+                        .then(() => {
+                            fetchProfessorById(baseURL, profIdFromComment)
                                 .then((data) => {
                                     setProfessor(data);
                                     setLoading(false);
+                                    console.log(data);
                                 })
                                 .catch((error) => {
                                     console.log(error);
                                     navigate("/error");
                                 });
-                        }
-                    }
-                })
-        }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            navigate("/error");
+                        });
+                }
 
-        if (!isLoading) {
-            fetchData()
-                .catch((error) => {
-                    console.log(`error from fetching user from database: ${error}`);
-                    navigate("/error");
-                });
+                // If new comment from professor/:profId
+                // Set only fields related to professor, others remain blank
+                else if (profId !== undefined) {
+                    fetchProfessorById(baseURL, profId)
+                        .then((data) => {
+                            setProfessor(data);
+                            setLoading(false);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            navigate("/error");
+                        });
+                }
+            }
         }
-    }, [isLoading]);
+        ,
+        [isLoading]
+    )
+    ;
 
     // Called when the submit button is clicked
     const handleSubmit = async (e) => {
@@ -100,7 +89,7 @@ function NewComment() {
             rate: newRating,
             date: newDate,
             content: newComment,
-            user: dbUser._id,
+            user: userContext.user._id,
             professor: professor._id,
         };
         const token = await getAccessTokenSilently();
@@ -205,7 +194,8 @@ function NewComment() {
                                             at*
                                         </Form.Label>
                                         <Col sm="4">
-                                            <Form.Select aria-label="Default select example" onChange={e => setNewCampus(e.target.value)}>
+                                            <Form.Select aria-label="Default select example"
+                                                         onChange={e => setNewCampus(e.target.value)}>
                                                 <option>Select your campus</option>
                                                 <option value="Vancouver">Vancouver</option>
                                                 <option value="Seattle">Seattle</option>

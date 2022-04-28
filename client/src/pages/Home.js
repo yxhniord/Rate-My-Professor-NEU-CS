@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Button, Carousel, Col, Container, Form, FormControl, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -6,6 +6,7 @@ import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import "../styles/Home.css";
 import {useAuth0} from "@auth0/auth0-react";
 import {fetchCommentsByUserId, fetchDbUser, fetchProfessorById, fetchTopRateProfessors} from "../function/Api";
+import {UserContext} from "../function/context";
 
 function Home() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -16,10 +17,11 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [youtubeLoading, setYoutubeLoading] = useState(true);
     const [videoMetaInfo, setVideoMetaInfo] = useState(null);
-    const [dbUser, setDbUser] = useState(null);
+    // const [dbUser, setDbUser] = useState(null);
     const [comments, setComments] = useState([]);
     const [professors, setProfessors] = useState([]);
     const navigate = useNavigate();
+    const {userContext} = useContext(UserContext);
 
     async function getYouTubePlaylistItems() {
         const res = await fetch(`${youtubeAPI}/search?part=snippet&type=video&q=northeastern+university&maxResults=5&key=${youtubeAPIKey}`);
@@ -40,53 +42,54 @@ function Home() {
                 console.log(err);
             });
 
-        async function fetchData() {
+        async function getComments() {
             // First get user from database if authenticated
             const token = await getAccessTokenSilently();
-            fetchDbUser(baseURL, user.sub, token)
-                .then(dbUsers => {
-                    if (dbUsers.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
-                        setDbUser(dbUsers[0]);
+            // fetchDbUser(baseURL, user.sub, token)
+            //     .then(dbUsers => {
+            //         if (dbUsers.length === 0) {
+            //             navigate("/userInfoForm");
+            //         } else {
+            //             setDbUser(dbUsers[0]);
 
-                        // Then get comments from database based on user id
-                        fetchCommentsByUserId(baseURL, dbUsers[0]._id, token)
-                            .then(comments => {
-                                setComments(comments);
-                                setProfessors([]);
-
-                                // For each comment, get professors from database and store in an array
-                                for (let comment of comments) {
-                                    fetchProfessorById(baseURL, comment.professor)
-                                        .then(professor => {
-                                            setProfessors(professors => [...professors, professor]);
-                                        })
-                                }
-                                setLoading(false);
-                            });
+            // Then get comments from database based on user id
+            fetchCommentsByUserId(baseURL, userContext.user._id, token)
+                .then(comments => {
+                    setComments(comments);
+                    setProfessors([]);
+                    // For each comment, get professors from database and store in an array
+                    for (let comment of comments) {
+                        fetchProfessorById(baseURL, comment.professor)
+                            .then(professor => {
+                                setProfessors(professors => [...professors, professor]);
+                            })
                     }
-                })
+                    setLoading(false);
+                });
+            //     }
+            // })
         }
 
-        if (isAuthenticated) {
-            fetchData()
-                .catch((err) => {
-                    console.log(err);
-                    navigate("/error");
-                });
-        } else {
-            fetchTopRateProfessors(baseURL)
-                .then(data => {
-                    setProfessors(data);
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    navigate("/error");
-                });
+        if (!userContext.userLoading) {
+            if (userContext.user) {
+                getComments()
+                    .catch((err) => {
+                        console.log(err);
+                        navigate("/error");
+                    });
+            } else {
+                fetchTopRateProfessors(baseURL)
+                    .then(data => {
+                        setProfessors(data);
+                        setLoading(false);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        navigate("/error");
+                    });
+            }
         }
-    }, [isLoading, isAuthenticated, youtubeLoading]);
+    }, [youtubeLoading, userContext.userLoading, userContext.user]);
 
 
     const handleSubmit = (event) => {
@@ -119,7 +122,7 @@ function Home() {
                     <>
                         {/* If authenticated, display user comments*/}
                         {/* If not authenticated, display a list of professors with highest ratings*/}
-                        {isAuthenticated ?
+                        {userContext.user ?
                             // Is authenticated
                             <Carousel className="headline-img">
                                 {/* Display a message if no user comments are found */}

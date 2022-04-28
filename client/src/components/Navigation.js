@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Container, Nav, Navbar, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGraduationCap, faUser} from '@fortawesome/free-solid-svg-icons'
@@ -7,24 +7,28 @@ import {Link, useNavigate} from "react-router-dom";
 import {HashLink} from 'react-router-hash-link';
 import {useAuth0} from "@auth0/auth0-react";
 import {fetchDbUser} from "../function/Api.js";
+import {UserContext} from "../function/context.js";
 
 
 function Navigation() {
     const {isLoading, isAuthenticated, loginWithRedirect, logout, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseUrl = process.env.REACT_APP_BASE_URL;
-    const [dbUser, setDbUser] = React.useState(null);
+    // const [dbUser, setDbUser] = React.useState(null);
     const navigate = useNavigate();
+    const {userContext, setUserContext} = useContext(UserContext);
 
     useEffect(() => {
         async function fetchData() {
             const token = await getAccessTokenSilently();
+            setUserContext(prev => ({...prev, userLoading: true}))
             fetchDbUser(baseUrl, user.sub, token)
                 .then(dbUsers => {
                     if (dbUsers.length === 0) {
                         navigate("/userInfoForm");
                     } else {
-                        setDbUser(dbUsers[0]);
+                        // setDbUser(dbUsers[0]);
+                        setUserContext(prev => ({...prev, user: dbUsers[0], userLoading: false}));
                     }
                     setLoading(false);
                 })
@@ -76,7 +80,7 @@ function Navigation() {
                                                   style={{textDecoration: 'none', color: "white"}}>
                                                         <span>
                                                             {'Hello, '}
-                                                            {dbUser ? dbUser.nickname : user.nickname}
+                                                            {userContext ? userContext.user.nickname : user.nickname}
                                                         </span>
                                             </Link>
                                             <span role="button" className="logout-text" onClick={() => {
