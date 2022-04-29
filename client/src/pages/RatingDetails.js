@@ -7,17 +7,17 @@ import ProfDescription from "../components/ratingDetails/ProfDescription";
 import CommentDetail from "../components/ratingDetails/CommentDetail";
 
 function RatingDetails() {
-    const baseURL = process.env.REACT_APP_BASE_URL;
     const {profId} = useParams();
     const navigate = useNavigate();
     const location = useLocation();
+
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [comments, setComments] = useState([]);
 
     // Get professor details and comments
     useEffect(() => {
-        fetchProfessorById(baseURL, profId)
+        fetchProfessorById(profId)
             .then((data) => {
                 setProfessor(data);
             })
@@ -26,7 +26,7 @@ function RatingDetails() {
                 navigate("/error");
             });
 
-        fetchCommentsByProfessorId(baseURL, profId)
+        fetchCommentsByProfessorId(profId)
             .then((data) => {
                 setComments(data);
                 setLoading(false);
