@@ -1,5 +1,5 @@
 import Comment from "./Comment";
-import "../styles/CommentList.css";
+import "../../styles/CommentList.css";
 
 function CommentList({comments, deleteComment}) {
     return (

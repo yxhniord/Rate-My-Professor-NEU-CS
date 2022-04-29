@@ -3,9 +3,9 @@ import {Alert, Button, Card} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPenToSquare, faTrashCan} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment";
-import "../styles/Comment.css";
+import "../../styles/Comment.css";
 import {useNavigate} from "react-router-dom";
-import {fetchProfessorById} from "../function/Api";
+import {fetchProfessorById} from "../../function/Api";
 
 function Comment({comment, deleteComment}) {
     const baseUrl = process.env.REACT_APP_BASE_URL;

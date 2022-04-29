@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, ListGroup, ListGroupItem, Spinner, Tab, Tabs} from "react-bootstrap";
-import CommentList from "../components/CommentList";
+import CommentList from "../components/comments/CommentList";
 import "../styles/Profile.css"
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate, useParams} from "react-router-dom";
