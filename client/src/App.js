@@ -19,7 +19,6 @@ import {fetchDbUser} from "./function/Api";
 
 function App() {
     const {isAuthenticated, user, getAccessTokenSilently} = useAuth0();
-    const baseUrl = process.env.REACT_APP_BASE_URL;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -27,7 +26,7 @@ function App() {
         return async function (dispatch) {
             dispatch(fetchUserRequest());
             await getAccessTokenSilently()
-                .then(token => fetchDbUser(baseUrl, user.sub, token))
+                .then(token => fetchDbUser(user.sub, token))
                 .then(res => {
                         dispatch(fetchUserSuccess(res));
                         if (res === null) {
