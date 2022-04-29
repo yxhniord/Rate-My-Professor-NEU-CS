@@ -5,7 +5,6 @@ import "../styles/NewComment.css";
 import {createComment, fetchCommentById, fetchProfessorById, updateComment} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
 import {useSelector} from "react-redux";
-import {baseURL} from "../constants/variables";
 
 function NewComment() {
     const navigate = useNavigate();
@@ -31,7 +30,7 @@ function NewComment() {
         // Set all fields according to data provided by comment id
         // If auth0_id is not the same as the logged-in user, redirect to error-page
         if (commentId !== undefined) {
-            fetchCommentById(baseURL, commentId)
+            fetchCommentById(commentId)
                 .then((data) => {
                     if (isMounted) {
                         setNewCourse(data.course);
@@ -43,7 +42,7 @@ function NewComment() {
                 })
                 .then(() => {
                     if (profIdFromComment === undefined) return;
-                    fetchProfessorById(baseURL, profIdFromComment)
+                    fetchProfessorById(profIdFromComment)
                         .then((data) => {
                             if (isMounted) {
                                 setProfessor(data);
@@ -65,7 +64,7 @@ function NewComment() {
         // If new comment from professor/:profId
         // Set only fields related to professor, others remain blank
         else if (profId !== undefined) {
-            fetchProfessorById(baseURL, profId)
+            fetchProfessorById(profId)
                 .then((data) => {
                     if (isMounted) {
                         setProfessor(data);
@@ -114,7 +113,7 @@ function NewComment() {
         // In case of updating a comment
         if (commentId !== undefined) {
 
-            updateComment(baseURL, commentId, createdNewComment, token)
+            updateComment(commentId, createdNewComment, token)
                 .then((response) => {
                     // Check if inputs are valid
                     if (response) {
@@ -133,7 +132,7 @@ function NewComment() {
                 });
             //    In case of creating new comment
         } else if (profId !== undefined) {
-            createComment(baseURL, createdNewComment, token)
+            createComment(createdNewComment, token)
                 .then((response) => {
                     // Check if inputs are valid
                     if (response) {

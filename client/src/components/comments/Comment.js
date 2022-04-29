@@ -8,14 +8,13 @@ import {useNavigate} from "react-router-dom";
 import {fetchProfessorById} from "../../function/Api";
 
 function Comment({comment, deleteComment}) {
-    const baseUrl = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const [professor, setProfessor] = useState(null);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
     useEffect(() => {
 
-        fetchProfessorById(baseUrl, comment.professor)
+        fetchProfessorById(comment.professor)
             .then((data) => {
                 setProfessor(data);
             })

@@ -9,7 +9,7 @@ import About from "../components/home/About";
 import "../styles/Home.css";
 
 import {fetchCommentsByUserId, fetchProfessorById, fetchTopRateProfessors} from "../function/Api";
-import {baseURL, youtubeAPI, youtubeAPIKey} from "../constants/variables";
+import {youtubeAPI, youtubeAPIKey} from "../constants/variables";
 
 function Home() {
     const navigate = useNavigate();
@@ -35,14 +35,14 @@ function Home() {
     async function getComments() {
         const token = await getAccessTokenSilently();
         console.log(dbUser)
-        fetchCommentsByUserId(baseURL, dbUser._id, token)
+        fetchCommentsByUserId(dbUser._id, token)
             .then(comments => {
                 setComments(comments);
                 setProfessors([]);
 
                 // For each comment, get professors from database and store in an array
                 for (let comment of comments) {
-                    fetchProfessorById(baseURL, comment.professor)
+                    fetchProfessorById(comment.professor)
                         .then(professor => {
                             setProfessors(professors => [...professors, professor]);
                         })
@@ -75,7 +75,7 @@ function Home() {
                         navigate("/error");
                     });
             } else {
-                fetchTopRateProfessors(baseURL)
+                fetchTopRateProfessors()
                     .then(data => {
                         setProfessors(data);
                         setLoading(false);
