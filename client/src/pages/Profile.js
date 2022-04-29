@@ -8,34 +8,35 @@ import {deleteCommentByCommentId, fetchCommentsByUserId} from "../function/Api.j
 import {useSelector} from "react-redux";
 
 function Profile() {
-    const {isAuthenticated, user, getAccessTokenSilently} = useAuth0();
-    const [loading, setLoading] = useState(true);
-    const baseURL = process.env.REACT_APP_BASE_URL;
+    const navigate = useNavigate();
     const tabKey = useParams().key;
-    const [key, setKey] = useState(tabKey);
+
+    const {isAuthenticated, user, getAccessTokenSilently} = useAuth0();
+
     const dbUser = useSelector(state => state.user.user);
     const userLoading = useSelector(state => state.user.loading);
-    const [comments, setComments] = useState([]);
-    const navigate = useNavigate();
 
+    const [key, setKey] = useState(tabKey);
+    const [loading, setLoading] = useState(true);
+    const [comments, setComments] = useState([]);
+
+    let isSubscribed = true;
+
+    async function fetchData() {
+        const token = await getAccessTokenSilently();
+
+        fetchCommentsByUserId(dbUser._id, token)
+            .then(data => {
+                if (isSubscribed) {
+                    setComments(data);
+                }
+            });
+        if (isSubscribed) {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        let isSubscribed = true;
-
-        async function fetchData() {
-            const token = await getAccessTokenSilently();
-
-            fetchCommentsByUserId(baseURL, dbUser._id, token)
-                .then(data => {
-                    if (isSubscribed) {
-                        setComments(data);
-                    }
-                });
-            if (isSubscribed) {
-                setLoading(false);
-            }
-        }
-
         if (isAuthenticated && !userLoading && dbUser) {
             fetchData()
                 .catch(err => {
@@ -53,7 +54,7 @@ function Profile() {
         setLoading(true);
         getAccessTokenSilently()
             .then(token => {
-                deleteCommentByCommentId(baseURL, commentId, token)
+                deleteCommentByCommentId(commentId, token)
                     .then(res => {
                         if (res) {
                             setComments(comments.filter(comment => comment._id !== commentId));
