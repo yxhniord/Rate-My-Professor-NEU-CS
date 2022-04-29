@@ -3,8 +3,8 @@ import "../styles/RatingDetails.css";
 import {Spinner} from "react-bootstrap";
 import {useNavigate, useParams, useLocation} from "react-router-dom";
 import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
-import ProfDescription from "../components/ratingdDetails/ProfDescription";
-import CommentDetail from "../components/ratingdDetails/CommentDetail";
+import ProfDescription from "../components/ratingDetails/ProfDescription";
+import CommentDetail from "../components/ratingDetails/CommentDetail";
 
 function RatingDetails() {
     const baseURL = process.env.REACT_APP_BASE_URL;
