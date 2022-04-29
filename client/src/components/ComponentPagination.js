@@ -1,9 +1,18 @@
 import React, {useState} from 'react';
 import {Pagination} from "react-bootstrap";
+import "../styles/ComponentPagination.css"
 
-function ComponentPagination({data, RenderComponent, pageLimit, dataLimit}) {
+function ComponentPagination({data, RenderComponent, dataLimit}) {
     const [pages] = useState(Math.round(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState(1);
+
+    function goToFirstPage() {
+        setCurrentPage(1);
+    }
+
+    function goToLastPage() {
+        setCurrentPage(pages);
+    }
 
     function goToNextPage() {
         setCurrentPage((page) => page + 1);
@@ -25,67 +34,34 @@ function ComponentPagination({data, RenderComponent, pageLimit, dataLimit}) {
     };
 
     const getPaginationGroup = () => {
-        let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-        return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
+        let start = Math.floor((currentPage - 1) / pages) * pages;
+        return new Array(pages).fill().map((_, idx) => start + idx + 1);
     };
 
     return (
-        <div>
+        <section className="pagination">
 
             {/* show the RenderComponent */}
-            <div className="dataContainer">
+            <div>
                 {getPaginatedData().map((d, idx) => (
                     <RenderComponent key={idx} data={d}/>
                 ))}
             </div>
 
             {/* show the pagination */}
-            <div className="pagination">
-                {/* previous button */}
-                <button
-                    onClick={goToPreviousPage}
-                    className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
-                >
-                    prev
-                </button>
-
-                {/* show page numbers */}
+            <Pagination className="pagination-number">
+                <Pagination.First onClick={goToFirstPage} disabled={currentPage === 1}/>
+                <Pagination.Prev onClick={goToPreviousPage} disabled={currentPage <= 1}/>
                 {getPaginationGroup().map((item, index) => (
-                    <button
-                        key={index}
-                        onClick={changePage}
-                        className={`paginationItem ${currentPage === item ? 'active' : null}`}
-                    >
-                        <span>{item}</span>
-                    </button>
-                ))}
-
-                {/* next button */}
-                <button
-                    onClick={goToNextPage}
-                    className={`next ${currentPage === pages ? 'disabled' : ''}`}
-                >
-                    next
-                </button>
-            </div>
-
-            <Pagination className="pagination">
-                {/*<Pagination.First/>*/}
-                <Pagination.Prev role={"button"} onClick={goToPreviousPage}
-                                          className={`prev ${currentPage === 1 ? 'disabled' : ''}`}/>
-                {getPaginationGroup().map((item, index) => (
-                    <Pagination.Item key={index}
-                                              onClick={changePage}
-                                              className={`paginationItem ${currentPage === item ? 'active' : null}`}>
-                        {index}
+                    <Pagination.Item key={index} onClick={changePage} active={currentPage === item}>
+                        {item}
                     </Pagination.Item>
                 ))}
                 {/*<Pagination.Ellipsis/>*/}
-                <Pagination.Next onClick={goToNextPage}
-                                 className={`next ${currentPage === pages ? 'disabled' : ''}`}/>
-                {/*<Pagination.Last/>*/}
+                <Pagination.Next onClick={goToNextPage} disabled={currentPage >= pages}/>
+                <Pagination.Last onClick={goToLastPage} disabled={currentPage === pages}/>
             </Pagination>
-        </div>
+        </section>
     );
 }
 
