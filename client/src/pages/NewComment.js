@@ -5,81 +5,81 @@ import "../styles/NewComment.css";
 import {createComment, fetchCommentById, fetchProfessorById, updateComment} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
 import {useSelector} from "react-redux";
+import {baseURL} from "../constants/variables";
 
 function NewComment() {
-    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {profId, commentId} = useParams();
     const {isLoading, getAccessTokenSilently} = useAuth0();
+
+    // Get user information from Redux store
+    const dbUser = useSelector(state => state.user.user);
+    const userLoading = useSelector(state => state.user.loading);
+
     const [loading, setLoading] = useState(true);
     const [professor, setProfessor] = useState({});
     const [newRating, setNewRating] = useState("");
     const [newCourse, setNewCourse] = useState("");
     const [newCampus, setNewCampus] = useState("");
     const [newComment, setNewComment] = useState("");
-    const dbUser = useSelector(state => state.user.user);
-    const userLoading = useSelector(state => state.user.loading);
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
     let profIdFromComment;
+    let isMounted = true;
 
-    useEffect(() => {
-        let isMounted = true;
-
-        async function fetchData() {
-            // If update comment from updateComment/:commentId
-            // Set all fields according to data provided by comment id
-            // If auth0_id is not the same as the logged-in user, redirect to error-page
-            if (commentId !== undefined) {
-                fetchCommentById(baseURL, commentId)
-                    .then((data) => {
-                        if (isMounted) {
-                            setNewCourse(data.course);
-                            setNewCampus(data.campus);
-                            setNewRating(data.rate);
-                            setNewComment(data.content);
-                            profIdFromComment = data.professor;
-                        }
-                    })
-                    .then(() => {
-                        if (profIdFromComment === undefined) return;
-                        fetchProfessorById(baseURL, profIdFromComment)
-                            .then((data) => {
-                                if (isMounted) {
-                                    setProfessor(data);
-                                    setLoading(false);
-                                }
-                                console.log(data);
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                                navigate("/error");
-                            });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        navigate("/error");
-                    });
-            }
-
-                // If new comment from professor/:profId
-            // Set only fields related to professor, others remain blank
-            else if (profId !== undefined) {
-                fetchProfessorById(baseURL, profId)
-                    .then((data) => {
-                        if (isMounted) {
-                            setProfessor(data);
-                            setLoading(false);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        navigate("/error");
-                    });
-            }
-
-
+    async function fetchData() {
+        // If update comment from updateComment/:commentId
+        // Set all fields according to data provided by comment id
+        // If auth0_id is not the same as the logged-in user, redirect to error-page
+        if (commentId !== undefined) {
+            fetchCommentById(baseURL, commentId)
+                .then((data) => {
+                    if (isMounted) {
+                        setNewCourse(data.course);
+                        setNewCampus(data.campus);
+                        setNewRating(data.rate);
+                        setNewComment(data.content);
+                        profIdFromComment = data.professor;
+                    }
+                })
+                .then(() => {
+                    if (profIdFromComment === undefined) return;
+                    fetchProfessorById(baseURL, profIdFromComment)
+                        .then((data) => {
+                            if (isMounted) {
+                                setProfessor(data);
+                                setLoading(false);
+                            }
+                            console.log(data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            navigate("/error");
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    navigate("/error");
+                });
         }
 
+        // If new comment from professor/:profId
+        // Set only fields related to professor, others remain blank
+        else if (profId !== undefined) {
+            fetchProfessorById(baseURL, profId)
+                .then((data) => {
+                    if (isMounted) {
+                        setProfessor(data);
+                        setLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    navigate("/error");
+                });
+        }
+    }
+
+    useEffect(() => {
         if (!isLoading && !userLoading && dbUser) {
             fetchData()
                 .catch((error) => {
