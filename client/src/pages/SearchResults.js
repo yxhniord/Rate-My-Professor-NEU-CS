@@ -45,7 +45,7 @@ function SearchResults() {
                                         <Card className="search-result">
 
                                             <Card.Body className="search-result-rating">
-                                                <Link to={`/details/${professor._id}`}
+                                                <Link role="button" to={`/details/${professor._id}`}
                                                       style={{color: 'inherit', textDecoration: 'inherit'}}>
 
                                                     <Card.Title
@@ -54,6 +54,9 @@ function SearchResults() {
                                                 </Link>
                                             </Card.Body>
                                             <Card.Body className={"search-result-content"}>
+                                                <Card.Text as="h5">
+                                                    Rating: {professor.rate} / 5
+                                                </Card.Text>
                                                 <Card.Text as="p">
                                                     {professor.comment.length} {professor.comment.length > 1 ? " students" : " student"} commented
                                                     on this professor.

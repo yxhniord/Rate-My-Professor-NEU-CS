@@ -58,7 +58,7 @@ function RatingDetails() {
                                 </Col>
                                 <Col className="prof-rating">
                                     <h3>
-                                        {professor.rate ? professor.rate : 0} / 5
+                                        {comments.length === 0 ? "-" : professor.rate} / 5
                                     </h3>
                                     <Button className="add-rating" variant="dark"
                                             onClick={() => navigate(`/newComment/${profId}`)}>
@@ -78,7 +78,7 @@ function RatingDetails() {
                                             <Card.Text as="h4">{comment.rate} / 5</Card.Text>
                                         </Card.Body>
                                         <Card.Body className={"comment-item-content"}>
-                                            <Card.Title as={"h6"}>{comment.course}</Card.Title>
+                                            <Card.Title as={"h5"}>{comment.course}</Card.Title>
                                             <Card.Text as="p">
                                                 From {comment.campus} campus: {comment.content}
                                             </Card.Text>
