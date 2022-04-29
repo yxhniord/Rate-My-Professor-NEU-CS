@@ -8,14 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchUserFail, fetchUserRequest, fetchUserSuccess} from "../actions/userActions";
 
 function UserInfoForm() {
-    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const {isLoading, user, getAccessTokenSilently} = useAuth0();
+
+    const dbUser = useSelector(state => state.user.user);
     const loading = useSelector(state => state.user.loading);
+
     const [newNickname, setNewNickname] = useState("");
     const [newCampus, setNewCampus] = useState("Vancouver");
-    const dbUser = useSelector(state => state.user.user);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if (dbUser) {
@@ -25,10 +26,10 @@ function UserInfoForm() {
     }, []);
 
 
-    const createUser = (baseURL, newUserInfo, token) => {
+    const createUser = (newUserInfo, token) => {
         return async function (dispatch) {
             dispatch(fetchUserRequest());
-            await createNewUser(baseURL, newUserInfo, token)
+            await createNewUser(newUserInfo, token)
                 .then((res) => {
                     navigate('/profile/user-info');
                     dispatch(fetchUserSuccess(res));
@@ -37,10 +38,10 @@ function UserInfoForm() {
         }
     }
 
-    const updateUserInfo = (baseURL, userId, newUserInfo, token) => {
+    const updateUserInfo = (userId, newUserInfo, token) => {
         return async function (dispatch) {
             dispatch(fetchUserRequest());
-            await updateUser(baseURL, userId, newUserInfo, token)
+            await updateUser(userId, newUserInfo, token)
                 .then((res) => {
                     navigate('/profile/user-info');
                     dispatch(fetchUserSuccess(res));
@@ -59,10 +60,10 @@ function UserInfoForm() {
         const token = await getAccessTokenSilently();
         if (dbUser == null) {
             // create new user
-            dispatch(createUser(baseURL, newUserInfo, token));
+            dispatch(createUser(newUserInfo, token));
         } else {
             // update existing user
-            dispatch(updateUserInfo(baseURL, dbUser._id, newUserInfo, token));
+            dispatch(updateUserInfo(dbUser._id, newUserInfo, token));
         }
     };
 

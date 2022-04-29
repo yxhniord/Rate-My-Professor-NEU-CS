@@ -3,10 +3,8 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {Card, Col, Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
 import {fetchProfessorsByName} from "../function/Api";
-import NewProfessor from "./NewProfessor";
 
 function SearchResults() {
-    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const {name} = useParams();
     const [loading, setLoading] = useState(true);
@@ -15,7 +13,7 @@ function SearchResults() {
     // GET/professor/name/:name
     useEffect(() => {
 
-        fetchProfessorsByName(baseURL, name)
+        fetchProfessorsByName(name)
             .then((data) => {
                 setProfessors(data);
                 setLoading(false);

@@ -1,49 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {Alert, Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
+import React, {useState} from 'react';
+import {useNavigate} from "react-router-dom";
+import {Alert, Button, Card, Col, Form, Row} from "react-bootstrap";
 import "../styles/NewProfessor.css";
-import {
-    createComment,
-    createProfessor,
-    fetchCommentById,
-    fetchDbUser,
-    fetchProfessorById,
-    updateComment
-} from "../function/Api";
+import {createProfessor} from "../function/Api";
 import {useAuth0} from "@auth0/auth0-react";
 
 function NewProfessor() {
-    const baseURL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
-    const {isLoading, isAuthenticated, user, getAccessTokenSilently} = useAuth0();
-    const [professor, setProfessor] = useState({});
+    const {getAccessTokenSilently} = useAuth0();
+
     const [fName, setFName] = useState("");
     const [lName, setLName] = useState("");
-    const [dbUser, setDbUser] = useState({});
     const [wrongInputMessage, setWrongInputMessage] = useState([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            // fetch dbUser
-            const token = await getAccessTokenSilently();
-            await fetchDbUser(baseURL, user.sub, token)
-                .then((data) => {
-                    if (data.length === 0) {
-                        navigate("/userInfoForm");
-                    } else {
-                        setDbUser(data[0]);
-                    }
-                })
-        }
-
-        if (!isLoading && isAuthenticated) {
-            fetchData()
-                .catch((error) => {
-                    console.log(`error from fetching user from database: ${error}`);
-                    navigate("/error");
-                });
-        }
-    }, [isLoading, isAuthenticated]);
 
     // Called when the submit button is clicked
     const handleSubmit = async (e) => {
@@ -58,7 +26,7 @@ function NewProfessor() {
         };
         const token = await getAccessTokenSilently();
 
-        createProfessor(baseURL, createdNewProfessor, token)
+        createProfessor(createdNewProfessor, token)
             .then(response => {
                 if (response.message !== undefined) {
                     let array = []

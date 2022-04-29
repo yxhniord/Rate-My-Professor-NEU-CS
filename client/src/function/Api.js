@@ -1,4 +1,8 @@
-export const fetchDbUser = async (baseURL, auth0_id, token) => {
+import {baseURL} from "../constants/variables";
+
+// User
+
+export const fetchDbUser = async (auth0_id, token) => {
     const response = await fetch(`${baseURL}/user/auth0_id/${auth0_id}`, {
         method: 'GET',
         headers: {
@@ -11,7 +15,7 @@ export const fetchDbUser = async (baseURL, auth0_id, token) => {
     return users.length === 0 ? null : users[0];
 }
 
-export const createNewUser = async (baseURL, user, token) => {
+export const createNewUser = async (user, token) => {
     const response = await fetch(`${baseURL}/user/create`, {
         method: 'POST',
         headers: {
@@ -24,7 +28,7 @@ export const createNewUser = async (baseURL, user, token) => {
     return await response.json();
 }
 
-export const updateUser = async (baseURL, userId, user, token) => {
+export const updateUser = async (userId, user, token) => {
     const response = await fetch(`${baseURL}/user/update/${userId}`, {
         method: 'POST',
         headers: {
@@ -37,7 +41,9 @@ export const updateUser = async (baseURL, userId, user, token) => {
     return await response.json();
 }
 
-export const fetchProfessorById = async (baseURL, profId) => {
+// Professor
+
+export const fetchProfessorById = async (profId) => {
     const response = await fetch(`${baseURL}/professor/id/${profId}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -47,7 +53,7 @@ export const fetchProfessorById = async (baseURL, profId) => {
     return await response.json();
 }
 
-export const fetchProfessorsByName = async (baseURL, name) => {
+export const fetchProfessorsByName = async (name) => {
     const response = await fetch(`${baseURL}/professor/name/${name}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -57,7 +63,7 @@ export const fetchProfessorsByName = async (baseURL, name) => {
     return await response.json();
 }
 
-export const fetchTopRateProfessors = async (baseURL) => {
+export const fetchTopRateProfessors = async () => {
     const response = await fetch(`${baseURL}/professor/list`, {
         headers: {
             'Content-Type': 'application/json',
@@ -67,7 +73,7 @@ export const fetchTopRateProfessors = async (baseURL) => {
     return await response.json();
 }
 
-export const createProfessor = async (baseURL, createdNewProfessor, token) => {
+export const createProfessor = async (createdNewProfessor, token) => {
     const response = await fetch(`${baseURL}/professor/create`, {
         method: 'POST',
         headers: {
@@ -81,7 +87,9 @@ export const createProfessor = async (baseURL, createdNewProfessor, token) => {
     return await response.json();
 }
 
-export const fetchCommentsByProfessorId = async (baseURL, profId) => {
+// Comments
+
+export const fetchCommentsByProfessorId = async (profId) => {
     const response = await fetch(`${baseURL}/comment/professor/${profId}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -91,7 +99,7 @@ export const fetchCommentsByProfessorId = async (baseURL, profId) => {
     return await response.json();
 }
 
-export const fetchCommentById = async (baseURL, commentId) => {
+export const fetchCommentById = async (commentId) => {
     const response = await fetch(`${baseURL}/comment/id/${commentId}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -101,7 +109,7 @@ export const fetchCommentById = async (baseURL, commentId) => {
     return await response.json();
 }
 
-export const fetchCommentsByUserId = async (baseURL, userId, token) => {
+export const fetchCommentsByUserId = async (userId, token) => {
     const response = await fetch(`${baseURL}/comment/user/${userId}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -112,7 +120,7 @@ export const fetchCommentsByUserId = async (baseURL, userId, token) => {
     return await response.json();
 }
 
-export const createComment = async (baseURL, createdNewComment, token) => {
+export const createComment = async (createdNewComment, token) => {
     const response = await fetch(`${baseURL}/comment/create`, {
         method: 'POST',
         headers: {
@@ -126,7 +134,7 @@ export const createComment = async (baseURL, createdNewComment, token) => {
     return response.status === 500 ? await response.json() : null;
 }
 
-export const updateComment = async (baseURL, commentId, createdNewComment, token) => {
+export const updateComment = async (commentId, createdNewComment, token) => {
     const response = await fetch(`${baseURL}/comment/update/${commentId}`, {
         method: 'POST',
         headers: {
@@ -140,7 +148,7 @@ export const updateComment = async (baseURL, commentId, createdNewComment, token
     return response.status === 500 ? await response.json() : null;
 }
 
-export const deleteCommentByCommentId = async (baseURL, commentId, token) => {
+export const deleteCommentByCommentId = async (commentId, token) => {
     const response = await fetch(`${baseURL}/comment/delete/${commentId}`, {
         method: 'DELETE',
         headers: {
