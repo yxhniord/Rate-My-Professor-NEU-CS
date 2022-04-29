@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import "../styles/RatingDetails.css";
-import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChalkboardTeacher} from "@fortawesome/free-solid-svg-icons";
+import {Spinner} from "react-bootstrap";
 import {useNavigate, useParams, useLocation} from "react-router-dom";
 import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
+import ProfDescription from "../components/ratingdDetails/ProfDescription";
+import CommentDetail from "../components/ratingdDetails/CommentDetail";
 
 function RatingDetails() {
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -45,49 +45,9 @@ function RatingDetails() {
                     <span className="visually-hidden">Loading...</span>
                 </Spinner> :
                 <main>
-                    <section>
-                        <Container fluid>
-                            <Row className="prof-detail">
-                                <Col className="prof-description">
-                                    {/*<div className="prof-title">*/}
-                                    <FontAwesomeIcon className="prof-icon" icon={faChalkboardTeacher}/>
-                                    <h3>
-                                        {professor.first_name}{" "}{professor.last_name}
-                                    </h3>
-                                    {/*</div>*/}
-                                </Col>
-                                <Col className="prof-rating">
-                                    <h3>
-                                        {comments.length === 0 ? "-" : professor.rate} / 5
-                                    </h3>
-                                    <Button className="add-rating" variant="dark"
-                                            onClick={() => navigate(`/newComment/${profId}`)}>
-                                        Add Comment
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </section>
+                    <ProfDescription professor={professor} comments={comments}></ProfDescription>
 
-                    <section className="comment-detail">
-                        <Row lg={1} className="g-4 comment-items">
-                            {comments.map((comment) => (
-                                <Col key={comment._id}>
-                                    <Card className="comment-item">
-                                        <Card.Body className="comment-item-rating">
-                                            <Card.Text as="h4">{comment.rate} / 5</Card.Text>
-                                        </Card.Body>
-                                        <Card.Body className={"comment-item-content"}>
-                                            <Card.Title as={"h5"}>{comment.course}</Card.Title>
-                                            <Card.Text as="p">
-                                                From {comment.campus} campus: {comment.content}
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            ))}
-                        </Row>
-                    </section>
+                    <CommentDetail comments={comments}></CommentDetail>
                 </main>
             }
         </div>

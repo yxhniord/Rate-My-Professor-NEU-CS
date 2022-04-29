@@ -8,7 +8,7 @@ import {deleteCommentByCommentId, fetchCommentsByUserId} from "../function/Api.j
 import {useSelector} from "react-redux";
 
 function Profile() {
-    const {isAuthenticated, isLoading, user, getAccessTokenSilently} = useAuth0();
+    const {isAuthenticated, user, getAccessTokenSilently} = useAuth0();
     const [loading, setLoading] = useState(true);
     const baseURL = process.env.REACT_APP_BASE_URL;
     const tabKey = useParams().key;
@@ -47,7 +47,7 @@ function Profile() {
         }
 
         return () => isSubscribed = false;
-    }, [isLoading, isAuthenticated, comments.length]);
+    }, [isAuthenticated, comments.length]);
 
     const deleteComment = (commentId) => {
         setLoading(true);
@@ -80,7 +80,7 @@ function Profile() {
                 <div className="profile-area">
                     <Tabs id="profile-tabs" activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
                         <Tab eventKey="user-info" title="Profile">
-                            {loading || isLoading || dbUser == null ?
+                            {loading || userLoading || dbUser == null ?
                                 <Spinner animation="border" role="status">
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner> :
