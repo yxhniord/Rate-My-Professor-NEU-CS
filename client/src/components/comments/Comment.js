@@ -7,7 +7,10 @@ import "../../styles/Comment.css";
 import {useNavigate} from "react-router-dom";
 import {fetchProfessorById} from "../../function/Api";
 
-function Comment({comment, deleteComment}) {
+function Comment({data, fn}) {
+    const comment = data;
+    const deleteComment = fn;
+
     const navigate = useNavigate();
     const [professor, setProfessor] = useState(null);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);

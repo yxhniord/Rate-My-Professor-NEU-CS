@@ -99,7 +99,7 @@ function Profile() {
                             }
                         </Tab>
                         <Tab eventKey="user-comments" title="My Ratings">
-                            {comments.length !== 0 && <CommentList comments={comments} deleteComment={deleteComment}/>}
+                            <CommentList comments={comments} deleteComment={deleteComment}/>
                         </Tab>
                     </Tabs>
                 </div>
