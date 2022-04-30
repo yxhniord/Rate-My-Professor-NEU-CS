@@ -48,7 +48,7 @@ function Profile() {
         }
 
         return () => isSubscribed = false;
-    }, [isAuthenticated, comments.length]);
+    }, [isAuthenticated, comments.length, dbUser]);
 
     const deleteComment = (commentId) => {
         setLoading(true);
