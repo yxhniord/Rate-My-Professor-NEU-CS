@@ -4,7 +4,7 @@ import {Spinner} from "react-bootstrap";
 import {useNavigate, useParams, useLocation} from "react-router-dom";
 import {fetchCommentsByProfessorId, fetchProfessorById} from "../function/Api";
 import ProfDescription from "../components/ratingDetails/ProfDescription";
-import CommentDetail from "../components/ratingDetails/CommentDetail";
+import CommentDetailList from "../components/ratingDetails/CommentDetailList";
 
 function RatingDetails() {
     const {profId} = useParams();
@@ -47,7 +47,7 @@ function RatingDetails() {
                 <main>
                     <ProfDescription professor={professor} comments={comments}></ProfDescription>
 
-                    <CommentDetail comments={comments}></CommentDetail>
+                    <CommentDetailList comments={comments}></CommentDetailList>
                 </main>
             }
         </div>

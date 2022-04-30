@@ -3,7 +3,7 @@ import {Card, Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import "../../styles/SearchResults.css";
 
-function SearchResult({data}) {
+function ProfessorCard({data}) {
     const professor = data;
     return (
         <Col>
@@ -33,4 +33,4 @@ function SearchResult({data}) {
     );
 }
 
-export default SearchResult;
+export default ProfessorCard;

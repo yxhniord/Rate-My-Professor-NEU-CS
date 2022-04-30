@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {Card, Col, Row, Spinner} from "react-bootstrap";
+import {Row, Spinner} from "react-bootstrap";
 import "../styles/SearchResults.css";
 import {fetchProfessorsByName} from "../function/Api";
 import ComponentPagination from "../components/ComponentPagination";
-import SearchResult from "../components/comments/SearchResult";
+import ProfessorCard from "../components/searchResults/ProfessorCard";
 
 function SearchResults() {
     const navigate = useNavigate();
@@ -40,7 +40,7 @@ function SearchResults() {
                             <h3>No results found</h3> :
                             <>
                                 <h3>Are you looking for ...</h3>
-                                <ComponentPagination data={professors} dataLimit={5} RenderComponent={SearchResult} />
+                                <ComponentPagination data={professors} dataLimit={5} RenderComponent={ProfessorCard} />
                             </>}
                         <h5>
                             No professor found?{" "}

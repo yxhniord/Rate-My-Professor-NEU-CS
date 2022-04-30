@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {Pagination} from "react-bootstrap";
 import "../styles/ComponentPagination.css"
 
-function ComponentPagination({data, RenderComponent, dataLimit}) {
-    const [pages] = useState(Math.round(data.length / dataLimit));
+function ComponentPagination({data, RenderComponent, dataLimit, fn}) {
+    const [pages] = useState(Math.ceil(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState(1);
 
     function goToFirstPage() {
@@ -44,7 +44,7 @@ function ComponentPagination({data, RenderComponent, dataLimit}) {
             {/* show the RenderComponent */}
             <div>
                 {getPaginatedData().map((d, idx) => (
-                    <RenderComponent key={idx} data={d}/>
+                    <RenderComponent key={d._id ? d._id : idx} data={d} fn={fn}/>
                 ))}
             </div>
 
