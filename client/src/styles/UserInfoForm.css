@@ -1,5 +1,5 @@
 .user-info-form {
-    margin: 5rem 35%;
+    margin: 5rem 25%;
 }
 
 .user-info-form-title {
@@ -12,4 +12,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+@media screen and (max-width: 991px) {
+    .user-info-form {
+        margin: 5rem 15%;
+    }
 }
