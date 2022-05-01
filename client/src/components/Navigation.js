@@ -60,7 +60,7 @@ function Navigation() {
                                                 dispatch(userLogout());
                                             }}>
                                                 {' '}
-                                                {'Logout    '}
+                                                {'Logout'}
                                             </span>
                                         </div>
                                         <Link role="button" to={"/profile/user-info"}
