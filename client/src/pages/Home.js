@@ -52,15 +52,17 @@ function Home() {
     }
 
     useEffect(() => {
-
+        let isMounted = true;
         getYouTubePlaylistItems()
             .then((res) => {
                 if (res?.error) {
                     return;
                 }
                 const index = Math.floor(Math.random() * res.items.length);
-                setVideoMetaInfo(res.items[index]);
-                setYoutubeLoading(false);
+                if (isMounted) {
+                    setVideoMetaInfo(res.items[index]);
+                    setYoutubeLoading(false);
+                }
             })
             .catch(err => {
                 console.log(err);
@@ -77,8 +79,10 @@ function Home() {
             } else {
                 fetchTopRateProfessors()
                     .then(data => {
-                        setProfessors(data);
-                        setLoading(false);
+                        if (isMounted) {
+                            setProfessors(data);
+                            setLoading(false);
+                        }
                     })
                     .catch((err) => {
                         console.log(err);
@@ -86,7 +90,9 @@ function Home() {
                     });
             }
         }
-
+        return () => {
+            isMounted = false;
+        };
     }, [userLoading, dbUser]);
 
     // Function used to interact with database and other pages
