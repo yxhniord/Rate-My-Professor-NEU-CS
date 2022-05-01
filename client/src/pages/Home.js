@@ -87,7 +87,7 @@ function Home() {
             }
         }
 
-    }, [youtubeLoading, userLoading, dbUser]);
+    }, [userLoading, dbUser]);
 
     // Function used to interact with database and other pages
     const handleSubmit = (event) => {
