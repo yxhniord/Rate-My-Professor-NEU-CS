@@ -2,8 +2,9 @@ import {render, screen} from '@testing-library/react';
 import ProfessorCard from "../ProfessorCard";
 import {MemoryRouter} from "react-router-dom";
 
+
 test('ProfessorCard renders correctly', () => {
-    let professor = {
+    const professor = {
         _id: 1,
         first_name: "John",
         last_name: "Doe",
@@ -20,4 +21,8 @@ test('ProfessorCard renders correctly', () => {
         </MemoryRouter>
     );
     expect(screen.getByText(`${professor.first_name} ${professor.last_name}`)).toBeInTheDocument();
+    const buttonElements = screen.getAllByRole('button');
+    expect(buttonElements.length).toBe(1);
+    const textElement = screen.getByText(`Rating: ${professor.rate} / 5`);
+    expect(textElement).toBeInTheDocument();
 });

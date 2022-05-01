@@ -3,7 +3,6 @@ import "../../styles/CommentList.css";
 import ComponentPagination from "../ComponentPagination";
 
 function CommentList({comments, deleteComment}) {
-    console.log(comments.length)
     return (
         <div className="comment-list-area">
             {comments.length === 0 ?
