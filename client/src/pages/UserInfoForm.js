@@ -19,9 +19,13 @@ function UserInfoForm() {
     const [newCampus, setNewCampus] = useState("Vancouver");
 
     useEffect(() => {
-        if (dbUser) {
+        let isMounted = true;
+        if (dbUser && isMounted) {
             setNewNickname(dbUser.nickname);
             setNewCampus(dbUser.campus);
+        }
+        return () => {
+            isMounted = false;
         }
     }, []);
 

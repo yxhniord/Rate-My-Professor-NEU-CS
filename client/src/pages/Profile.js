@@ -20,20 +20,22 @@ function Profile() {
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]);
 
-    let isSubscribed = true;
+    let isMounted = true;
 
     async function fetchData() {
         const token = await getAccessTokenSilently();
 
         fetchCommentsByUserId(dbUser._id, token)
             .then(data => {
-                if (isSubscribed) {
+                if (isMounted) {
                     setComments(data);
                 }
+            })
+            .then(() => {
+                if (isMounted) {
+                    setLoading(false);
+                }
             });
-        if (isSubscribed) {
-            setLoading(false);
-        }
     }
 
     useEffect(() => {
@@ -43,11 +45,9 @@ function Profile() {
                     console.log(err);
                     navigate("/error");
                 });
-        } else {
-            setLoading(false);
         }
 
-        return () => isSubscribed = false;
+        return () => isMounted = false;
     }, [isAuthenticated, comments.length, dbUser]);
 
     const deleteComment = (commentId) => {
