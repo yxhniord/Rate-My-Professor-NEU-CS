@@ -99,6 +99,8 @@ Use this space to show useful examples of how a project can be used. Additional 
         1. Fix bugs
     -   Client
         1. Add tests for all components
+        2. Refractor codes to implement pagination and enhance code re-usability.
+        3. Setup Redux store to prevent repetitive fetching of user information.
 
 <!-- CONTRIBUTION -->
 
@@ -118,15 +120,18 @@ Server development
 
 Client development
 
--   Client home, search results, professor rating details, add/modify comments pages, add professor page.
+- Design frontend layout
+- Implement pages for Home, SearchResults, ProfessorDetails, AddComment, EditComment and AddProfessor
+- Write tests and refractor codes
 
 ### Zhiwei Bao
 
 Client development
 
--   Client profile detail page. Comment and CommentList components.
--   Client authentication (Signup/Login, Protected route) and Server API security.
--   Homepage YouTube API.
+- Implement UserProfile page and Comment and CommentList components.
+- Integrate user authentication (Signup/Login, Protected route) and Server API security.
+- Add YouTube API to Home page
+- Write tests and refractor codes
 
 <!-- LICENSE -->
 
