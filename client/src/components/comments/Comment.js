@@ -32,7 +32,7 @@ function Comment({data, fn}) {
             <Alert show={showDeleteAlert} variant="warning">
                 <Alert.Heading>Warning!</Alert.Heading>
                 <p>
-                    Are you sure you want to delete this comment? It cannot be reverted.
+                    Are you sure you want to delete this comment? It cannot be reversed.
                 </p>
                 <hr/>
                 <div className="d-flex justify-content-end">
