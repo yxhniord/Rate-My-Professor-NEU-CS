@@ -8,6 +8,8 @@ This is a rate my professor website application for Northeastern University Comp
 
 Website Link: https://neu-rate-my-prof.herokuapp.com/
 
+Demo: https://www.youtube.com/watch?v=2GlXF6pobAY&ab_channel=XuehanYi
+
 ### Built With
 
 -   [Node.js](https://nodejs.org/)
